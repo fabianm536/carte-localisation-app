@@ -286,11 +286,11 @@
       <div id="panelBasemaps2" class="panel collapse">
           <div id="headingBasemaps2" class="panel-heading" role="tab">
               <div class="panel-title">
-                  <a class="panel-toggle collapsed" role="button" data-toggle="collapse" href="#collapseBasemaps" aria-expanded="false" aria-controls="collapseBasemaps"><span class="glyphicon glyphicon-th-large" aria-hidden="true"></span><span class="panel-label">Basemaps 2</span></a>
+                  <a class="panel-toggle collapsed" role="button" data-toggle="collapse" href="#collapseBasemaps2" aria-expanded="false" aria-controls="collapseBasemaps2"><span class="glyphicon glyphicon-th-large" aria-hidden="true"></span><span class="panel-label">Basemaps 2</span></a>
                   <a class="panel-close" role="button" data-toggle="collapse" tabindex="0" href="#panelBasemaps2"><span class="esri-icon esri-icon-close" aria-hidden="true"></span></a>
               </div>
           </div>
-          <div id="collapseBasemaps2" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingBasemaps">
+          <div id="collapseBasemaps2" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingBasemaps2">
               <div class="panel-body">
                   <select id="selectBasemapPanel2" class="form-control">
                       <option value="streets" data-vector="streets-vector">Streets</option>
@@ -440,6 +440,7 @@
           <ul class="nav nav-tabs" role="tablist">
             <li role="presentation" class="active"><a href="#title" aria-controls="title" role="tab" data-toggle="tab">Name</a></li>
             <li role="presentation"><a href="#map" aria-controls="map" role="tab" data-toggle="tab">Map</a></li>
+            <li role="presentation"><a href="#map2" aria-controls="map2" role="tab" data-toggle="tab">Map2</a></li>
             <li role="presentation"><a href="#theme" aria-controls="theme" role="tab" data-toggle="tab">Theme</a></li>
             <li role="presentation"><a href="#custom" aria-controls="custom" role="tab" data-toggle="tab">Layout</a></li>
           </ul>
@@ -530,11 +531,56 @@
               </div>
             </div>
 
+              <!-- Tab - Map 2-->
+
+              <div role="tabpanel" class="tab-pane" id="map2">
+                  <div class="calcite-form-title">2. Set the location, basemap and layer</div>
+                  <div class="form-horizontal calcite-form-padding">
+  
+                      <div class="form-group">
+                          <label for="settingsSelectBasemap2" class="col-xs-3 control-label">Basemap</label>
+                          <div class="col-xs-9">
+                              <select id="settingsSelectBasemap2" class="form-control">
+                                  <option value="streets" data-vector="streets-vector">Streets</option>
+                                  <option value="satellite" data-vector="satellite">Satellite</option>
+                                  <option value="hybrid" data-vector="hybrid">Hybrid</option>
+                                  <option value="national-geographic" data-vector="national-geographic">National Geographic</option>
+                                  <option value="topo" data-vector="topo-vector">Topographic</option>
+                                  <option value="gray" data-vector="gray-vector" selected>Gray</option>
+                                  <option value="dark-gray" data-vector="dark-gray-vector">Dark Gray</option>
+                                  <option value="osm" data-vector="osm">Open Street Map</option>
+                                  <option value="dark-gray" data-vector="streets-night-vector">Streets Night</option>
+                                  <option value="streets" data-vector="streets-navigation-vector">Streets Navigation</option>
+                              </select>
+                          </div>
+                      </div>
+
+                      <div class="form-group">
+                          <label for="settingsAddLayer2" class="col-xs-3 control-label">Webmap</label>
+                          <div class="col-xs-9">
+                              <input type="text" class="form-control" id="settingsWebmapId" placeholder="df5b4bad631d4209b6ef7a88493dac7d">
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <div class="col-xs-9 col-xs-offset-3">
+                              <button id="settingsAddWebmap2" type="button" class="btn btn-primary btn-block">Add Webmap</button>
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <div class="col-xs-9 col-xs-offset-3">
+                              <button id="settingsClearWebmap2" type="button" class="btn btn-primary btn-block">Clear</button>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+
+
             <!-- Tab - Theme -->
 
-            <div role="tabpanel" class="tab-pane" id="theme">
+          <div role="tabpanel" class="tab-pane" id="theme">
               <div class="calcite-form-title">3. Set background and text color</div>  
-              <div class="form-horizontal calcite-form-padding">
+              <div class="form-horizontal calcite-form-padding"> 
     
                 <!-- Color -->
 
