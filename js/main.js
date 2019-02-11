@@ -104,6 +104,7 @@ require([
     function initializeMapViews() {
         // Webmap
         app.webmap = new Webmap({
+            basemap: 'hybrid',
             portalItem: {
                 id: app.webmapId
             }
@@ -558,10 +559,10 @@ require([
 
     function initializeAppUI() {
         // App UI
-        setTabEvents();
+        //setTabEvents();
         setBasemapEvents();
-        setSearchWidgets();
-        setColorPicker();
+       // setSearchWidgets();
+        //setColorPicker();
         CalciteMapsArcGISSupport.setPopupPanelSync(app2.mapView);
         CalciteMapsArcGISSupport.setPopupPanelSync(app2.sceneView);
         CalciteMapsArcGISSupport.setSearchExpandEvents(app2.searchWidgetNav);
