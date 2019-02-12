@@ -1,4 +1,4 @@
-var app, app2;;
+var app, app2, app3;
 
 require([
   // ArcGIS
@@ -8,6 +8,7 @@ require([
   "esri/layers/VectorTileLayer",
   "esri/views/MapView",
   "esri/views/SceneView",
+  "esri/Graphic",
   "esri/widgets/Search",
   "esri/widgets/Popup",
   "esri/widgets/Home",
@@ -35,7 +36,7 @@ require([
 
   // Dojo
   "dojo/domReady!"
-], function (Map, Basemap, Webmap, VectorTileLayer, MapView, SceneView, Search, Popup, Home, Legend, ColorPicker,
+], function (Map, Basemap, Webmap, VectorTileLayer, MapView, SceneView, Graphic,Search, Popup, Home, Legend, ColorPicker,
   watchUtils, query, domClass, dom, on, CalciteMapsSettings, CalciteMapsArcGISSupport, PanelSettings) {
 
     app = {
@@ -130,6 +131,8 @@ require([
         colorPickerWidget: null,
         panelSettings: null
     }
+
+
 
     //----------------------------------
     // App
@@ -316,7 +319,7 @@ require([
         // App UI
         setTabEvents(app);
         setBasemapEvents(app);
-        setSearchWidgets(app);
+        //setSearchWidgets(app);
         setColorPicker(app);
         CalciteMapsArcGISSupport.setPopupPanelSync(app.mapView);
         CalciteMapsArcGISSupport.setPopupPanelSync(app.sceneView);
@@ -328,7 +331,7 @@ require([
         // App UI
         setTabEvents(app);
         setBasemapEvents2(app);
-        //setSearchWidgets(app);
+        setSearchWidgets(app);
         setColorPicker2(app);
         CalciteMapsArcGISSupport.setPopupPanelSync(app.mapView);
         CalciteMapsArcGISSupport.setPopupPanelSync(app.sceneView);
@@ -353,7 +356,7 @@ require([
                 app.activeView = app.sceneView;
             }
             // Search
-            syncSearch();
+            syncSearch(app);
             // Hide popup - TODO
             app.activeView.popup.set({
                 visible: false
@@ -376,7 +379,7 @@ require([
         }
 
         // Search
-        function syncSearch() {
+        function syncSearch(app) {
             app.searchWidgetNav.view = app.activeView;
             app.searchWidgetPanel.view = app.activeView;
             app.searchWidgetSettings.view = app.activeView;
@@ -506,10 +509,46 @@ require([
                 var bottomLeft = app.mapView.toScreen(extent.xmin, extent.ymin);
                 var topRight = app.mapView.toScreen(extent.xmax, extent.ymax);
 
+                addPolygonExtent(extent);
             }
         });
 
+       function addPolygonExtent(extent) {
 
+           app.mapView.graphics.removeAll();
+
+
+           // Create a polygon geometry
+           var polygon = {
+               type: "polygon", // autocasts as new Polygon()
+               rings: [
+                 [extent.xmin, extent.ymin],
+                 [extent.xmin, extent.ymax],
+                 [extent.xmax, extent.ymax],
+                 [extent.xmax, extent.ymin]
+               ],
+               spatialReference: { wkid: 102100 }
+           };
+
+           // Create a symbol for rendering the graphic
+           var fillSymbol = {
+               type: "simple-fill", // autocasts as new SimpleFillSymbol()
+               color: [227, 139, 79, 0.0],
+               outline: { // autocasts as new SimpleLineSymbol()
+                   color: [255, 0, 0],
+                   width: 1
+               }
+           };
+
+           // Add the geometry and symbol to a new graphic
+           var polygonGraphic = new Graphic({
+               geometry: polygon,
+               symbol: fillSymbol
+           });
+
+           // Add the graphics to the view's graphics layer
+           app.mapView.graphics.add(polygonGraphic);
+       }
 
 
     }
