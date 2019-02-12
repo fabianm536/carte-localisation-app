@@ -132,6 +132,52 @@ require([
         panelSettings: null
     }
 
+    app3 = {
+        zoom: 12,
+        lonlat: [1.393, 46.525],
+        mapView: null,
+        mapDiv: "mapViewDiv3",
+        mapFL: null,
+        vectorLayer: null,
+        sceneView: null,
+        sceneDiv: "sceneViewDiv3",
+        sceneFL: null,
+        activeView: null,
+        searchWidgetNav: null,
+        searchWidgetPanel: null,
+        searchWidgetSettings: null,
+        basemapSelected: "gray",
+        basemapSelectedAlt: "gray",
+        webmap: null,
+        webmapId: "3615ad3ea7a04278ad1b4ac3eef50f8f",
+        padding: {
+            top: 50,
+            right: 0,
+            bottom: 0,
+            left: 0
+        },
+        uiPadding: {
+            components: ["attribution"],
+            padding: {
+                top: 15,
+                right: 15,
+                bottom: 30,
+                left: 15
+            }
+        },
+        popupOptions: {
+            autoPanEnabled: true,
+            messageEnabled: false,
+            spinnerEnabled: false,
+            dockEnabled: true,
+            dockOptions: {
+                buttonEnabled: true,
+                //breakpoint: 544 // default
+            }
+        },
+        colorPickerWidget: null,
+        panelSettings: null
+    }
 
 
     //----------------------------------
@@ -152,9 +198,18 @@ require([
     initializeAppSettings(app2);
     initializeWidgets(app2);
 
+    //----------------------------------
+    // App3
+    //----------------------------------
+
+    initializeMapViews3(app3);
+    initializeAppUI3(app3);
+    initializeAppSettings(app3);
+    initializeWidgets(app3);
 
     //synchronizeMaps
     synchronizeMap(app, app2);
+    synchronizeMap(app2, app3);
 
     //----------------------------------
     // Map and Scene View
@@ -270,6 +325,61 @@ require([
         });
     }
 
+    function initializeMapViews3(app) {
+        // Webmap
+        app.webmap = new Map({
+            basemap: 'satellite',
+            portalItem: {
+                id: app.webmapId
+            }
+        });
+        // 2D - MapView
+        app.mapView = new MapView({
+            container: app.mapDiv,
+            map: app.webmap,
+            zoom: app.zoom,
+            center: app.lonlat,
+            padding: app.padding,
+            ui: app.uiPadding,
+            popup: new Popup(app.popupOptions),
+            visible: true
+        });
+
+
+        // Set active view
+        app.activeView = app.mapView;
+
+        // 3D - SceneView
+        app.sceneView = new SceneView({
+            container: app.sceneDiv,
+            map: app.webmap,
+            zoom: app.zoom,
+            center: app.lonlat,
+            padding: app.padding,
+            ui: app.uiPadding,
+            popup: new Popup(app.popupOptions),
+            visible: false
+        });
+
+        // Listen for view breakpoint changes and update control location
+        app.mapView.watch("widthBreakpoint", function (newVal, oldVal) {
+            function setPadding(newVal, oldVal) {
+                if (!app.panelSettings) {
+                    return;
+                }
+                if (newVal === "small" && oldVal === "medium") {
+                    app.panelSettings.setPadding(app.panelSettings.activeLayout.viewPaddingSmallScreen, app.panelSettings.activeLayout.uiPadding);
+                } else if (newVal === "medium" && oldVal === "small") {
+                    app.panelSettings.setPadding(app.panelSettings.activeLayout.viewPadding, app.panelSettings.activeLayout.uiPadding);
+                }
+            }
+            // Set padding for navs that change height
+            if (app.panelSettings.activeLayout.viewPaddingSmallScreen) {
+                setPadding(newVal, oldVal);
+            }
+        });
+    }
+
     //----------------------------------
     // View widgets
     //----------------------------------
@@ -331,8 +441,20 @@ require([
         // App UI
         setTabEvents(app);
         setBasemapEvents2(app);
-        setSearchWidgets(app);
+        //setSearchWidgets(app);
         setColorPicker2(app);
+        CalciteMapsArcGISSupport.setPopupPanelSync(app.mapView);
+        CalciteMapsArcGISSupport.setPopupPanelSync(app.sceneView);
+        CalciteMapsArcGISSupport.setSearchExpandEvents(app.searchWidgetNav);
+
+    }
+
+    function initializeAppUI3(app) {
+        // App UI
+        setTabEvents(app);
+        setBasemapEvents3(app);
+        setSearchWidgets(app);
+        setColorPicker3(app);
         CalciteMapsArcGISSupport.setPopupPanelSync(app.mapView);
         CalciteMapsArcGISSupport.setPopupPanelSync(app.sceneView);
         CalciteMapsArcGISSupport.setSearchExpandEvents(app.searchWidgetNav);
@@ -429,6 +551,22 @@ require([
 
     }
 
+    function setBasemapEvents3(app) {
+
+        // Sync basemaps for map and scene
+        query("#selectBasemapPanel3").on("change", function (e) {
+            app.basemapSelected = e.target.options[e.target.selectedIndex].dataset.vector;
+            app.basemapSelectedAlt = e.target.value;
+            setBasemaps();
+        });
+
+        function setBasemaps() {
+            app.mapView.map.basemap = app.basemapSelected;
+            app.sceneView.map.basemap = app.basemapSelectedAlt;
+        }
+
+    }
+
     //----------------------------------
     // Search Widgets
     //----------------------------------
@@ -474,6 +612,13 @@ require([
         }, "colorPickerDiv2");
     }
 
+    function setColorPicker3(app) {
+        app.colorPickerWidget = new ColorPicker({
+            required: false,
+            showRecentColors: false,
+            showTransparencySlider: false
+        }, "colorPickerDiv3");
+    }
     //----------------------------------
     // Synchronize maps
     //----------------------------------

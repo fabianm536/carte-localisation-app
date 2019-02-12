@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <!-- Lock viewport to prevent scaling -->
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-  <meta name="description" content="Calcite Maps Demo - ArcGIS">
+  <meta name="description" content="Calcite Maps - ArcGIS">
   <meta name="author" content="">
   <link rel="icon" href="img/icon.png">
   <title>Carte de localisation - Fugro</title>
@@ -75,16 +75,15 @@
       margin-bottom: 10px;
     }
 
-    /* Color Widget */
-
-    .esri-color-picker .esri-swatch-preview.esri-container,
-    .esri-color-picker .esri-header,
-    .esri-color-picker .esri-footer,
-    .esri-color-picker .esri-palette-options .esri-palette-toggle > input,
-    .dijitReset .dijitToggleButtonIconChar,
-    .esri-color-picker .esri-palette-options .esri-palette-toggle {
-      display: none;
-    }
+      /* Color Widget */
+      .esri-color-picker .esri-swatch-preview.esri-container,
+      .esri-color-picker .esri-header,
+      .esri-color-picker .esri-footer,
+      .esri-color-picker .esri-palette-options .esri-palette-toggle > input,
+      .dijitReset .dijitToggleButtonIconChar,
+      .esri-color-picker .esri-palette-options .esri-palette-toggle {
+          display: none;
+      }
     .esri-color-picker.esri-container {
       border: 0;
       padding: 0;
@@ -131,11 +130,11 @@
             </a>
             <ul class="dropdown-menu">
 
-                <li><a class="hidden-md hidden-lg" href="#mapTab" aria-controls="mapTab" role="tab" data-toggle="tab"> Map</a></li>
-                <!--<li><a class="hidden-md hidden-lg" href="#sceneTab" aria-controls="sceneTab" role="tab" data-toggle="tab"> Scene</a></li>-->
                 <li><a class="visible-xs" role="button" data-target="#panelSearch" aria-haspopup="true"><span class="glyphicon glyphicon-search"></span> Search</a></li>
+                <li><a role="menuitem" tabindex="0" data-target="#panelPoint" aria-haspopup="true"><span class="glyphicon glyphicon-map-marker"></span> Add Point</a></li>
                 <li><a role="menuitem" tabindex="0" data-target="#panelBasemaps" aria-haspopup="true"><span class="glyphicon glyphicon-th-large"></span> Basemaps</a></li>
                 <li><a role="menuitem" tabindex="0" data-target="#panelBasemaps2" aria-haspopup="true"><span class="glyphicon glyphicon-th-large"></span> Basemaps 2</a></li>
+                <li><a role="menuitem" tabindex="0" data-target="#panelBasemaps3" aria-haspopup="true"><span class="glyphicon glyphicon-th-large"></span> Basemaps 3</a></li>
                 <li><a role="menuitem" tabindex="0" data-target="#panelLegend" aria-haspopup="true"><span class="glyphicon glyphicon-list"></span> Legend</a></li>
                 <li><a role="menuitem" tabindex="0" data-target="#panelLayerlist" aria-haspopup="true"><span class="glyphicon glyphicon-list-alt"></span> LayerList</a></li>
                 <li><a role="menuitem" tabindex="0" data-target="#panelPrint" aria-haspopup="true"><span class="glyphicon glyphicon-print"></span> Print</a></li>
@@ -151,8 +150,6 @@
         </div>
         <!-- Nav -->
         <ul class="calcite-nav nav navbar-nav">
-            <li class="active"><a id="mapNav" class="hidden-xs hidden-sm" href="#mapTab" aria-controls="mapTab" aria-expanded="true" role="tab" data-toggle="tab" data-tooltip="tip" title="2D View" data-placement="bottom">Map</a></li>
-            <!--<li><a id="sceneNav" class="hidden-xs hidden-sm" href="#sceneTab" aria-controls="sceneTab" role="tab" data-toggle="tab" data-tooltip="tip" title="3D View" data-placement="bottom">Scene</a></li>   -->
             <li><div class="calcite-navbar-search calcite-search-expander"><div id="searchNavDiv"></div></div></li>
         </ul>
     </nav><!--/.navbar -->
@@ -182,6 +179,19 @@
         </div>
     </div>
 
+    <!-- Map Container 3  -->
+
+    <div class="calcite-map calcite-map-absolute">
+        <div id="tabContainer" class="tab-content">
+            <div id="mapTab" class="tab-pane fade in active" role="tabpanel">
+                <div id="mapViewDiv3"></div>
+            </div>
+            <div id="sceneTab" class="tab-pane fade" role="tabpanel">
+                <div id="sceneViewDiv3"></div>
+            </div>
+        </div>
+    </div>
+
     <!-- Panel Container -->
 
     <div class="calcite-panels calcite-panels-right calcite-bg-dark calcite-text-light panel-group" role="tablist" aria-multiselectable="true">
@@ -201,6 +211,45 @@
                 </div>
             </div>
         </div>
+
+        <!-- Panel - Point -->
+
+        <div id="panelPoint" class="panel collapse">
+
+            <div id="headingSettings" class="panel-heading">
+                <div class="panel-title">
+                    <a class="panel-toggle" role="button" data-toggle="collapse" href="#collapsePoint" aria-expanded="true" aria-controls="collapsePoint"><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span><span class="panel-label">Point</span></a>
+
+                    <a class="panel-close" role="button" data-toggle="collapse" tabindex="0" href="#panelPoint"><span class="esri-icon esri-icon-close" aria-hidden="true"></span></a>
+                </div>
+            </div>
+
+            <div id="collapsePoint" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingPoint">
+                <div class="panel-body">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation"><a href="#map" aria-controls="map" role="tab" data-toggle="tab">Map</a></li>
+                    </ul>
+
+                    <div class="tab-content">
+
+                        <!-- Tab - Map -->
+
+                        <div role="tabpanel" class="tab-pane active" id="map">
+                            <div class="calcite-form-title">Set the location</div>
+                            <div class="form-horizontal calcite-form-padding">
+                                <div class="form-group">
+                                    <label for="settingsSearch" class="col-xs-3 control-label">Location</label>
+                                    <div class="col-xs-9">
+                                        <div id="settingsSearchDiv" class="calcite-form-search"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div><!-- /.tab-content -->
+                </div><!-- /.panel-body -->
+            </div><!-- /.panel-collapse -->
+        </div><!-- /.panel -->
 
         <!-- Panel - Basemaps -->
 
@@ -242,6 +291,34 @@
             <div id="collapseBasemaps2" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingBasemaps2">
                 <div class="panel-body">
                     <select id="selectBasemapPanel2" class="form-control">
+                        <option value="streets" data-vector="streets-vector">Streets</option>
+                        <option value="satellite" data-vector="satellite">Satellite</option>
+                        <option value="hybrid" data-vector="hybrid">Hybrid</option>
+                        <option value="national-geographic" data-vector="national-geographic">National Geographic</option>
+                        <option value="topo" data-vector="topo-vector">Topographic</option>
+                        <option value="gray" data-vector="gray-vector" selected>Gray</option>
+                        <option value="dark-gray" data-vector="dark-gray-vector">Dark Gray</option>
+                        <option value="osm" data-vector="osm">Open Street Map</option>
+                        <option value="dark-gray" data-vector="streets-night-vector">Streets Night</option>
+                        <option value="streets" data-vector="streets-navigation-vector">Streets Navigation</option>
+                    </select>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Panel - Basemaps 3-->
+
+        <div id="panelBasemaps3" class="panel collapse">
+            <div id="headingBasemaps2" class="panel-heading" role="tab">
+                <div class="panel-title">
+                    <a class="panel-toggle collapsed" role="button" data-toggle="collapse" href="#collapseBasemaps3" aria-expanded="false" aria-controls="collapseBasemaps3"><span class="glyphicon glyphicon-th-large" aria-hidden="true"></span><span class="panel-label">Basemaps 3</span></a>
+                    <a class="panel-close" role="button" data-toggle="collapse" tabindex="0" href="#panelBasemaps3"><span class="esri-icon esri-icon-close" aria-hidden="true"></span></a>
+                </div>
+            </div>
+            <div id="collapseBasemaps3" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingBasemaps3">
+                <div class="panel-body">
+                    <select id="selectBasemapPanel3" class="form-control">
                         <option value="streets" data-vector="streets-vector">Streets</option>
                         <option value="satellite" data-vector="satellite">Satellite</option>
                         <option value="hybrid" data-vector="hybrid">Hybrid</option>

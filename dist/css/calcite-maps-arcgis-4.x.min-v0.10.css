@@ -370,10 +370,10 @@ body {
 
     .calcite-map .calcite-map-absolute, .calcite-map.calcite-map-absolute {
         position: absolute;
-        top: 0;
-        right: 0;
         bottom: 0;
-        left: 0;
+        left: 20%;
+        height: 250px;
+        width: 250px;
     }
 
     .calcite-map .calcite-map-fixed, .calcite-map.calcite-map-fixed {
