@@ -6,15 +6,22 @@ require([
   "esri/Basemap",
   "esri/WebMap",
   "esri/layers/VectorTileLayer",
+  "esri/layers/FeatureLayer",
+  "esri/geometry/Point",
   "esri/views/MapView",
   "esri/views/SceneView",
   "esri/Graphic",
   "esri/widgets/Search",
+  "esri/widgets/ScaleBar",
   "esri/widgets/Popup",
   "esri/widgets/Home",
   "esri/widgets/Legend",
   "esri/widgets/ColorPicker",
+  "esri/widgets/Expand",
+  "esri/widgets/FeatureForm",
+  "esri/widgets/FeatureTemplates",
   "esri/core/watchUtils",
+  "esri/symbols/PictureMarkerSymbol",
   "dojo/query",
   "dojo/dom-class",
   "dojo/dom",
@@ -36,12 +43,15 @@ require([
 
   // Dojo
   "dojo/domReady!"
-], function (Map, Basemap, Webmap, VectorTileLayer, MapView, SceneView, Graphic,Search, Popup, Home, Legend, ColorPicker,
-  watchUtils, query, domClass, dom, on, CalciteMapsSettings, CalciteMapsArcGISSupport, PanelSettings) {
+], function (Map, Basemap, Webmap, VectorTileLayer,FeatureLayer,Point, MapView, SceneView, Graphic,Search,ScaleBar, Popup, Home, Legend, ColorPicker,Expand,
+        FeatureForm, FeatureTemplates, watchUtils, PictureMarkerSymbol, query, domClass, dom, on, CalciteMapsSettings, CalciteMapsArcGISSupport, PanelSettings
+        ) {
+
+    let editFeature, highlight;
 
     app = {
         zoom: 2,
-        lonlat: [-40, 0],
+        lonlat: [1.393, 46.525],
         mapView: null,
         mapDiv: "mapViewDiv",
         mapFL: null,
@@ -83,11 +93,14 @@ require([
             }
         },
         colorPickerWidget: null,
-        panelSettings: null
+        scaleBar: null,
+        panelSettings: null,
+        pointSymbol: null,
+        featureform: null
     }
     app2 = {
         zoom: 2,
-        lonlat: [-40, 0],
+        lonlat: [1.393, 46.525],
         mapView: null,
         mapDiv: "mapViewDiv2",
         mapFL: null,
@@ -129,7 +142,10 @@ require([
             }
         },
         colorPickerWidget: null,
-        panelSettings: null
+        scaleBar: null,
+        panelSettings: null,
+        pointSymbol: null,
+        featureform: null
     }
 
     app3 = {
@@ -176,7 +192,10 @@ require([
             }
         },
         colorPickerWidget: null,
-        panelSettings: null
+        scaleBar: null,
+        panelSettings: null,
+        pointSymbol: null,
+        featureform: null
     }
 
 
@@ -207,12 +226,15 @@ require([
     initializeAppSettings(app3);
     initializeWidgets(app3);
 
+    //add search point
+    addPoint(app3);
+
     //synchronizeMaps
     synchronizeMap(app, app2);
     synchronizeMap(app2, app3);
 
     //----------------------------------
-    // Map and Scene View
+    // Map View
     //----------------------------------
 
     function initializeMapViews(app) {
@@ -387,17 +409,7 @@ require([
     function initializeWidgets(app) {
 
         app.mapView.when(function () {
-            //app.panelSettings.setWidgetPosition(app.mapView, "home", "top-left", 0);
             app.panelSettings.setWidgetPosition(app.mapView, "zoom", "none", 1);
-            //app.panelSettings.setWidgetPosition(app.mapView, "compass", "top-left");
-        });
-
-
-        app.sceneView.when(function () {
-            app.panelSettings.setWidgetPosition(app.sceneView, "home", "top-left", 0);
-            //app.panelSettings.setWidgetPosition(app.sceneView, "zoom", "top-left");
-            app.panelSettings.setWidgetPosition(app.sceneView, "compass", "top-left");
-            app.panelSettings.setWidgetPosition(app.sceneView, "navtoggle", "top-left");
         });
 
         // Panel widgets
@@ -427,92 +439,35 @@ require([
     //----------------------------------
     function initializeAppUI(app) {
         // App UI
-        setTabEvents(app);
         setBasemapEvents(app);
         //setSearchWidgets(app);
         setColorPicker(app);
+        setScaleBar(app);
         CalciteMapsArcGISSupport.setPopupPanelSync(app.mapView);
-        CalciteMapsArcGISSupport.setPopupPanelSync(app.sceneView);
         CalciteMapsArcGISSupport.setSearchExpandEvents(app.searchWidgetNav);
 
     }
 
     function initializeAppUI2(app) {
         // App UI
-        setTabEvents(app);
         setBasemapEvents2(app);
         //setSearchWidgets(app);
         setColorPicker2(app);
+        setScaleBar(app);
         CalciteMapsArcGISSupport.setPopupPanelSync(app.mapView);
-        CalciteMapsArcGISSupport.setPopupPanelSync(app.sceneView);
         CalciteMapsArcGISSupport.setSearchExpandEvents(app.searchWidgetNav);
 
     }
 
     function initializeAppUI3(app) {
         // App UI
-        setTabEvents(app);
         setBasemapEvents3(app);
         setSearchWidgets(app);
         setColorPicker3(app);
+        setScaleBar(app);
         CalciteMapsArcGISSupport.setPopupPanelSync(app.mapView);
-        CalciteMapsArcGISSupport.setPopupPanelSync(app.sceneView);
         CalciteMapsArcGISSupport.setSearchExpandEvents(app.searchWidgetNav);
 
-    }
-
-    //----------------------------------
-    // View Tabs
-    //----------------------------------
-
-    function setTabEvents(app) {
-
-        // Tab event
-        query(".calcite-navbar li a[data-toggle='tab']").on("show.bs.tab", function (e) {
-            // Views
-            if (e.target.text.indexOf("Map") > -1) {
-                syncViews(app.sceneView, app.mapView);
-                app.activeView = app.mapView;
-            } else {
-                syncViews(app.mapView, app.sceneView);
-                app.activeView = app.sceneView;
-            }
-            // Search
-            syncSearch(app);
-            // Hide popup - TODO
-            app.activeView.popup.set({
-                visible: false
-            });
-        });
-
-        // Views
-        function syncViews(fromView, toView) {
-            watchUtils.whenTrueOnce(fromView, "ready", function () {
-                var viewPt = fromView.viewpoint.clone();
-                fromView.container = null;
-                if (fromView.type === "3d") {
-                    toView.container = app.mapDiv;
-                } else {
-                    toView.container = app.sceneDiv;
-                }
-                toView.viewpoint = viewPt;
-                toView.padding = fromView.padding;
-            });
-        }
-
-        // Search
-        function syncSearch(app) {
-            app.searchWidgetNav.view = app.activeView;
-            app.searchWidgetPanel.view = app.activeView;
-            app.searchWidgetSettings.view = app.activeView;
-            // Sync
-            if (app.searchWidgetNav.selectedResult) {
-                app.searchWidgetNav.search(app.searchWidgetNav.selectedResult.name);
-            }
-            if (app.searchWidgetPanel.selectedResult) {
-                app.searchWidgetPanel.search(app.searchWidgetPanel.selectedResult.name);
-            }
-        }
     }
 
     //----------------------------------
@@ -573,9 +528,9 @@ require([
 
     function setSearchWidgets(app) {
 
+        
+
         //TODO - Search Nav + Panel (detach/attach)
-        app.searchWidgetNav = createSearchWidget("searchNavDiv", true);
-        app.searchWidgetPanel = createSearchWidget("searchPanelDiv", true);
         app.searchWidgetSettings = createSearchWidget("settingsSearchDiv", false);
 
         // Create widget
@@ -583,13 +538,17 @@ require([
             var search = new Search({
                 viewModel: {
                     view: app.activeView,
-                    showPopupOnSelect: showPopup,
+                    popupEnabled: showPopup,
                     highlightEnabled: false,
                     maxSuggestions: 20
                 },
             }, parentId);
+            
+            
             return search;
+            
         }
+        
     }
 
     //----------------------------------
@@ -619,6 +578,25 @@ require([
             showTransparencySlider: false
         }, "colorPickerDiv3");
     }
+
+    //----------------------------------
+    // Scale Bar Widget
+    //----------------------------------
+    function setScaleBar(app) {
+        app.scaleBar = new ScaleBar({
+            view: app.mapView,
+            unit: "metric",
+            style: 'ruler'
+        });
+
+        app.mapView.ui.add(app.scaleBar, {
+            position: "bottom-right"
+        });
+    }
+
+
+
+
     //----------------------------------
     // Synchronize maps
     //----------------------------------
@@ -694,8 +672,294 @@ require([
            // Add the graphics to the view's graphics layer
            app.mapView.graphics.add(polygonGraphic);
        }
+    }
 
+
+    //----------------------------------
+    // add Point 
+    //----------------------------------
+    function addPoint(app) {
+        
+        var pointGeom = new Point({
+            x: 1.393,
+            y: 46.525
+        });
+            var features = [
+         {
+             geometry: pointGeom,
+             attributes: {
+                 ObjectID: 1,
+                 DepArpt: "Sample",
+                 MsgTime: Date.now(),
+                 FltId: "UAL1"
+             }
+         }
+            ];
+
+            var fields = [
+                {
+                    name: "ObjectID",
+                    alias: "ObjectID",
+                    type: "oid"
+                },
+                {
+                    name: "DepArpt",
+                    alias: "DepArpt",
+                    type: "string"
+                }, {
+                    name: "MsgTime",
+                    alias: "MsgTime",
+                    type: "date"
+                }, {
+                    name: "FltId",
+                    alias: "FltId",
+                    type: "string"
+                }];
+
+            var renderer = {
+                type: "simple", 
+                symbol: {
+                    type: "picture-marker",
+                    url: "img/pointIcon.png",
+                    width: "15px",
+                    height: "15px"
+                }
+            };
+
+            var layer = new FeatureLayer({
+                source: features,
+                fields: fields,
+                objectIdField: "ObjectID",
+                renderer: renderer,
+                id: "localisation"
+            });
+
+
+                app.webmap.add(layer);
+
+                setFeatureForm(app, layer);
 
     }
+
+
+    //----------------------------------
+    // FeatureForm Widget
+    //----------------------------------
+    function setFeatureForm(app, layer) {
+ 
+        app.featureform = new FeatureForm({
+            container: "formDiv",
+            layer: layer,
+            fieldConfig: [
+                  {
+                      name: "ObjectID",
+                      label: "ObjectID"
+                  },
+                  {
+                      name: "DepArpt",
+                      label: "Choose DepArpt"
+                  },
+                  {
+                      name: "FltId",
+                      label: "Describe the FltId"
+                  }
+                ]
+        });
+        //delete point sample
+        deleteSample();
+       
+
+        // Listen to the feature form's submit event.
+        // Update feature attributes shown in the form.
+        app.featureform.on("submit", function () {
+            if (editFeature) {
+                // Grab updated attributes from the form.
+                const updated = app.featureform.getValues();
+
+                // Loop through updated attributes and assign
+                // the updated values to feature attributes.
+                Object.keys(updated).forEach(function (name) {
+                    editFeature.attributes[name] = updated[name];
+                });
+
+                // Setup the applyEdits parameter with updates.
+                const edits = {
+                    updateFeatures: [editFeature]
+                };
+                applyEditsToIncidents(edits);
+            }
+        });
+
+        // Check if the user clicked on the existing feature
+        selectExistingFeature();
+
+        // Listen for when a result is selected
+        app.searchWidgetSettings.on("select-result", function (event) {
+
+            // Access the template item's attributes from the event's
+            // template prototype.
+            attributes = {
+                ObjectID: 1,
+                DepArpt: "KATL",
+                MsgTime: Date.now(),
+                FltId: "UAL1"
+            };
+            unselectFeature();
+
+            // With the selected template item, listen for the view's click event and create feature
+            const handler =  document.getElementById('addPointButton').onclick = function () {
+
+                app.featureform.feature = null;
+
+                if (event.result.feature.geometry !== null) {
+                    var pointGeom = event.result.feature.geometry;
+
+
+                    // Create a new feature 
+                    editFeature = new Graphic({
+                        geometry: pointGeom,
+                        attributes: {
+                            "DepArpt": attributes.DepArpt
+                        }
+                    });
+
+                    // Setup the applyEdits parameter with adds.
+                    const edits = {
+                        addFeatures: [editFeature]
+                    };
+                    applyEditsToIncidents(edits);
+                } else {
+                    console.error("event.mapPoint is not defined");
+                }
+            };
+        });
+
+        function applyEditsToIncidents(params) {
+            // unselectFeature();
+            layer.applyEdits(params).then(function (editsResult) {
+                // Get the objectId of the newly added feature.
+                // Call selectFeature function to highlight the new feature.
+                if (editsResult.addFeatureResults.length > 0 || editsResult.updateFeatureResults.length > 0) {
+                    unselectFeature();
+                    let objectId;
+                    if (editsResult.addFeatureResults.length > 0) {
+                        objectId = editsResult.addFeatureResults[0].objectId;
+                    }
+                    else {
+                        app.featureform.feature = null;
+                        objectId = editsResult.updateFeatureResults[0].objectId;
+                    }
+                    selectFeature(objectId);
+                    if (addFeatureDiv.style.display === "block") {
+                        toggleEditingDivs("none", "block");
+                    }
+                }
+                    // show off if user deleted a feature
+                else if (editsResult.deleteFeatureResults.length > 0) {
+                    toggleEditingDivs("block", "none");
+                }
+            })
+            .catch(function (error) {
+                console.log("===============================================");
+                console.error("[ applyEdits ] FAILURE: ", error.code, error.name,
+                  error.message);
+                console.log("error = ", error);
+            });
+        }
+        // Check if a user clicked on an incident feature.
+        function selectExistingFeature() {
+            app.mapView.on("click", function (event) {
+                // clear previous feature selection
+                unselectFeature();
+                             
+                app.mapView.hitTest(event).then(function (response) {
+                    // If a user clicks on an incident feature, select the feature.
+                   
+                    if (response.results.length === 0) {
+                        toggleEditingDivs("block", "none");
+                    }
+                    else if (response.results[0].graphic && response.results[0].graphic.layer.id == "localisation") {
+
+                        if (addFeatureDiv.style.display === "block") {
+                            toggleEditingDivs("none", "block");
+                        }
+                        selectFeature(response.results[0].graphic.attributes[layer.objectIdField]);
+                       
+                    }
+                });
+                
+            });
+        }
+        // Highlights the clicked feature and display
+        // the feature form with the incident's attributes.
+        function selectFeature(objectId) {
+
+            // query feature from the server
+            layer.queryFeatures({
+                objectIds: [objectId],
+                outFields: ["*"],
+                returnGeometry: true
+            }).then(function (results) {
+                
+                if (results.features.length > 0) {
+                    editFeature = results.features[0];
+
+                    // display the attributes of selected feature in the form
+                    app.featureform.feature = editFeature;
+                    // highlight the feature on the view
+                    app.mapView.whenLayerView(editFeature.layer).then(function (layerView) {
+                        
+                        highlight = layerView.highlight(editFeature);
+                    });
+                }
+            });
+        }
+        // input boxes for the attribute editing
+        const addFeatureDiv = document.getElementById("addFeatureDiv");
+        const attributeEditing = document.getElementById("featureUpdateDiv");
+
+        // Controls visibility of addFeature or attributeEditing divs
+        function toggleEditingDivs(addDiv, attributesDiv) {
+            addFeatureDiv.style.display = addDiv;
+            attributeEditing.style.display = attributesDiv;
+
+            document.getElementById("updateInstructionDiv").style.display = addDiv;
+        }
+        // Remove the feature highlight and remove attributes
+        // from the feature form.
+        function unselectFeature() {
+            if (highlight) {
+                highlight.remove();
+            }
+        }
+        // Update attributes of the selected feature.
+        document.getElementById("btnUpdate").onclick = function () {
+            // Fires feature form's submit event.
+            app.featureform.submit();
+        }
+        // Delete the selected feature. ApplyEdits is called
+        // with the selected feature to be deleted.
+        document.getElementById("btnDelete").onclick = function () {
+            // setup the applyEdits parameter with deletes.
+            const edits = {
+                deleteFeatures: [editFeature]
+            };
+
+            applyEditsToIncidents(edits);
+        }
+
+        //delete sample
+        function deleteSample() {
+
+            selectFeature(1);
+
+            const edits = {
+                deleteFeatures: [editFeature]
+            };
+
+            applyEditsToIncidents(edits);
+        }
+    }
+
 
 });

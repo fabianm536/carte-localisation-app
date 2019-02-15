@@ -936,6 +936,7 @@ body {
 .calcite-panels .panel-body {
     padding: 15px;
     width: 350px;
+    height: 500px;
     min-height: 50px;
     max-height: 500px;
     font-size: 13px;
