@@ -689,9 +689,9 @@ require([
              geometry: pointGeom,
              attributes: {
                  ObjectID: 1,
-                 DepArpt: "Sample",
-                 MsgTime: Date.now(),
-                 FltId: "UAL1"
+                 toponyme: "Sample",
+                 date: Date.now(),
+                 client: "UAL1"
              }
          }
             ];
@@ -703,16 +703,52 @@ require([
                     type: "oid"
                 },
                 {
-                    name: "DepArpt",
-                    alias: "DepArpt",
+                    name: "toponyme",
+                    alias: "toponyme",
                     type: "string"
                 }, {
-                    name: "MsgTime",
-                    alias: "MsgTime",
+                    name: "date",
+                    alias: "date",
                     type: "date"
                 }, {
-                    name: "FltId",
-                    alias: "FltId",
+                    name: "client",
+                    alias: "client",
+                    type: "string"
+                }, {
+                    name: "rapport",
+                    alias: "rapport",
+                    type: "string"
+                }, {
+                    name: "titre",
+                    alias: "titre",
+                    type: "string"
+                }, {
+                    name: "n_affaire",
+                    alias: "n_affaire",
+                    type: "string"
+                }, {
+                    name: "theme",
+                    alias: "theme",
+                    type: "string"
+                }, {
+                    name: "prestation",
+                    alias: "prestation",
+                    type: "string"
+                }, {
+                    name: "type_clien",
+                    alias: "type_clien",
+                    type: "string"
+                }, {
+                    name: "filiere",
+                    alias: "filiere",
+                    type: "string"
+                }, {
+                    name: "id_aff",
+                    alias: "id_aff",
+                    type: "string"
+                }, {
+                    name: "titre_aff",
+                    alias: "titre_aff",
                     type: "string"
                 }];
 
@@ -752,21 +788,47 @@ require([
             layer: layer,
             fieldConfig: [
                   {
-                      name: "ObjectID",
-                      label: "ObjectID"
+                      name: "toponyme",
+                      label: "Toponyme"
                   },
                   {
-                      name: "DepArpt",
-                      label: "Choose DepArpt"
-                  },
-                  {
-                      name: "FltId",
-                      label: "Describe the FltId"
+                      name: "client",
+                      label: "Client"
+                  }, {
+                      name: "date",
+                      label: "Date"
+                  }, {
+                      name: "rapport",
+                      label: "Rapport"
+                  }, {
+                      name: "titre",
+                      label: "Titre"
+                  }, {
+                      name: "n_affaire",
+                      label: "Nombre Affaire"
+                  }, {
+                      name: "theme",
+                      label: "Theme"
+                  }, {
+                      name: "prestation",
+                      label: "Prestation"
+                  }, {
+                      name: "type_clien",
+                      label: "Type Client"
+                  }, {
+                      name: "filiere",
+                      label: "Filiere"
+                  }, {
+                      name: "id_aff",
+                      label: "Id Affaire"
+                  }, {
+                      name: "titre_aff",
+                      label: "Titre Affaire"
                   }
                 ]
         });
         //delete point sample
-        deleteSample();
+       // deleteSample();
        
 
         // Listen to the feature form's submit event.
@@ -795,15 +857,16 @@ require([
 
         // Listen for when a result is selected
         app.searchWidgetSettings.on("select-result", function (event) {
+            
 
             // Access the template item's attributes from the event's
             // template prototype.
             attributes = {
                 ObjectID: 1,
-                DepArpt: "KATL",
-                MsgTime: Date.now(),
-                FltId: "UAL1"
+                toponyme: event.result.name,
+                date: Date.now()
             };
+
             unselectFeature();
 
             // With the selected template item, listen for the view's click event and create feature
@@ -818,9 +881,7 @@ require([
                     // Create a new feature 
                     editFeature = new Graphic({
                         geometry: pointGeom,
-                        attributes: {
-                            "DepArpt": attributes.DepArpt
-                        }
+                        attributes: attributes
                     });
 
                     // Setup the applyEdits parameter with adds.
@@ -948,6 +1009,48 @@ require([
             applyEditsToIncidents(edits);
         }
 
+        $("#btnAddBD").click(function () {
+            // add point to database
+            
+            
+            var objForm = app.featureform.getValues();
+            var latForm = app.featureform.feature.geometry.latitude;
+            var longForm = app.featureform.feature.geometry.longitude;
+            
+            //fields
+            var keys = Object.keys(objForm);
+            var fields = "";
+            for (var i = 1; i < keys.length; i++) {
+                fields=fields+keys[i]+",";
+            }
+            fields = fields+"lat,long";
+
+            //values
+            var valObj = Object.values(objForm);
+            var values = "";
+            for (var i = 1; i < valObj.length; i++) {
+                if (i !== 2) {
+                    values = values + "'" + valObj[i] + "'" + ",";
+                } else {
+                    values = values + "to_timestamp(" + valObj[i] / 1000 + ")" + ",";
+                }
+            }
+            values = values +latForm + ", " + longForm;
+
+            var resultData = $.ajax({
+                url: 'php/postData.php',
+                data: 'fields=' + fields + '&values=' + values,
+                success: function (result) {
+                    alert(result)
+                },
+                error: function (xhr) {
+                    alert(xhr.statusText)
+                }
+
+            });
+
+        });
+
         //delete sample
         function deleteSample() {
 
@@ -959,7 +1062,10 @@ require([
 
             applyEditsToIncidents(edits);
         }
+
+
     }
+
 
 
 });
