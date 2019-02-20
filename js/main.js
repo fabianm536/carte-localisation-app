@@ -8,6 +8,8 @@ require([
   "esri/layers/VectorTileLayer",
   "esri/layers/FeatureLayer",
   "esri/geometry/Point",
+  "esri/geometry/SpatialReference",
+  "esri/geometry/coordinateFormatter",
   "esri/views/MapView",
   "esri/views/SceneView",
   "esri/Graphic",
@@ -43,7 +45,7 @@ require([
 
   // Dojo
   "dojo/domReady!"
-], function (Map, Basemap, Webmap, VectorTileLayer,FeatureLayer,Point, MapView, SceneView, Graphic,Search,ScaleBar, Popup, Home, Legend, ColorPicker,Expand,
+], function (Map, Basemap, Webmap, VectorTileLayer, FeatureLayer, Point, SpatialReference, coordinateFormatter,MapView, SceneView, Graphic, Search, ScaleBar, Popup, Home, Legend, ColorPicker, Expand,
         FeatureForm, FeatureTemplates, watchUtils, PictureMarkerSymbol, query, domClass, dom, on, CalciteMapsSettings, CalciteMapsArcGISSupport, PanelSettings
         ) {
 
@@ -827,9 +829,7 @@ require([
                   }
                 ]
         });
-        //delete point sample
-       // deleteSample();
-       
+
 
         // Listen to the feature form's submit event.
         // Update feature attributes shown in the form.
@@ -870,7 +870,7 @@ require([
             unselectFeature();
 
             // With the selected template item, listen for the view's click event and create feature
-            const handler =  document.getElementById('addPointButton').onclick = function () {
+            $('#addPointButton').click(function () {
 
                 app.featureform.feature = null;
 
@@ -889,10 +889,86 @@ require([
                         addFeatures: [editFeature]
                     };
                     applyEditsToIncidents(edits);
+
+
                 } else {
                     console.error("event.mapPoint is not defined");
                 }
+            });
+        });
+
+        // With the lat long data click event and create feature
+        $("#geoform").submit(function (event) {
+
+            event.preventDefault();
+            app.featureform.feature = null;
+            var latlon = $('#lat').val() + " " + $('#long').val();
+            var sr = new SpatialReference($('#epsg').val());
+
+            coordinateFormatter.load().then(function () {
+                var point = coordinateFormatter.fromLatitudeLongitude(latlon, sr);
+
+                console.log(latlon, point);
+
+                if (point !== null) {
+                    //add attributes by default
+                    attributes = {
+                        ObjectID: 1,
+                        toponyme: "result1",
+                        date: Date.now()
+                    };
+                    // Create a new feature 
+                    editFeature = new Graphic({
+                        geometry: point,
+                        attributes: attributes
+                    });
+
+                    // Setup the applyEdits parameter with adds.
+                    const edits = {
+                        addFeatures: [editFeature]
+                    };
+
+                    applyEditsToIncidents(edits);
+                }
+
+            });
+        });
+        // With the XY data click event and create feature
+        $("#xyform").submit(function (event) {
+
+            event.preventDefault();
+            app.featureform.feature = null;
+
+            var x = $('#coordx').val();
+            var y = $('#coordy').val();
+            var sr = new SpatialReference($('#epsg2').val());
+
+            //create point from xy data
+            var pointXY = new Point({
+                x: x,
+                y: y,
+                spatialReference: sr
+            });
+            //add attributes by default
+            attributes = {
+                ObjectID: 1,
+                toponyme: "result1",
+                date: Date.now()
             };
+            // Create a new feature 
+            editFeature = new Graphic({
+                geometry: pointXY,
+                attributes: attributes
+            });
+
+            // Setup the applyEdits parameter with adds.
+            const edits = {
+                addFeatures: [editFeature]
+            };
+
+            applyEditsToIncidents(edits);
+
+
         });
 
         function applyEditsToIncidents(params) {
@@ -926,6 +1002,7 @@ require([
                   error.message);
                 console.log("error = ", error);
             });
+
         }
         // Check if a user clicked on an incident feature.
         function selectExistingFeature() {
@@ -971,6 +1048,8 @@ require([
                     app.mapView.whenLayerView(editFeature.layer).then(function (layerView) {
                         
                         highlight = layerView.highlight(editFeature);
+                        //zoomto point selected
+                        app.mapView.goTo(editFeature.geometry);
                     });
                 }
             });
@@ -994,20 +1073,20 @@ require([
             }
         }
         // Update attributes of the selected feature.
-        document.getElementById("btnUpdate").onclick = function () {
+        $("#btnUpdate").click(function () {
             // Fires feature form's submit event.
             app.featureform.submit();
-        }
+        });
         // Delete the selected feature. ApplyEdits is called
         // with the selected feature to be deleted.
-        document.getElementById("btnDelete").onclick = function () {
+        $("#btnDelete").click(function () {
             // setup the applyEdits parameter with deletes.
             const edits = {
                 deleteFeatures: [editFeature]
             };
 
             applyEditsToIncidents(edits);
-        }
+        });
 
         $("#btnAddBD").click(function () {
             // add point to database
@@ -1050,20 +1129,6 @@ require([
             });
 
         });
-
-        //delete sample
-        function deleteSample() {
-
-            selectFeature(1);
-
-            const edits = {
-                deleteFeatures: [editFeature]
-            };
-
-            applyEditsToIncidents(edits);
-        }
-
-
     }
 
 

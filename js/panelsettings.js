@@ -297,7 +297,28 @@ function(Zoom, Home, Locate, Compass, BasemapToggle, NavToggle, Search, Legend, 
     //
     //--------------------------------------------------------------------------
 
-    _initUIHandlers: function() {
+    _initUIHandlers: function () {
+
+        //--------------------------------------------------------------------
+        // Tab - XY
+        //--------------------------------------------------------------------
+
+        query("#refsystem").on("change", function (e) {
+            var style = e.target.value;
+            // Update UI
+            query("#geographicCollapse").removeClass("in");
+            query("#projectedCollapse").removeClass("in");
+            switch (style) {
+                // Show geographic
+                case "geographic":
+                    query("#geographicCollapse").collapse("show");
+                    break;
+                    // Show projected
+                case "projected":
+                    query("#projectedCollapse").collapse("show");
+
+            }
+        });
 
       //--------------------------------------------------------------------
       // Tab - Title

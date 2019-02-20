@@ -264,16 +264,16 @@
 
             <div id="headingSettings" class="panel-heading">
                 <div class="panel-title">
-                    <a class="panel-toggle" role="button" data-toggle="collapse" href="#collapsePoint" aria-expanded="true" aria-controls="collapsePoint"><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span><span class="panel-label">Point</span></a>
-
-                    <a class="panel-close" role="button" data-toggle="collapse" tabindex="0" href="#panelPoint"><span class="esri-icon esri-icon-close" aria-hidden="true"></span></a>
+                  <a class="panel-toggle" role="button" data-toggle="collapse" href="#collapsePoint" aria-expanded="true" aria-controls="collapsePoint"><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span><span class="panel-label">Point</span></a>
+                  <a class="panel-close" role="button" data-toggle="collapse" tabindex="0" href="#panelPoint"><span class="esri-icon esri-icon-close" aria-hidden="true"></span></a>
                 </div>
             </div>
 
             <div id="collapsePoint" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingPoint">
-                <div class="panel-body">
+                <div class="panel-body" style="height: 700px;max-height: 700px;">
                     <ul class="nav nav-tabs" role="tablist">
-                        <li role="presentation"><a href="#map" aria-controls="map" role="tab" data-toggle="tab">Map</a></li>
+                        <li role="presentation" class="active"><a href="#map" aria-controls="map" role="tab" data-toggle="tab">Map</a></li>
+                        <li role="presentation"><a href="#xy" aria-controls="xy" role="tab" data-toggle="tab">XY</a></li>
                     </ul>
 
                     <div class="tab-content">
@@ -295,33 +295,111 @@
                                     <button id="addPointButton" type="button" class="btn btn-primary btn-block">Add point to map</button>
                                 </div>
                             </div>
-                            <div id="editArea" class="editArea-container">
-                                <div id="addFeatureDiv" style="display:block;">
-                                    <h3 class="list-heading">Report Project</h3>
-                                </div>
-                                <div id="featureUpdateDiv" style="display:none; margin-top: 1em;">
-                                    <h3 class="list-heading">Enter the project information</h3>
-                                    <div id="attributeArea">
-                                        <div id="formDiv"></div>
-                                        <input type="button" class="btn btn-primary btn-block" value="Update project info" id="btnUpdate" style="color: #fff;">
-                                       
-                                    </div>
-                                    <br />
-                                    <div id="deleteArea">
-                                        <input type="button" class="btn btn-primary btn-block" value="Delete project" id="btnDelete" style="color: #fff;">
-                                    </div>
-                                    <br />
-                                    <div id="addBDArea">
-                                        <input type="button" class="btn btn-primary btn-block" value="Add project to Data Base" id="btnAddBD" style="color: #fff; background-color: #008000; border-color: #286328; ">
+                        </div>
+
+                        <!-- Tab - XY -->
+
+                        <div role="tabpanel" class="tab-pane" id="xy">
+
+ 
+                            <div class="form-horizontal calcite-form-padding">
+                                <div class="calcite-form-title">Set the location</div>
+                                <div class="form-group">
+                                    <label for="refsystem" class="col-xs-4 control-label">Ref System</label>
+                                    <div class="col-xs-8">
+                                        <select id="refsystem" class="form-control">
+                                            <option value="geographic">Geographic</option>
+                                            <option value="projected">Projected</option>
+                                        </select>
                                     </div>
                                 </div>
-                                <div id="updateInstructionDiv" style="text-align:center; display:block">
-                                    <p id="selectHeader">Select an project to edit or delete.</p>
-                                </div>
+                                <form id="geoform">
+
+                                    <div id="geographicCollapse" class="form-group collapse in">
+                                        <div class="form-group">
+                                            <label for="epsg" class="col-xs-3 control-label"><a target="_blank" href="http://www.spatialreference.org/ref/epsg/">EPSG</a></label>
+                                            <div class="col-xs-9">
+                                                <input list="refsystem-datalist" id="epsg" value="" class="form-control" required>
+                                                <datalist id="refsystem-datalist">
+                                                    <option value="4326">WGS84(4326)</option>
+                                                    <option value="3857">Web Mercator(3857)</option>
+                                                </datalist>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="lat" class="col-xs-3 control-label">Latitude</label>
+                                            <div class="col-xs-9">
+                                                <input type="text" class="form-control" id="lat" placeholder="DD: 55.94420083 DMS: 55 56 39.123N" required>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="long" class="col-xs-3 control-label">Longitude</label>
+                                            <div class="col-xs-9">
+                                                <input type="text" class="form-control" id="long" placeholder="DD: -3.16194444 DMS: 003 09 43.034W" required>
+                                            </div>
+                                        </div>
+                                        <button id="geoButton" type="submit" class="btn btn-primary">Add point to map</button>
+                                    </div>
+                                </form>
+
+                                <form id="xyform">
+                                    <div id="projectedCollapse" class="form-group collapse">
+                                        <div class="form-group">
+                                            <label for="epsg2" class="col-xs-3 control-label"><a target="_blank" href="http://www.spatialreference.org/ref/epsg/">EPSG</a></label>
+                                            <div class="col-xs-9">
+                                                <input list="refsystem-datalist2" id="epsg2" value="" class="form-control" required>
+                                                <datalist id="refsystem-datalist2">
+                                                    <option value="102100">WebMercator(102100)</option>
+                                                </datalist>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="coordx" class="col-xs-3 control-label">Coord. X</label>
+                                            <div class="col-xs-9">
+                                                <input type="number" step=any class="form-control" id="coordx" required>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="coordy" class="col-xs-3 control-label">Coord. Y</label>
+                                            <div class="col-xs-9">
+                                                <input type="number" step=any class="form-control" id="coordy" required>
+                                            </div>
+                                        </div>
+                                        <button id="xyButton" type="submit" class="btn btn-primary">Add point to map</button>
+                                    </div>
+                                </form>
+                            
                             </div>
+                        
+                                
+
                         </div>
 
                     </div><!-- /.tab-content -->
+                    <div id="editArea" class="editArea-container">
+                        <div id="addFeatureDiv" style="display:block;">
+                            <h3 class="list-heading">Report Project</h3>
+                        </div>
+                        <div id="featureUpdateDiv" style="display:none; margin-top: 1em;">
+                            <h3 class="list-heading">Enter the project information</h3>
+                            <div id="attributeArea">
+                                <div id="formDiv"></div>
+                                <input type="button" class="btn btn-primary btn-block" value="Update project info" id="btnUpdate" style="color: #fff;">
+
+                            </div>
+                            <br />
+                            <div id="deleteArea">
+                                <input type="button" class="btn btn-primary btn-block" value="Delete project" id="btnDelete" style="color: #fff;">
+                            </div>
+                            <br />
+                            <div id="addBDArea">
+                                <input type="button" class="btn btn-primary btn-block" value="Add project to Data Base" id="btnAddBD" style="color: #fff; background-color: #008000; border-color: #286328; ">
+                            </div>
+                        </div>
+                        <div id="updateInstructionDiv" style="text-align:center; display:block">
+                            <p id="selectHeader">Select an project to edit or delete.</p>
+                        </div>
+                    </div>
                 </div><!-- /.panel-body -->
             </div><!-- /.panel-collapse -->
         </div><!-- /.panel -->
@@ -831,6 +909,7 @@
             </div><!-- /.panel-collapse -->
         </div><!-- /.panel -->
     </div> <!-- /.calcite-panels group-->
+
 
 
     <script type="text/javascript">
