@@ -7,6 +7,7 @@ require([
   "esri/WebMap",
   "esri/layers/VectorTileLayer",
   "esri/layers/FeatureLayer",
+  "esri/layers/CSVLayer",
   "esri/geometry/Point",
   "esri/geometry/SpatialReference",
   "esri/geometry/coordinateFormatter",
@@ -23,6 +24,7 @@ require([
   "esri/widgets/FeatureForm",
   "esri/widgets/FeatureTemplates",
   "esri/core/watchUtils",
+  "esri/core/urlUtils",
   "esri/symbols/PictureMarkerSymbol",
   "dojo/query",
   "dojo/dom-class",
@@ -45,8 +47,8 @@ require([
 
   // Dojo
   "dojo/domReady!"
-], function (Map, Basemap, Webmap, VectorTileLayer, FeatureLayer, Point, SpatialReference, coordinateFormatter,MapView, SceneView, Graphic, Search, ScaleBar, Popup, Home, Legend, ColorPicker, Expand,
-        FeatureForm, FeatureTemplates, watchUtils, PictureMarkerSymbol, query, domClass, dom, on, CalciteMapsSettings, CalciteMapsArcGISSupport, PanelSettings
+], function (Map, Basemap, Webmap, VectorTileLayer, FeatureLayer, CSVLayer,Point, SpatialReference, coordinateFormatter, MapView, SceneView, Graphic, Search, ScaleBar, Popup, Home, Legend, ColorPicker, Expand,
+        FeatureForm, FeatureTemplates, watchUtils,urlUtils, PictureMarkerSymbol, query, domClass, dom, on, CalciteMapsSettings, CalciteMapsArcGISSupport, PanelSettings
         ) {
 
     let editFeature, highlight;
@@ -229,7 +231,11 @@ require([
     initializeWidgets(app3);
 
     //add search point
-    addPoint(app3);
+    addPoint(app3, 1.393, 46.525);
+
+    //export map image
+    exportMapPNG(app3);
+    console.log("hola");
 
     //synchronizeMaps
     synchronizeMap(app, app2);
@@ -673,112 +679,116 @@ require([
 
            // Add the graphics to the view's graphics layer
            app.mapView.graphics.add(polygonGraphic);
-       }
+       } 
     }
 
 
     //----------------------------------
     // add Point 
     //----------------------------------
-    function addPoint(app) {
-        
+    function addPoint(app, x, y, sr) {
+
         var pointGeom = new Point({
-            x: 1.393,
-            y: 46.525
+            x: x,
+            y: y,
+            spatialReference: sr
         });
-            var features = [
-         {
-             geometry: pointGeom,
-             attributes: {
-                 ObjectID: 1,
-                 toponyme: "Sample",
-                 date: Date.now(),
-                 client: "UAL1"
-             }
+        // variable object id
+        var id = Date.now().toString();
+        var oid = parseInt(id.substr(id.length - 3));
+
+        var features = [
+     {
+         geometry: pointGeom,
+         attributes: {
+             ObjectID: oid,
+             toponyme: "Sample",
+             date: Date.now(),
+             client: "UAL1"
          }
-            ];
+     }
+        ];
 
-            var fields = [
-                {
-                    name: "ObjectID",
-                    alias: "ObjectID",
-                    type: "oid"
-                },
-                {
-                    name: "toponyme",
-                    alias: "toponyme",
-                    type: "string"
-                }, {
-                    name: "date",
-                    alias: "date",
-                    type: "date"
-                }, {
-                    name: "client",
-                    alias: "client",
-                    type: "string"
-                }, {
-                    name: "rapport",
-                    alias: "rapport",
-                    type: "string"
-                }, {
-                    name: "titre",
-                    alias: "titre",
-                    type: "string"
-                }, {
-                    name: "n_affaire",
-                    alias: "n_affaire",
-                    type: "string"
-                }, {
-                    name: "theme",
-                    alias: "theme",
-                    type: "string"
-                }, {
-                    name: "prestation",
-                    alias: "prestation",
-                    type: "string"
-                }, {
-                    name: "type_clien",
-                    alias: "type_clien",
-                    type: "string"
-                }, {
-                    name: "filiere",
-                    alias: "filiere",
-                    type: "string"
-                }, {
-                    name: "id_aff",
-                    alias: "id_aff",
-                    type: "string"
-                }, {
-                    name: "titre_aff",
-                    alias: "titre_aff",
-                    type: "string"
-                }];
+        var fields = [
+            {
+                name: "ObjectID",
+                alias: "ObjectID",
+                type: "oid"
+            },
+            {
+                name: "toponyme",
+                alias: "toponyme",
+                type: "string"
+            }, {
+                name: "date",
+                alias: "date",
+                type: "date"
+            }, {
+                name: "client",
+                alias: "client",
+                type: "string"
+            }, {
+                name: "rapport",
+                alias: "rapport",
+                type: "string"
+            }, {
+                name: "titre",
+                alias: "titre",
+                type: "string"
+            }, {
+                name: "n_affaire",
+                alias: "n_affaire",
+                type: "string"
+            }, {
+                name: "theme",
+                alias: "theme",
+                type: "string"
+            }, {
+                name: "prestation",
+                alias: "prestation",
+                type: "string"
+            }, {
+                name: "type_clien",
+                alias: "type_clien",
+                type: "string"
+            }, {
+                name: "filiere",
+                alias: "filiere",
+                type: "string"
+            }, {
+                name: "id_aff",
+                alias: "id_aff",
+                type: "string"
+            }, {
+                name: "titre_aff",
+                alias: "titre_aff",
+                type: "string"
+            }];
 
-            var renderer = {
-                type: "simple", 
-                symbol: {
-                    type: "picture-marker",
-                    url: "img/pointIcon.png",
-                    width: "15px",
-                    height: "15px"
-                }
-            };
+        var renderer = {
+            type: "simple",
+            symbol: {
+                type: "picture-marker",
+                url: "img/pointIcon.png",
+                width: "15px",
+                height: "15px"
+            }
+        };
 
-            var layer = new FeatureLayer({
-                source: features,
-                fields: fields,
-                objectIdField: "ObjectID",
-                renderer: renderer,
-                id: "localisation"
-            });
+        var layer = new FeatureLayer({
+            source: features,
+            fields: fields,
+            objectIdField: "ObjectID",
+            renderer: renderer,
+            id: "localisation"
+        });
 
 
-                app.webmap.add(layer);
+        app.webmap.add(layer);
 
-                setFeatureForm(app, layer);
+        setFeatureForm(app, layer);
 
     }
-
 
     //----------------------------------
     // FeatureForm Widget
@@ -971,8 +981,94 @@ require([
 
         });
 
+
+        // With the CSV file data click event and create features
+
+            $("#fileform").submit(function (event) {
+                event.preventDefault();
+                app.featureform.feature = null;
+                var sr = $('#epsg3').val();
+                var formData = new FormData(this);
+                formData.append("epsg3", sr);
+
+                $.ajax({
+                    url: 'php/upload.php',
+                    data: formData,
+                    type: 'POST',
+                    contentType: false,
+                    cache: false,
+                    processData: false,
+                    success: function (returndata) {
+
+                        console.log(returndata);
+
+                        var res = JSON.parse(returndata);
+
+                        if (res.hasOwnProperty('messageError')) { alert(res.messageError) }
+                        else {
+
+                        var x = null;
+                        var y = null;
+
+                        for (r in res) {
+                            respoint = JSON.parse(res[r]);
+                            
+                            if (respoint.hasOwnProperty('x')) {x= respoint.x}
+                            else if (respoint.hasOwnProperty('longitude')) { x = respoint.longitude }
+                            else if (respoint.hasOwnProperty('Longitude')) { x = respoint.Longitude }
+                            else if (respoint.hasOwnProperty('long')) {x= respoint.long}
+                            else if (respoint.hasOwnProperty('X')) { x = respoint.X }
+                            else { messageError; }
+
+                            
+                            if (respoint.hasOwnProperty('y')) {y= respoint.y}
+                            else if (respoint.hasOwnProperty('latitude')) { y = respoint.latitude }
+                            else if (respoint.hasOwnProperty('Latitude')) { y = respoint.Latitude }
+                            else if (respoint.hasOwnProperty('lat')) { y = respoint.lat }
+                            else if (respoint.hasOwnProperty('Y')) { y = respoint.Y }
+                            else { alert("No field y, Y, latitude, Latitude or lat found"); }
+
+                                //create point from xy data
+                                var pointXY = new Point({
+                                    x: x,
+                                    y: y,
+                                    spatialReference: respoint.spatialReference
+                                });
+
+
+                                //add attributes by default
+                                // variable object id
+                                var id = Date.now().toString();
+                                var oid = parseInt(id.substr(id.length - 3));
+                                attributes = {
+                                    ObjectID: oid,
+                                    toponyme: "result1",
+                                    date: Date.now()
+                                };
+                                // Create a new feature 
+                                editFeature = new Graphic({
+                                    geometry: pointXY,
+                                    attributes: attributes
+                                });
+
+                                // Setup the applyEdits parameter with adds.
+                                const edits = {
+                                    addFeatures: [editFeature]
+                                };
+
+                                applyEditsToIncidents(edits);
+                            }
+                        
+                        }
+                    },
+                    error: function () {
+                        alert("error in ajax form submission");
+                    }
+                });
+            });
+
         function applyEditsToIncidents(params) {
-            // unselectFeature();
+             unselectFeature();
             layer.applyEdits(params).then(function (editsResult) {
                 // Get the objectId of the newly added feature.
                 // Call selectFeature function to highlight the new feature.
@@ -1090,7 +1186,7 @@ require([
 
         $("#btnAddBD").click(function () {
             // add point to database
-            
+            app.featureform.submit();
             
             var objForm = app.featureform.getValues();
             var latForm = app.featureform.feature.geometry.latitude;
@@ -1129,6 +1225,22 @@ require([
             });
 
         });
+    }
+
+    function exportMapPNG(app) {
+
+        var options = {
+            width: 200,
+            height: 200
+        };
+
+        console.log(app);
+
+        app.mapView.takeScreenshot(options).then(function (screenshot) {
+            var imageElement = screenshot.dataUrl;
+            console.log(imageElement);
+        });
+
     }
 
 

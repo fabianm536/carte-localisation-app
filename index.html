@@ -10,9 +10,6 @@
   <link rel="icon" href="img/icon.png">
   <title>Carte de localisation - Fugro</title>
 
-  <!-- Bootstrap - For testing only -->
-  <!--link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"-->
-
   <!-- Calcite Maps Bootstrap -->
   <link rel="stylesheet" href="dist/css/calcite-maps-bootstrap-v0.10.css">
 
@@ -20,8 +17,7 @@
   <link rel="stylesheet" href="dist/css/calcite-maps-arcgis-4.x.min-v0.10.css">
   
   <!-- ArcGIS JS 4.x -->
-  <link rel="stylesheet" href="https://js.arcgis.com/4.10/esri/css/main.css">
-  <!--link rel="stylesheet" href="../../dist/css/arcgis/themes/light/main.css"-->
+  <link rel="stylesheet" href="arcgis/4.10/esri/css/main.css">
 
   <!-- jQuery 4.x -->
   <script src="js/jquery-3.1.1.min.js"></script>
@@ -274,6 +270,7 @@
                     <ul class="nav nav-tabs" role="tablist">
                         <li role="presentation" class="active"><a href="#map" aria-controls="map" role="tab" data-toggle="tab">Map</a></li>
                         <li role="presentation"><a href="#xy" aria-controls="xy" role="tab" data-toggle="tab">XY</a></li>
+                        <li role="presentation"><a href="#file" aria-controls="file" role="tab" data-toggle="tab">File</a></li>
                     </ul>
 
                     <div class="tab-content">
@@ -300,10 +297,10 @@
                         <!-- Tab - XY -->
 
                         <div role="tabpanel" class="tab-pane" id="xy">
-
+                            <div class="calcite-form-title">Set the location</div>
  
                             <div class="form-horizontal calcite-form-padding">
-                                <div class="calcite-form-title">Set the location</div>
+                                
                                 <div class="form-group">
                                     <label for="refsystem" class="col-xs-4 control-label">Ref System</label>
                                     <div class="col-xs-8">
@@ -319,7 +316,7 @@
                                         <div class="form-group">
                                             <label for="epsg" class="col-xs-3 control-label"><a target="_blank" href="http://www.spatialreference.org/ref/epsg/">EPSG</a></label>
                                             <div class="col-xs-9">
-                                                <input list="refsystem-datalist" id="epsg" value="" class="form-control" required>
+                                                <input list="refsystem-datalist" id="epsg" value="4326" class="form-control" required>
                                                 <datalist id="refsystem-datalist">
                                                     <option value="4326">WGS84(4326)</option>
                                                     <option value="3857">Web Mercator(3857)</option>
@@ -338,7 +335,12 @@
                                                 <input type="text" class="form-control" id="long" placeholder="DD: -3.16194444 DMS: 003 09 43.034W" required>
                                             </div>
                                         </div>
-                                        <button id="geoButton" type="submit" class="btn btn-primary">Add point to map</button>
+                                        <div class="form-group">
+                                            <div class="col-xs-9 col-xs-offset-3">
+                                                <button id="geoButton" type="submit" class="btn btn-primary btn-block">Add point to map</button>
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </form>
 
@@ -370,11 +372,41 @@
                                 </form>
                             
                             </div>
-                        
-                                
-
                         </div>
+                        <!-- Tab - File -->
 
+                        <div role="tabpanel" class="tab-pane" id="file">
+                            <div class="calcite-form-title">Set the location</div>
+
+                            <div class="form-horizontal calcite-form-padding">
+
+                                <form id="fileform" method="post" enctype="multipart/form-data">
+                                    <div class="form-group">
+                                        <label for="long" class="col-xs-3 control-label">File</label>
+                                        <div class="col-xs-9" style="margin-top: 5px;">
+                                            <input type="file" name="fileToUpload" id="fileToUpload" class="custom-file-input" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="epsg3" class="col-xs-3 control-label"><a target="_blank" href="http://www.spatialreference.org/ref/epsg/">EPSG</a></label>
+                                        <div class="col-xs-9">
+                                            <input list="refsystem-datalist3" id="epsg3" value="4326" class="form-control" required>
+                                            <datalist id="refsystem-datalist3">
+                                                <option value="4326">WGS84(4326)</option>
+                                                <option value="102100">WebMercator(102100)</option>
+                                            </datalist>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-xs-9 col-xs-offset-3">
+                                            <button type="submit" value="Upload file" name="submit" class="btn btn-primary btn-block">Add file points to map</button>
+                                        </div>
+                                    </div>
+                                </form>
+
+
+</div>
+                        </div>
                     </div><!-- /.tab-content -->
                     <div id="editArea" class="editArea-container">
                         <div id="addFeatureDiv" style="display:block;">
@@ -934,8 +966,7 @@
     </script>
 
     <!-- ArcGIS JS 4.x -->
-    <script src="https://js.arcgis.com/4.10/"></script>
-
+    <script src="arcgis/4.10/dojo/dojo.js"></script>
     <script src="js/main.js"></script>
 
 </body>
