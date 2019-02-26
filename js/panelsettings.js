@@ -594,7 +594,7 @@ function(Zoom, Home, Locate, Compass, BasemapToggle, NavToggle, Search, Legend, 
       query("#settingsPositionSceneWidget").on("change", function(e) {
         var name = query("#settingsSceneWidget")[0].value,
           position = e.target.value;
-        _this.setWidgetPosition(_this.app.sceneView, name, position);
+       // _this.setWidgetPosition(_this.app.sceneView, name, position);
       });
 
       query("#settingsPopup").on("change", function(e){
@@ -602,7 +602,7 @@ function(Zoom, Home, Locate, Compass, BasemapToggle, NavToggle, Search, Legend, 
           position: e.target.value
         }
         _this.setPopupDock(_this.app.mapView, popupOptions);
-        _this.setPopupDock(_this.app.sceneView, popupOptions);
+        //_this.setPopupDock(_this.app.sceneView, popupOptions);
       });
 
       query("#settingsPanel").on("change", function(e) {
@@ -625,7 +625,7 @@ function(Zoom, Home, Locate, Compass, BasemapToggle, NavToggle, Search, Legend, 
           var padding = eval("("+str+")");
           if (padding) {
             _this.app.mapView.padding = padding;
-            _this.app.sceneView.padding = padding;
+            //_this.app.sceneView.padding = padding;
           }
         }
       });
@@ -832,7 +832,7 @@ function(Zoom, Home, Locate, Compass, BasemapToggle, NavToggle, Search, Legend, 
         .then(function(map){
           _this.app.webmap = map;
           _this.app.mapView.map = map;
-          _this.app.sceneView.map = map;
+          //_this.app.sceneView.map = map;
         }, function(error){
           _this.showErrorLoadingLayer("Sorry, the webmap could not be loaded. Check the ID.");
         });
@@ -856,10 +856,10 @@ function(Zoom, Home, Locate, Compass, BasemapToggle, NavToggle, Search, Legend, 
       _this.setPaddingUI(layout.viewPadding); //update UI
       if (layout.zoomPosition === "calcite-zoom-top-right") {
         _this.setWidgetPosition(_this.app.mapView, "zoom", "top-right");
-        _this.setWidgetPosition(_this.app.sceneView, "zoom", "top-right");
+        //_this.setWidgetPosition(_this.app.sceneView, "zoom", "top-right");
       } else {
         _this.setWidgetPosition(_this.app.mapView, "zoom", "top-left");
-        _this.setWidgetPosition(_this.app.sceneView, "zoom", "top-left");
+       // _this.setWidgetPosition(_this.app.sceneView, "zoom", "top-left");
       }
     },
 
@@ -887,8 +887,8 @@ function(Zoom, Home, Locate, Compass, BasemapToggle, NavToggle, Search, Legend, 
       }
       _this.app.mapView.padding = viewPadding;
       _this.app.mapView.ui.padding = uiPadding;
-      _this.app.sceneView.padding = viewPadding;
-      _this.app.sceneView.ui.padding = uiPadding;
+      //_this.app.sceneView.padding = viewPadding;
+      //_this.app.sceneView.ui.padding = uiPadding;
     },
 
     setPaddingUI: function(viewPadding) {

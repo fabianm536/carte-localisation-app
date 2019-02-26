@@ -12,7 +12,6 @@ require([
   "esri/geometry/SpatialReference",
   "esri/geometry/coordinateFormatter",
   "esri/views/MapView",
-  "esri/views/SceneView",
   "esri/Graphic",
   "esri/widgets/Search",
   "esri/widgets/ScaleBar",
@@ -47,7 +46,7 @@ require([
 
   // Dojo
   "dojo/domReady!"
-], function (Map, Basemap, Webmap, VectorTileLayer, FeatureLayer, CSVLayer,Point, SpatialReference, coordinateFormatter, MapView, SceneView, Graphic, Search, ScaleBar, Popup, Home, Legend, ColorPicker, Expand,
+], function (Map, Basemap, Webmap, VectorTileLayer, FeatureLayer, CSVLayer,Point, SpatialReference, coordinateFormatter, MapView, Graphic, Search, ScaleBar, Popup, Home, Legend, ColorPicker, Expand,
         FeatureForm, FeatureTemplates, watchUtils,urlUtils, PictureMarkerSymbol, query, domClass, dom, on, CalciteMapsSettings, CalciteMapsArcGISSupport, PanelSettings
         ) {
 
@@ -60,8 +59,6 @@ require([
         mapDiv: "mapViewDiv",
         mapFL: null,
         vectorLayer: null,
-        sceneView: null,
-        sceneDiv: "sceneViewDiv",
         sceneFL: null,
         activeView: null,
         searchWidgetNav: null,
@@ -233,10 +230,6 @@ require([
     //add search point
     addPoint(app3, 1.393, 46.525);
 
-    //export map image
-    exportMapPNG(app3);
-    console.log("hola");
-
     //synchronizeMaps
     synchronizeMap(app, app2);
     synchronizeMap(app2, app3);
@@ -268,18 +261,6 @@ require([
 
         // Set active view
         app.activeView = app.mapView;
-
-        // 3D - SceneView
-        app.sceneView = new SceneView({
-            container: app.sceneDiv,
-            map: app.webmap,
-            zoom: app.zoom,
-            center: app.lonlat,
-            padding: app.padding,
-            ui: app.uiPadding,
-            popup: new Popup(app.popupOptions),
-            visible: false
-        });
 
         // Listen for view breakpoint changes and update control location
         app.mapView.watch("widthBreakpoint", function (newVal, oldVal) {
@@ -324,18 +305,6 @@ require([
         // Set active view
         app.activeView = app.mapView;
 
-        // 3D - SceneView
-        app.sceneView = new SceneView({
-            container: app.sceneDiv,
-            map: app.webmap,
-            zoom: app.zoom,
-            center: app.lonlat,
-            padding: app.padding,
-            ui: app.uiPadding,
-            popup: new Popup(app.popupOptions),
-            visible: false
-        });
-
         // Listen for view breakpoint changes and update control location
         app.mapView.watch("widthBreakpoint", function (newVal, oldVal) {
             function setPadding(newVal, oldVal) {
@@ -379,18 +348,6 @@ require([
         // Set active view
         app.activeView = app.mapView;
 
-        // 3D - SceneView
-        app.sceneView = new SceneView({
-            container: app.sceneDiv,
-            map: app.webmap,
-            zoom: app.zoom,
-            center: app.lonlat,
-            padding: app.padding,
-            ui: app.uiPadding,
-            popup: new Popup(app.popupOptions),
-            visible: false
-        });
-
         // Listen for view breakpoint changes and update control location
         app.mapView.watch("widthBreakpoint", function (newVal, oldVal) {
             function setPadding(newVal, oldVal) {
@@ -423,7 +380,7 @@ require([
         // Panel widgets
         app.panelSettings.setWidgetPosition(app.mapView, "legend", "top-left", 0, "legendDiv");
         app.panelSettings.setWidgetPosition(app.mapView, "layerlist", "top-left", 0, "layerlistDiv");
-        app.panelSettings.setWidgetPosition(app.mapView, "print", "top-left", 0, "printDiv");
+       // app.panelSettings.setWidgetPosition(app.mapView, "print", "top-left", 0, "printDiv");
 
     }
     //----------------------------------
@@ -1227,22 +1184,110 @@ require([
         });
     }
 
-    function exportMapPNG(app) {
+    
+   document.getElementById('printButton').addEventListener('click', function () {
 
-        var options = {
-            width: 200,
-            height: 200
-        };
+       var dataUrl1 = null;
+       var dataUrl2 = null;
+       var dataUrl3 = null;
 
-        console.log(app);
-
-        app.mapView.takeScreenshot(options).then(function (screenshot) {
-            var imageElement = screenshot.dataUrl;
-            console.log(imageElement);
+        app.mapView.when(function () {
+            var options = {
+                format: 'jpg',
+                quality: 100
+            };
+                app.mapView.takeScreenshot(options).then(function (screenshot) {
+                dataUrl1 = screenshot.dataUrl;
+            });
         });
 
+        app2.mapView.when(function () {
+            var options = {
+                format: 'jpg',
+                quality: 100
+            };
+            app2.mapView.takeScreenshot(options).then(function (screenshot) {
+                dataUrl2 = screenshot.dataUrl;
+            });
+        });
+
+        app3.mapView.when(function () {
+            var options = {
+                format: 'jpg',
+                quality: 100
+            };
+            app3.mapView.takeScreenshot(options).then(function (screenshot) {
+                dataUrl3 = screenshot.dataUrl;
+            });
+        });
+
+        var image1 = dataUrl1;
+        var base64ImageContent1 = image1.replace(/^data:image\/(png|jpeg);base64,/, "");
+        var blob1 = base64ToBlob(base64ImageContent1, 'image/jpg');
+
+        var image2 = dataUrl2;
+        var base64ImageContent2 = image2.replace(/^data:image\/(png|jpeg);base64,/, "");
+        var blob2 = base64ToBlob(base64ImageContent2, 'image/jpg');
+
+        var image3 = dataUrl3;
+        var base64ImageContent3 = image3.replace(/^data:image\/(png|jpeg);base64,/, "");
+        var blob3 = base64ToBlob(base64ImageContent3, 'image/jpg');
+
+        var formData = new FormData();
+        formData.append('picture1', blob1);
+        formData.append('picture2', blob2);
+        formData.append('picture3', blob3);
+
+        var request = new XMLHttpRequest();
+        request.open('POST', 'php/print.php', true);
+        request.responseType = 'blob';
+        request.send(formData);
+       
+        request.onload = function () {
+
+            // Only handle status code 200
+            if (request.status === 200) {
+                // Try to find out the filename from the content disposition `filename` value
+                var disposition = request.getResponseHeader('content-disposition');
+                var matches = /"([^"]*)"/.exec(disposition);
+                var filename = (matches != null && matches[1] ? matches[1] : 'file.pdf');
+
+                // The actual download
+                var blob = new Blob([request.response], { type: 'application/pdf' });
+                var link = document.createElement('a');
+                link.href = window.URL.createObjectURL(blob);
+                link.download = filename;
+
+                document.body.appendChild(link);
+
+                link.click();
+
+                document.body.removeChild(link);
+            }
+        };
+    });
+
+    //The base64 To Blob image from map
+    function base64ToBlob(base64, mime) {
+        mime = mime || '';
+        var sliceSize = 1024;
+        var byteChars = window.atob(base64);
+        var byteArrays = [];
+
+        for (var offset = 0, len = byteChars.length; offset < len; offset += sliceSize) {
+            var slice = byteChars.slice(offset, offset + sliceSize);
+
+            var byteNumbers = new Array(slice.length);
+            for (var i = 0; i < slice.length; i++) {
+                byteNumbers[i] = slice.charCodeAt(i);
+            }
+
+            var byteArray = new Uint8Array(byteNumbers);
+
+            byteArrays.push(byteArray);
+        }
+
+        return new Blob(byteArrays, { type: mime });
     }
-
-
 
 });

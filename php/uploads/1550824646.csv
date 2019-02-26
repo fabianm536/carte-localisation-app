@@ -1,5 +1,0 @@
-time,latitude,longitude,depth,mag,magType,nst,gap,dmin,rms,net,id,updated,place,type,horizontalError,depthError,magError,magNst,status,locationSource,magSource
-"2019-02-21T09:30:49.850Z,19.4015007,-155.2514954,1.04,2.66,ml,13,157,0.01317,0.26,hv,hv70820351,2019-02-21T09:36:32.050Z,""3km SSW of Volcano, Hawaii"",earthquake,0.63,0.66,0.18,3,automatic,hv,hv"
-"2019-02-21T08:52:20.630Z,52.3991,-168.539,28.9,4.2,mb,,183,1.897,1.18,us,us2000jl1p,2019-02-21T09:16:17.040Z,""63km SSE of Nikolski, Alaska"",earthquake,9,8.4,0.071,54,reviewed,us,us"
-"2019-02-21T08:52:03.720Z,13.4555,-89.7135,65.01,4.2,mb,,151,0.998,1.11,us,us2000jl1r,2019-02-21T09:28:40.688Z,""19km SE of Acajutla, El Salvador"",earthquake,7.7,16.3,0.104,26,reviewed,us,us"
-"2019-02-21T07:37:49.560Z,-20.8504,-70.6929,12.23,4.5,mb,,142,0.557,0.61,us,us2000jl0v,2019-02-21T07:55:14.040Z,""90km SW of Iquique, Chile"",earthquake,4.5,2.4,0.145,14,reviewed,us,us"
