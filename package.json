@@ -1,0 +1,16 @@
+{
+  "name": "localisation",
+  "version": "0.1.0",
+  "dependencies": {
+    "express": "4.13.3",
+    "multer": "1.1.0",
+    "pg": "^6.4.2"
+  },
+  "devDependencies": {
+    "should": "~7.1.0",
+    "mocha": "~2.3.3",
+    "supertest": "~1.1.0"
+  },
+  "author": "Fabian Molina <fabianm536@gmail.com>",
+  "description": "carte de localisation"
+}
