@@ -52,7 +52,7 @@ require([
 
     let editFeature, highlight;
 
-    app = {
+    app1 = {
         zoom: 2,
         lonlat: [1.393, 46.525],
         mapView: null,
@@ -97,7 +97,8 @@ require([
         scaleBar: null,
         panelSettings: null,
         pointSymbol: null,
-        featureform: null
+        featureform: null,
+        layers:[]
     }
     app2 = {
         zoom: 2,
@@ -146,12 +147,13 @@ require([
         scaleBar: null,
         panelSettings: null,
         pointSymbol: null,
-        featureform: null
+        featureform: null,
+        layers: []
     }
 
     app3 = {
-        zoom: 12,
-        lonlat: [1.393, 46.525],
+        zoom: 8,
+        lonlat: [3.98138, 43.67888],
         mapView: null,
         mapDiv: "mapViewDiv3",
         mapFL: null,
@@ -196,7 +198,8 @@ require([
         scaleBar: null,
         panelSettings: null,
         pointSymbol: null,
-        featureform: null
+        featureform: null,
+        layers: []
     }
 
 
@@ -204,10 +207,10 @@ require([
     // App
     //----------------------------------
 
-    initializeMapViews(app);
-    initializeAppUI(app);
-    initializeAppSettings(app);
-    initializeWidgets(app);
+    initializeMapViews(app1);
+    initializeAppUI(app1);
+    initializeAppSettings(app1);
+    initializeWidgets(app1);
 
     //----------------------------------
     // App2
@@ -228,10 +231,10 @@ require([
     initializeWidgets(app3);
 
     //add search point
-    addPoint(app3, 1.393, 46.525);
+    initPoint(app3, 3.98138, 43.67888);
 
     //synchronizeMaps
-    synchronizeMap(app, app2);
+    synchronizeMap(app1, app2);
     synchronizeMap(app2, app3);
 
     //----------------------------------
@@ -378,7 +381,7 @@ require([
         });
 
         // Panel widgets
-        app.panelSettings.setWidgetPosition(app.mapView, "legend", "top-left", 0, "legendDiv");
+        //app.panelSettings.setWidgetPosition(app.mapView, "legend", "top-left", 0, "legendDiv");
         app.panelSettings.setWidgetPosition(app.mapView, "layerlist", "top-left", 0, "layerlistDiv");
        // app.panelSettings.setWidgetPosition(app.mapView, "print", "top-left", 0, "printDiv");
 
@@ -635,6 +638,144 @@ require([
        } 
     }
 
+    //----------------------------------
+    // copy Layer 
+    //----------------------------------
+   
+    $('#syncButton').off("click").on("click", function () {
+
+        var layers = app3.webmap.layers.items;
+
+        var foundLayer =  app3.webmap.allLayers.find(function (layer) {
+            return layer.title === "Project";
+        });
+
+        console.log(foundLayer);
+
+        app1.webmap.removeAll();
+        app2.webmap.removeAll();
+
+        layers.forEach(function (lyr) {
+            addPoint(app2, lyr.source.items[0].geometry.x, lyr.source.items[0].geometry.y, lyr.source.items[0].geometry.spatialReference);
+            addPoint(app1, lyr.source.items[0].geometry.x, lyr.source.items[0].geometry.y, lyr.source.items[0].geometry.spatialReference);
+
+        });
+
+      
+
+
+
+    });
+    //----------------------------------
+    // init Point 
+    //----------------------------------
+    function initPoint(app, x, y, sr) {
+        addPoint(app, x, y, sr);
+    }
+
+    //----------------------------------
+    // Add Map Point 
+    //----------------------------------
+
+    // Listen for when a result is selected
+    app3.searchWidgetSettings.on("select-result", function (event) {
+
+        //off - on prevent event duplicated
+        $('#addPointButton').off("click").on("click", function () {
+
+            if (event.result.key !== null) {
+
+                addPoint(app3, event.result.feature.geometry.x, event.result.feature.geometry.y, event.result.feature.geometry.spatialReference);
+
+            } else {
+                console.error("event.mapPoint is not defined");
+            }
+
+        });
+
+
+    });
+
+    // With the lat long data click event and create feature
+    $("#geoform").submit(function (event) {
+
+        event.preventDefault();
+        var latlon = $('#lat').val() + " " + $('#long').val();
+        var sr = new SpatialReference($('#epsg').val());
+
+        coordinateFormatter.load().then(function () {
+            var point = coordinateFormatter.fromLatitudeLongitude(latlon, sr);
+
+            if (point !== null) {
+
+                addPoint(app3, point.x, point.y, point.spatialReference);
+            }
+
+        });
+
+        changeLayers();
+    });
+
+    // With the XY data click event and create feature
+    $("#xyform").submit(function (event) {
+
+        event.preventDefault();
+
+        var x = $('#coordx').val();
+        var y = $('#coordy').val();
+        var sr = new SpatialReference($('#epsg2').val());
+
+        addPoint(app3, x, y, sr);
+
+        changeLayers();
+
+
+    });
+
+
+    // With the CSV file data click event and create features
+
+    $("#fileform").submit(function (event) {
+
+        $("#status").empty().text("File is uploading...");
+        event.preventDefault();
+        var sr = JSON.parse('{ "wkid": ' + $('#epsg3').val() + '}');
+
+        $(this).ajaxSubmit({
+
+            error: function (xhr) {
+                status('Error: ' + xhr.status);
+            },
+
+            success: function (response) {
+
+                $("#status").empty().text("File uploaded");
+
+                var res = JSON.parse(response);
+                var x = null;
+                var y = null;
+                for (r in res) {
+                    if (res[r].hasOwnProperty('x')) { x = res[r].x }
+                    else if (res[r].hasOwnProperty('longitude')) { x = res[r].longitude }
+                    else if (res[r].hasOwnProperty('Longitude')) { x = res[r].Longitude }
+                    else if (res[r].hasOwnProperty('long')) { x = res[r].long }
+                    else if (res[r].hasOwnProperty('X')) { x = res[r].X }
+                    else { alert("No field x, X, longitude, Longitude or long found"); }
+
+                    if (res[r].hasOwnProperty('y')) { y = res[r].y }
+                    else if (res[r].hasOwnProperty('latitude')) { y = res[r].latitude }
+                    else if (res[r].hasOwnProperty('Latitude')) { y = res[r].Latitude }
+                    else if (res[r].hasOwnProperty('lat')) { y = res[r].lat }
+                    else if (res[r].hasOwnProperty('Y')) { y = res[r].Y }
+                    else { alert("No field y, Y, latitude, Latitude or lat found"); }
+
+                    addPoint(app3, x, y, sr);
+                }
+            }
+        });
+        return false;
+    });
+
 
     //----------------------------------
     // add Point 
@@ -729,6 +870,7 @@ require([
         };
 
         var layer = new FeatureLayer({
+            title: "Project" + oid,
             source: features,
             fields: fields,
             objectIdField: "ObjectID",
@@ -739,9 +881,43 @@ require([
 
         app.webmap.add(layer);
 
-        setFeatureForm(app, layer);
+        if (app === app3) {
 
+            setFeatureForm(app, layer);
+        }
+
+        //app.mapView.goTo(pointGeom);
+        
     }
+
+    //----------------------------------
+    // set Feature form by selected point 
+    //----------------------------------
+ 
+    app3.mapView.on("click", function (event) {
+
+            app3.mapView.hitTest(event).then(function (response) {
+                // If a user clicks on an incident feature, select the feature.
+                console.log(reponse);
+               // var layer = response.results[0].graphic.layer;
+                //setFeatureForm(app3, layer);
+               /* if (response.results.length === 0) {
+                    toggleEditingDivs("block", "none");
+                }
+                else if (response.results[0].graphic && response.results[0].graphic.layer.id == "localisation") {
+
+                    if (addFeatureDiv.style.display === "block") {
+                        toggleEditingDivs("none", "block");
+                    }
+                    selectFeature(response.results[0].graphic.attributes[layer.objectIdField]);
+
+                }*/
+            });
+
+        });
+
+
+
 
     //----------------------------------
     // FeatureForm Widget
@@ -818,193 +994,6 @@ require([
         // Check if the user clicked on the existing feature
         selectExistingFeature();
 
-        // Listen for when a result is selected
-        app.searchWidgetSettings.on("select-result", function (event) {
-
-            //off - on prevent event duplicated
-            $('#addPointButton').off("click").on("click", function () {
-
-                app.featureform.feature = null;
-
-                unselectFeature();
-
-                if (event.result.key !== null) {
-
-                    attributes = {
-                        ObjectID: 1,
-                        toponyme: event.result.name,
-                        date: Date.now()
-                    };
-
-                    var pointGeom = event.result.feature.geometry;
-
-                    // Create a new feature 
-                    editFeature = new Graphic({
-                        geometry: pointGeom,
-                        attributes: attributes
-                    });
-
-                    // Setup the applyEdits parameter with adds.
-                    const edits = {
-                        addFeatures: [editFeature]
-                    };
-
-                    applyEditsToIncidents(edits);
-
-                } else {
-                    console.error("event.mapPoint is not defined");
-                }
-
-            });
-
-
-        });
-
-
-        // With the lat long data click event and create feature
-        $("#geoform").submit(function (event) {
-
-            event.preventDefault();
-            app.featureform.feature = null;
-            var latlon = $('#lat').val() + " " + $('#long').val();
-            var sr = new SpatialReference($('#epsg').val());
-
-            coordinateFormatter.load().then(function () {
-                var point = coordinateFormatter.fromLatitudeLongitude(latlon, sr);
-
-                if (point !== null) {
-                    //add attributes by default
-                    attributes = {
-                        ObjectID: 1,
-                        toponyme: "result1",
-                        date: Date.now()
-                    };
-                    // Create a new feature 
-                    editFeature = new Graphic({
-                        geometry: point,
-                        attributes: attributes
-                    });
-
-                    // Setup the applyEdits parameter with adds.
-                    const edits = {
-                        addFeatures: [editFeature]
-                    };
-
-                    applyEditsToIncidents(edits);
-                }
-
-            });
-        });
-
-        // With the XY data click event and create feature
-        $("#xyform").submit(function (event) {
-
-            event.preventDefault();
-            app.featureform.feature = null;
-
-            var x = $('#coordx').val();
-            var y = $('#coordy').val();
-            var sr = new SpatialReference($('#epsg2').val());
-
-            //create point from xy data
-            var pointXY = new Point({
-                x: x,
-                y: y,
-                spatialReference: sr
-            });
-            //add attributes by default
-            attributes = {
-                ObjectID: 1,
-                toponyme: "result1",
-                date: Date.now()
-            };
-            // Create a new feature 
-            editFeature = new Graphic({
-                geometry: pointXY,
-                attributes: attributes
-            });
-
-            // Setup the applyEdits parameter with adds.
-            const edits = {
-                addFeatures: [editFeature]
-            };
-
-            applyEditsToIncidents(edits);
-
-
-        });
-
-
-        // With the CSV file data click event and create features
-
-        $("#fileform").submit(function (event) {
-
-            $("#status").empty().text("File is uploading...");
-                event.preventDefault();
-                app.featureform.feature = null;
-                var sr = JSON.parse('{ "wkid": '+$('#epsg3').val() +'}');
-
-                $(this).ajaxSubmit({
-
-                    error: function (xhr) {
-                        status('Error: ' + xhr.status);
-                    },
-
-                    success: function (response) {
-                        
-                        $("#status").empty().text("File uploaded");
-
-                        var res = JSON.parse(response);
-                        var x = null;
-                        var y = null;
-                        for (r in res) {
-                            if (res[r].hasOwnProperty('x')) { x = res[r].x }
-                            else if (res[r].hasOwnProperty('longitude')) { x = res[r].longitude }
-                            else if (res[r].hasOwnProperty('Longitude')) { x = res[r].Longitude }
-                            else if (res[r].hasOwnProperty('long')) { x = res[r].long }
-                            else if (res[r].hasOwnProperty('X')) { x = res[r].X }
-                            else { alert("No field x, X, longitude, Longitude or long found"); }
-
-                            if (res[r].hasOwnProperty('y')) { y = res[r].y }
-                            else if (res[r].hasOwnProperty('latitude')) { y = res[r].latitude }
-                            else if (res[r].hasOwnProperty('Latitude')) { y = res[r].Latitude }
-                            else if (res[r].hasOwnProperty('lat')) { y = res[r].lat }
-                            else if (res[r].hasOwnProperty('Y')) { y = res[r].Y }
-                            else { alert("No field y, Y, latitude, Latitude or lat found"); }
-
-                            //create point from xy data
-                            var pointXY = new Point({
-                                x: x,
-                                y: y,
-                                spatialReference: sr
-                            });
-
-                            //add attributes by default
-                            // variable object id
-                            var id = Date.now().toString();
-                            var oid = parseInt(id.substr(id.length - 3));
-                            attributes = {
-                                ObjectID: oid,
-                                toponyme: "result1",
-                                date: Date.now()
-                            };
-                            // Create a new feature 
-                            editFeature = new Graphic({
-                                geometry: pointXY,
-                                attributes: attributes
-                            });
-
-                            // Setup the applyEdits parameter with adds.
-                            const edits = {
-                                addFeatures: [editFeature]
-                            };
-
-                            applyEditsToIncidents(edits);
-                        }
-                    }
-                });
-                return false;
-        });
 
         // update point edits to map
         function applyEditsToIncidents(params) {
@@ -1175,28 +1164,57 @@ require([
     $("#printButton").click(function () {
 
         var dataUrl1 = null;
+        var dataUrl2 = null;
+        var dataUrl3 = null;
 
-        var node = document.getElementById('mapViewDiv');
-        domtoimage.toPng(node)
-        .then(function (dataUrl) {
-            var img = new Image();
-            img.src = dataUrl;
-            dataUrl1 = img;
-            console.log(img);
-
-            var doc = new jsPDF({
-                orientation: 'p',
-                unit: 'mm',
-                format: 'a4'
-            })
-            doc.addImage(dataUrl1, 'JPEG', 30, 30, 100, 50);
-            doc.save('carteLoc.pdf')
-
-        })
-        .catch(function (error) {
-            console.error('oops, something went wrong!', error);
+        app.mapView.when(function () {
+            var options = {
+                format: 'jpg',
+                quality: 100
+            };
+            app.mapView.takeScreenshot(options).then(function (screenshot) {
+                dataUrl1 = screenshot.dataUrl;
+            });
         });
 
+        app2.mapView.when(function () {
+            var options = {
+                format: 'jpg',
+                quality: 100
+            };
+            app2.mapView.takeScreenshot(options).then(function (screenshot) {
+                dataUrl2 = screenshot.dataUrl;
+            });
+        });
+
+        app3.mapView.when(function () {
+            var options = {
+                format: 'jpg',
+                quality: 100
+            };
+            app3.mapView.takeScreenshot(options).then(function (screenshot) {
+                dataUrl3 = screenshot.dataUrl;
+            });
+        });
+
+        var doc = new jsPDF({
+            orientation: 'p',
+            unit: 'mm',
+            format: 'a4'
+        })
+        doc.addImage(dataUrl1, 'JPEG', 15, 20, 180, 120);
+        doc.addImage(dataUrl2, 'JPEG', 15, 160, 180, 120);
+        doc.addImage(dataUrl3, 'JPEG', 15, 220, 60, 60);
+        doc.save('carteLoc.pdf')
     });
+
+    function changeLayers() {
+        // Listen for any layer being added or removed in the Map
+        app3.webmap.allLayers.on("change", function (event) {
+            console.log("Layer added: ", event.added);
+            console.log("Layer removed: ", event.removed);
+            console.log("Layer moved: ", event.moved);
+        });
+    }
 
 });

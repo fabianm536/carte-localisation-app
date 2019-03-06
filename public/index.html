@@ -28,6 +28,9 @@
 
   <!-- dom-to-image -->
     <script src="/dist/dom-to-image/dom-to-image.min.js"></script>
+    <script src="/dist/html2canvas/html2canvas.min.js"></script>
+    <script src="/dist/canvas2image/canvas2image.js"></script>
+
 
   <style>
     html, body {
@@ -165,21 +168,13 @@
           max-height: 180px;
       }
 
-      @media print {
-          body * {
-              visibility: hidden;
-          }
-
-          #mapViewDiv, #mapViewDiv * {
-              visibility: visible;
-          }
-
-          #mapViewDiv {
-              position: absolute;
-              left: 0;
-              top: 0;
-          }
+      .esri-view {
+          border-style: solid;
+          border-width: 1px;
+          height: 95%;
+          width: 95%;
       }
+
   </style>
 
 </head>
@@ -207,7 +202,6 @@
                 <li><a role="menuitem" tabindex="0" data-target="#panelBasemaps" aria-haspopup="true"><span class="glyphicon glyphicon-th-large"></span> Basemaps</a></li>
                 <li><a role="menuitem" tabindex="0" data-target="#panelBasemaps2" aria-haspopup="true"><span class="glyphicon glyphicon-th-large"></span> Basemaps 2</a></li>
                 <li><a role="menuitem" tabindex="0" data-target="#panelBasemaps3" aria-haspopup="true"><span class="glyphicon glyphicon-th-large"></span> Basemaps 3</a></li>
-                <li><a role="menuitem" tabindex="0" data-target="#panelLegend" aria-haspopup="true"><span class="glyphicon glyphicon-list"></span> Legend</a></li>
                 <li><a role="menuitem" tabindex="0" data-target="#panelLayerlist" aria-haspopup="true"><span class="glyphicon glyphicon-list-alt"></span> LayerList</a></li>
                 <li><a role="menuitem" tabindex="0" data-target="#panelPrint" aria-haspopup="true"><span class="glyphicon glyphicon-print"></span> Print</a></li>
                 <li><a role="menuitem" tabindex="0" data-target="#panelSettings" aria-haspopup="true"><span class="glyphicon glyphicon-cog"></span> Settings</a></li>
@@ -230,7 +224,7 @@
     <div class="calcite-map calcite-map-fixed">
         <div id="tabContainer" class="tab-content">
             <div id="mapTab" class="tab-pane fade in active" role="tabpanel">
-                <div id="mapViewDiv"></div>
+                <div id="mapViewDiv" style="top: 10px;"></div>
             </div>
         </div>
     </div>
@@ -293,6 +287,7 @@
                         <li role="presentation" class="active"><a href="#map" aria-controls="map" role="tab" data-toggle="tab">Map</a></li>
                         <li role="presentation"><a href="#xy" aria-controls="xy" role="tab" data-toggle="tab">XY</a></li>
                         <li role="presentation"><a href="#file" aria-controls="file" role="tab" data-toggle="tab">File</a></li>
+                        <li role="presentation"><a href="#sync" aria-controls="sync" role="tab" data-toggle="tab">Sync</a></li>
                     </ul>
 
                     <div class="tab-content">
@@ -430,6 +425,22 @@
 
 </div>
                         </div>
+
+                        <!-- Tab - Sync -->
+
+                        <div role="tabpanel" class="tab-pane" id="sync">
+                            <div class="calcite-form-title">Maps Sync</div>
+
+                            <div class="form-horizontal calcite-form-padding">
+
+                                <div class="form-group">
+                                    <div class="col-xs-9 col-xs-offset-3">
+                                        <button id="syncButton" type="button" class="btn btn-primary btn-block">Sync maps</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div><!-- /.tab-content -->
                     <div id="editArea" class="editArea-container">
                         <div id="addFeatureDiv" style="display:block;">
@@ -543,21 +554,6 @@
 
         </div>
 
-        <!-- Panel - Legend -->
-
-        <div id="panelLegend" class="panel collapse">
-            <div id="headingLegend" class="panel-heading" role="tab">
-                <div class="panel-title">
-                    <a class="panel-toggle collapsed" role="button" data-toggle="collapse" href="#collapseLegend" aria-expanded="false" aria-controls="collapseLegend"><span class="glyphicon glyphicon-list" aria-hidden="true"></span><span class="panel-label">Legend</span></a>
-                    <a class="panel-close" role="button" data-toggle="collapse" tabindex="0" href="#panelLegend"><span class="esri-icon esri-icon-close" aria-hidden="true"></span></a>
-                </div>
-            </div>
-            <div id="collapseLegend" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingLegend">
-                <div class="panel-body body-light">
-                    <div id="legendDiv"></div>
-                </div>
-            </div>
-        </div>
 
         <!-- Panel - LayerList -->
 
@@ -877,7 +873,6 @@
                                                         <option value="home">Home</option>
                                                         <option value="locate">Locate</option>
                                                         <option value="compass">Compass</option>
-                                                        <option value="legend">Legend</option>
                                                         <option value="layerlist">LayerList</option>
                                                         <option value="track">Track</option>
                                                         <option value="basemaptoggle">Basemaptoggle</option>
