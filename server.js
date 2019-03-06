@@ -1,7 +1,13 @@
 var express = require('express');
+var multer = require('multer');
+var path = require('path');
 var pg = require("pg");
 var app = express();
+var fs = require('fs');
+const csv = require('csvtojson');
 
+
+//static folder. All sub folders work with
 app.use(express.static(__dirname + '/public'));
 
 
@@ -40,6 +46,47 @@ app.get('/pool', function (req, res) {
         });
     });
 });
+
+//////////////////////////
+///////file upload////////
+//////////////////////////
+
+var storage = multer.diskStorage({
+    destination: function (req, file, callback) {
+        callback(null, './uploads');
+    },
+    filename: function (req, file, callback) {
+        callback(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+    }
+});
+var upload = multer({ storage: storage }).single('userFile');
+
+
+app.post('/api/file', function (req, res) {
+    upload(req, res, function (err) {
+        if (err) {
+            return res.end("Error uploading file.");
+        }
+        
+        
+        const csvFilePath = req.file.destination + '/' + req.file.filename;
+
+        csv({
+            delimiter: [",", "|", "$", ";", "\t"]
+        })
+        .fromFile(csvFilePath)
+        .then(function (jsonObj) {
+            res.end(JSON.stringify(jsonObj));
+            
+        });
+    });
+});
+
+//////////////////////////
+//////server config///////
+//////////////////////////
+
+
 
 app.listen(4000, function () {
     console.log('Server is running.. on Port 4000');

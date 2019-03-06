@@ -860,10 +860,6 @@ require([
 
         });
 
-        // With the selected template item, listen for the view's click event and create feature
-
-
-
 
         // With the lat long data click event and create feature
         $("#geoform").submit(function (event) {
@@ -899,6 +895,7 @@ require([
 
             });
         });
+
         // With the XY data click event and create feature
         $("#xyform").submit(function (event) {
 
@@ -940,89 +937,76 @@ require([
 
         // With the CSV file data click event and create features
 
-            $("#fileform").submit(function (event) {
+        $("#fileform").submit(function (event) {
+
+            $("#status").empty().text("File is uploading...");
                 event.preventDefault();
                 app.featureform.feature = null;
-                var sr = $('#epsg3').val();
-                var formData = new FormData(this);
-                formData.append("epsg3", sr);
+                var sr = JSON.parse('{ "wkid": '+$('#epsg3').val() +'}');
 
-                $.ajax({
-                    url: '/file',
-                    data: formData,
-                    type: 'POST',
-                    contentType: false,
-                    cache: false,
-                    processData: false,
-                    success: function (returndata) {
+                $(this).ajaxSubmit({
 
-                        console.log(returndata);
+                    error: function (xhr) {
+                        status('Error: ' + xhr.status);
+                    },
 
-                        var res = JSON.parse(returndata);
+                    success: function (response) {
+                        
+                        $("#status").empty().text("File uploaded");
 
-                        if (res.hasOwnProperty('messageError')) { alert(res.messageError) }
-                        else {
-
+                        var res = JSON.parse(response);
                         var x = null;
                         var y = null;
-
                         for (r in res) {
-                            respoint = JSON.parse(res[r]);
-                            
-                            if (respoint.hasOwnProperty('x')) {x= respoint.x}
-                            else if (respoint.hasOwnProperty('longitude')) { x = respoint.longitude }
-                            else if (respoint.hasOwnProperty('Longitude')) { x = respoint.Longitude }
-                            else if (respoint.hasOwnProperty('long')) {x= respoint.long}
-                            else if (respoint.hasOwnProperty('X')) { x = respoint.X }
-                            else { messageError; }
+                            if (res[r].hasOwnProperty('x')) { x = res[r].x }
+                            else if (res[r].hasOwnProperty('longitude')) { x = res[r].longitude }
+                            else if (res[r].hasOwnProperty('Longitude')) { x = res[r].Longitude }
+                            else if (res[r].hasOwnProperty('long')) { x = res[r].long }
+                            else if (res[r].hasOwnProperty('X')) { x = res[r].X }
+                            else { alert("No field x, X, longitude, Longitude or long found"); }
 
-                            
-                            if (respoint.hasOwnProperty('y')) {y= respoint.y}
-                            else if (respoint.hasOwnProperty('latitude')) { y = respoint.latitude }
-                            else if (respoint.hasOwnProperty('Latitude')) { y = respoint.Latitude }
-                            else if (respoint.hasOwnProperty('lat')) { y = respoint.lat }
-                            else if (respoint.hasOwnProperty('Y')) { y = respoint.Y }
+                            if (res[r].hasOwnProperty('y')) { y = res[r].y }
+                            else if (res[r].hasOwnProperty('latitude')) { y = res[r].latitude }
+                            else if (res[r].hasOwnProperty('Latitude')) { y = res[r].Latitude }
+                            else if (res[r].hasOwnProperty('lat')) { y = res[r].lat }
+                            else if (res[r].hasOwnProperty('Y')) { y = res[r].Y }
                             else { alert("No field y, Y, latitude, Latitude or lat found"); }
 
-                                //create point from xy data
-                                var pointXY = new Point({
-                                    x: x,
-                                    y: y,
-                                    spatialReference: respoint.spatialReference
-                                });
+                            //create point from xy data
+                            var pointXY = new Point({
+                                x: x,
+                                y: y,
+                                spatialReference: sr
+                            });
 
+                            //add attributes by default
+                            // variable object id
+                            var id = Date.now().toString();
+                            var oid = parseInt(id.substr(id.length - 3));
+                            attributes = {
+                                ObjectID: oid,
+                                toponyme: "result1",
+                                date: Date.now()
+                            };
+                            // Create a new feature 
+                            editFeature = new Graphic({
+                                geometry: pointXY,
+                                attributes: attributes
+                            });
 
-                                //add attributes by default
-                                // variable object id
-                                var id = Date.now().toString();
-                                var oid = parseInt(id.substr(id.length - 3));
-                                attributes = {
-                                    ObjectID: oid,
-                                    toponyme: "result1",
-                                    date: Date.now()
-                                };
-                                // Create a new feature 
-                                editFeature = new Graphic({
-                                    geometry: pointXY,
-                                    attributes: attributes
-                                });
+                            // Setup the applyEdits parameter with adds.
+                            const edits = {
+                                addFeatures: [editFeature]
+                            };
 
-                                // Setup the applyEdits parameter with adds.
-                                const edits = {
-                                    addFeatures: [editFeature]
-                                };
-
-                                applyEditsToIncidents(edits);
-                            }
-                        
+                            applyEditsToIncidents(edits);
                         }
-                    },
-                    error: function () {
-                        alert("error in ajax form submission");
                     }
                 });
-            });
+                return false;
+        });
 
+        // update point edits to map
         function applyEditsToIncidents(params) {
              //unselectFeature();
             layer.applyEdits(params).then(function (editsResult) {
@@ -1183,110 +1167,36 @@ require([
         });
     }
 
-    
-   document.getElementById('printButton').addEventListener('click', function () {
 
-       var dataUrl1 = null;
-       var dataUrl2 = null;
-       var dataUrl3 = null;
+    //----------------------------------
+    // Print Map Widget
+    //----------------------------------
 
-        app.mapView.when(function () {
-            var options = {
-                format: 'jpg',
-                quality: 100
-            };
-                app.mapView.takeScreenshot(options).then(function (screenshot) {
-                dataUrl1 = screenshot.dataUrl;
-            });
+    $("#printButton").click(function () {
+
+        var dataUrl1 = null;
+
+        var node = document.getElementById('mapViewDiv');
+        domtoimage.toPng(node)
+        .then(function (dataUrl) {
+            var img = new Image();
+            img.src = dataUrl;
+            dataUrl1 = img;
+            console.log(img);
+
+            var doc = new jsPDF({
+                orientation: 'p',
+                unit: 'mm',
+                format: 'a4'
+            })
+            doc.addImage(dataUrl1, 'JPEG', 30, 30, 100, 50);
+            doc.save('carteLoc.pdf')
+
+        })
+        .catch(function (error) {
+            console.error('oops, something went wrong!', error);
         });
 
-        app2.mapView.when(function () {
-            var options = {
-                format: 'jpg',
-                quality: 100
-            };
-            app2.mapView.takeScreenshot(options).then(function (screenshot) {
-                dataUrl2 = screenshot.dataUrl;
-            });
-        });
-
-        app3.mapView.when(function () {
-            var options = {
-                format: 'jpg',
-                quality: 100
-            };
-            app3.mapView.takeScreenshot(options).then(function (screenshot) {
-                dataUrl3 = screenshot.dataUrl;
-            });
-        });
-
-        var image1 = dataUrl1;
-        var base64ImageContent1 = image1.replace(/^data:image\/(png|jpeg);base64,/, "");
-        var blob1 = base64ToBlob(base64ImageContent1, 'image/jpg');
-
-        var image2 = dataUrl2;
-        var base64ImageContent2 = image2.replace(/^data:image\/(png|jpeg);base64,/, "");
-        var blob2 = base64ToBlob(base64ImageContent2, 'image/jpg');
-
-        var image3 = dataUrl3;
-        var base64ImageContent3 = image3.replace(/^data:image\/(png|jpeg);base64,/, "");
-        var blob3 = base64ToBlob(base64ImageContent3, 'image/jpg');
-
-        var formData = new FormData();
-        formData.append('picture1', blob1);
-        formData.append('picture2', blob2);
-        formData.append('picture3', blob3);
-
-        var request = new XMLHttpRequest();
-        request.open('POST', 'php/print.php', true);
-        request.responseType = 'blob';
-        request.send(formData);
-       
-        request.onload = function () {
-
-            // Only handle status code 200
-            if (request.status === 200) {
-                // Try to find out the filename from the content disposition `filename` value
-                var disposition = request.getResponseHeader('content-disposition');
-                var matches = /"([^"]*)"/.exec(disposition);
-                var filename = (matches != null && matches[1] ? matches[1] : 'file.pdf');
-
-                // The actual download
-                var blob = new Blob([request.response], { type: 'application/pdf' });
-                var link = document.createElement('a');
-                link.href = window.URL.createObjectURL(blob);
-                link.download = filename;
-
-                document.body.appendChild(link);
-
-                link.click();
-
-                document.body.removeChild(link);
-            }
-        };
     });
-
-    //The base64 To Blob image from map
-    function base64ToBlob(base64, mime) {
-        mime = mime || '';
-        var sliceSize = 1024;
-        var byteChars = window.atob(base64);
-        var byteArrays = [];
-
-        for (var offset = 0, len = byteChars.length; offset < len; offset += sliceSize) {
-            var slice = byteChars.slice(offset, offset + sliceSize);
-
-            var byteNumbers = new Array(slice.length);
-            for (var i = 0; i < slice.length; i++) {
-                byteNumbers[i] = slice.charCodeAt(i);
-            }
-
-            var byteArray = new Uint8Array(byteNumbers);
-
-            byteArrays.push(byteArray);
-        }
-
-        return new Blob(byteArrays, { type: mime });
-    }
 
 });
