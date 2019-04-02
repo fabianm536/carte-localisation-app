@@ -22,6 +22,10 @@ require([
   "esri/widgets/Expand",
   "esri/widgets/FeatureForm",
   "esri/widgets/FeatureTemplates",
+  "esri/widgets/Print",
+  "esri/tasks/PrintTask",
+  "esri/tasks/support/PrintTemplate",
+  "esri/tasks/support/PrintParameters",
   "esri/core/watchUtils",
   "esri/core/urlUtils",
   "esri/symbols/PictureMarkerSymbol",
@@ -47,7 +51,7 @@ require([
   // Dojo
   "dojo/domReady!"
 ], function (Map, Basemap, Webmap, VectorTileLayer, FeatureLayer, CSVLayer,Point, SpatialReference, coordinateFormatter, MapView, Graphic, Search, ScaleBar, Popup, Home, Legend, ColorPicker, Expand,
-        FeatureForm, FeatureTemplates, watchUtils,urlUtils, PictureMarkerSymbol, query, domClass, dom, on, CalciteMapsSettings, CalciteMapsArcGISSupport, PanelSettings
+        FeatureForm, FeatureTemplates, Print, PrintTask, PrintTemplate, PrintParameters,watchUtils, urlUtils, PictureMarkerSymbol, query, domClass, dom, on, CalciteMapsSettings, CalciteMapsArcGISSupport, PanelSettings
         ) {
 
     let editFeature, highlight;
@@ -64,8 +68,8 @@ require([
         searchWidgetNav: null,
         searchWidgetPanel: null,
         searchWidgetSettings: null,
-        basemapSelected: "hybrid",
-        basemapSelectedAlt: "hybrid",
+        basemapSelected: "streets",
+        basemapSelectedAlt: "streets",
         webmap: null,
         webmapId: "3615ad3ea7a04278ad1b4ac3eef50f8f",
         padding: {
@@ -230,9 +234,6 @@ require([
     initializeAppSettings(app3);
     initializeWidgets(app3);
 
-    //add search point
-    initPoint(app3, 3.98138, 43.67888);
-
     //synchronizeMaps
     synchronizeMap(app1, app2);
     synchronizeMap(app2, app3);
@@ -244,7 +245,7 @@ require([
     function initializeMapViews(app) {
         // Webmap
         app.webmap = new Map({
-            basemap: 'hybrid',
+            basemap: 'streets',
             portalItem: {
                 id: app.webmapId
             }
@@ -593,10 +594,14 @@ require([
                
                 var extent = app2.mapView.extent;
 
-                var bottomLeft = app.mapView.toScreen(extent.xmin, extent.ymin);
-                var topRight = app.mapView.toScreen(extent.xmax, extent.ymax);
+                app.mapView.when(function () {
 
-                addPolygonExtent(extent);
+                    var bottomLeft = app.mapView.toScreen(extent.xmin, extent.ymin);
+                    var topRight = app.mapView.toScreen(extent.xmax, extent.ymax);
+                    addPolygonExtent(extent);
+                });
+
+
             }
         });
 
@@ -635,6 +640,7 @@ require([
 
            // Add the graphics to the view's graphics layer
            app.mapView.graphics.add(polygonGraphic);
+
        } 
     }
 
@@ -646,32 +652,17 @@ require([
 
         var layers = app3.webmap.layers.items;
 
-        var foundLayer =  app3.webmap.allLayers.find(function (layer) {
-            return layer.title === "Project";
-        });
-
-        console.log(foundLayer);
-
         app1.webmap.removeAll();
         app2.webmap.removeAll();
 
         layers.forEach(function (lyr) {
-            addPoint(app2, lyr.source.items[0].geometry.x, lyr.source.items[0].geometry.y, lyr.source.items[0].geometry.spatialReference);
-            addPoint(app1, lyr.source.items[0].geometry.x, lyr.source.items[0].geometry.y, lyr.source.items[0].geometry.spatialReference);
+            addPoint(app2, lyr.featureform.feature.geometry.x, lyr.featureform.feature.geometry.y, lyr.featureform.feature.geometry.spatialReference, lyr.featureform.feature.attributes.toponyme);
+            addPoint(app1, lyr.featureform.feature.geometry.x, lyr.featureform.feature.geometry.y, lyr.featureform.feature.geometry.spatialReference, lyr.featureform.feature.attributes.toponyme);
 
         });
 
-      
-
-
-
     });
-    //----------------------------------
-    // init Point 
-    //----------------------------------
-    function initPoint(app, x, y, sr) {
-        addPoint(app, x, y, sr);
-    }
+
 
     //----------------------------------
     // Add Map Point 
@@ -712,8 +703,6 @@ require([
             }
 
         });
-
-        changeLayers();
     });
 
     // With the XY data click event and create feature
@@ -726,9 +715,6 @@ require([
         var sr = new SpatialReference($('#epsg2').val());
 
         addPoint(app3, x, y, sr);
-
-        changeLayers();
-
 
     });
 
@@ -780,7 +766,7 @@ require([
     //----------------------------------
     // add Point 
     //----------------------------------
-    function addPoint(app, x, y, sr) {
+    function addPoint(app, x, y, sr, toponyme) {
 
         var pointGeom = new Point({
             x: x,
@@ -789,14 +775,14 @@ require([
         });
         // variable object id
         var id = Date.now().toString();
-        var oid = parseInt(id.substr(id.length - 3));
+        var oid = parseInt(id.substr(id.length - 5));
 
         var features = [
      {
          geometry: pointGeom,
          attributes: {
              ObjectID: oid,
-             toponyme: "Sample",
+             toponyme: toponyme,
              date: Date.now(),
              client: "UAL1"
          }
@@ -869,53 +855,298 @@ require([
             }
         };
 
+        const labelClass = {
+            // autocasts as new LabelClass()
+            symbol: {
+                type: "text",  // autocasts as new TextSymbol()
+                color: "white",
+                haloColor: "black",
+                haloSize: "1px",
+                font: {  // autocast as new Font()
+                    family: "playfair-display",
+                    size: 12,
+                    weight: "bold"
+                }
+            },
+            labelPlacement: "above-right",
+            labelExpressionInfo: {
+                expression: "$feature.toponyme"
+            }
+        };
+
         var layer = new FeatureLayer({
             title: "Project" + oid,
             source: features,
             fields: fields,
             objectIdField: "ObjectID",
             renderer: renderer,
-            id: "localisation"
+            id: "Project" + oid,
+            labelingInfo: [labelClass]
         });
 
 
         app.webmap.add(layer);
+        app.layers.push(layer);
 
         if (app === app3) {
 
             setFeatureForm(app, layer);
         }
 
-        //app.mapView.goTo(pointGeom);
+        layer.when(function () {
+            app.mapView.goTo(layer.fullExtent);
+        });
         
     }
 
     //----------------------------------
     // set Feature form by selected point 
     //----------------------------------
- 
-    app3.mapView.on("click", function (event) {
+    
+
+    // Check if the user clicked on the existing feature
+    selectExistingFeature();
+
+    function selectExistingFeature() {
+
+        app3.mapView.on("click", function (event) {
+            // clear previous feature selection
+            unselectFeature();
+            toggleEditingDivs("block", "none");
 
             app3.mapView.hitTest(event).then(function (response) {
-                // If a user clicks on an incident feature, select the feature.
-                console.log(reponse);
-               // var layer = response.results[0].graphic.layer;
-                //setFeatureForm(app3, layer);
-               /* if (response.results.length === 0) {
-                    toggleEditingDivs("block", "none");
-                }
-                else if (response.results[0].graphic && response.results[0].graphic.layer.id == "localisation") {
+                // If a user clicks on an project feature, select the feature.
+                var layer = response.results[0].graphic.layer;
+
+                if (response.results[0].graphic && response.results[0].graphic.layer.title == layer.title) {
+
+
+                   
 
                     if (addFeatureDiv.style.display === "block") {
                         toggleEditingDivs("none", "block");
-                    }
-                    selectFeature(response.results[0].graphic.attributes[layer.objectIdField]);
+                    }                   
+                    var id = setLayerActive(layer);
+                    selectFeature(response.results[0].graphic.attributes[layer.objectIdField], id.id);
+                    
 
-                }*/
+
+                    
+                }
             });
 
         });
 
+        function setLayerActive(layer) {
+            var returnedObject = {};
+            for (var i = 0; i < app3.layers.length; i++) {
+                if (app3.layers[i] === layer) {
+                    app3.layers[i].active = true;
+                    id = i;  
+                }
+                else {
+                    app3.layers[i].active = false;
+                }
+            }
+            returnedObject["id"] = id;
+            
+            return returnedObject;
+        }
+
+       
+        
+
+    // Highlights the clicked feature and display
+    // the feature form with the incident's attributes.
+    function selectFeature(objectId, idLyr) {
+
+        // query feature from the server
+        app3.layers[idLyr].queryFeatures({
+            objectIds: [objectId],
+            outFields: ["*"],
+            returnGeometry: true
+        }).then(function (results) {
+
+            if (results.features.length > 0) {
+                editFeature = results.features[0];
+
+
+
+                // display the attributes of selected feature in the form
+                app3.layers[idLyr].featureform.feature = editFeature;
+
+                app3.mapView.whenLayerView(editFeature.layer).then(function () {
+
+                    //set id form
+                    var formid = "EFF" + idLyr;
+                    for (var i = 0; i < $("#formDiv").children().length ; i++) {
+                        $("#formDiv").children()[i].id = "EFF" + i;
+                    }
+                    //set up form view
+                    if ($("#formDiv").children()) {
+                        for (var i = 0; i < $("#formDiv").children().length ; i++) {
+                            if ($("#formDiv").children()[i].id == formid) {
+                                $("#formDiv").children()[i].style.display = "block";
+                            }
+                            else { $("#formDiv").children()[i].style.display = "none"; }
+                        }
+                    }
+
+                });
+
+                
+
+                // highlight the feature on the view
+                app3.mapView.whenLayerView(editFeature.layer).then(function (layerView) {
+
+                    highlight = layerView.highlight(editFeature);
+                });
+            }
+        });
+
+        setSubmitForm(idLyr);
+    }
+
+        //set submit options
+    function setSubmitForm(idLyr) {
+
+        // Listen to the feature form's submit event.
+        // Update feature attributes shown in the form.
+        app3.layers[idLyr].featureform.on("submit", function () {
+
+            if (editFeature) {
+                // Grab updated attributes from the form.
+                var updated = app3.layers[idLyr].featureform.getValues();
+
+                // Loop through updated attributes and assign
+                // the updated values to feature attributes.
+                Object.keys(updated).forEach(function (name) {
+                    editFeature.attributes[name] = updated[name];
+                });
+
+                // Setup the applyEdits parameter with updates.
+                const edits = {
+                    updateFeatures: [editFeature]
+                };
+                applyEditsToIncidents(edits);
+            }
+        });
+
+        // update point edits to map
+        function applyEditsToIncidents(params) {
+            //unselectFeature();
+            app3.layers[idLyr].applyEdits(params).then(function (editsResult) {
+                // Get the objectId of the newly added feature.
+                // Call selectFeature function to highlight the new feature.
+                if (editsResult.addFeatureResults.length > 0 || editsResult.updateFeatureResults.length > 0) {
+                    unselectFeature();
+                    let objectId;
+                    if (editsResult.addFeatureResults.length > 0) {
+                        objectId = editsResult.addFeatureResults[0].objectId;
+                    }
+                    else {
+                        app3.layers[idLyr].featureform.feature = null;
+                        objectId = editsResult.updateFeatureResults[0].objectId;
+                    }
+                    selectFeature(objectId, idLyr);
+                    if (addFeatureDiv.style.display === "block") {
+                        toggleEditingDivs("none", "block");
+                    }
+                }
+                    // show off if user deleted a feature
+                else if (editsResult.deleteFeatureResults.length > 0) {
+                    toggleEditingDivs("block", "none");
+                }
+            })
+            .catch(function (error) {
+                console.log("===============================================");
+                console.error("[ applyEdits ] FAILURE: ", error.code, error.name,
+                  error.message);
+                console.log("error = ", error);
+            });
+
+        }
+
+        // Update attributes of the selected feature.
+        $('#btnUpdate').off("click").on("click", function () {
+            // Fires feature form's submit event.
+            app3.layers[idLyr].featureform.submit();
+        });
+        // Delete the selected feature. ApplyEdits is called
+        // with the selected feature to be deleted.
+        $("#btnDelete").off("click").on("click", function () {
+            // setup the applyEdits parameter with deletes.
+            const edits = {
+                deleteFeatures: [editFeature]
+            };
+
+            applyEditsToIncidents(edits);
+
+            app3.webmap.remove(app3.layers[idLyr]);
+        });
+
+        $("#btnAddBD").off("click").on("click", function () {
+            // add point to database
+            app3.layers[idLyr].featureform.submit();
+
+            var objForm = app3.layers[idLyr].featureform.getValues();
+            var latForm = app3.layers[idLyr].featureform.feature.geometry.latitude;
+            var longForm = app3.layers[idLyr].featureform.feature.geometry.longitude;
+
+            //fields
+            var keys = Object.keys(objForm);
+            var fields = "";
+            for (var i = 1; i < keys.length; i++) {
+                fields = fields + keys[i] + ",";
+            }
+            fields = fields + "lat,long";
+
+            //values
+            var valObj = Object.values(objForm);
+            var values = "";
+            for (var i = 1; i < valObj.length; i++) {
+                if (i !== 2) {
+                    values = values + "'" + valObj[i] + "'" + ",";
+                } else {
+                    values = values + "to_timestamp(" + valObj[i] / 1000 + ")" + ",";
+                }
+            }
+            values = values + latForm + ", " + longForm;
+
+            var resultData = $.ajax({
+                url: '/pool',
+                data: 'fields=' + fields + '&values=' + values,
+                success: function (result) {
+                    alert(result)
+                },
+                error: function (xhr) {
+                    alert(xhr.statusText)
+                }
+
+            });
+
+        });
+
+    }
+        // input boxes for the attribute editing
+    const addFeatureDiv = document.getElementById("addFeatureDiv");
+    const attributeEditing = document.getElementById("featureUpdateDiv");
+
+        // Controls visibility of addFeature or attributeEditing divs
+    function toggleEditingDivs(addDiv, attributesDiv) {
+        addFeatureDiv.style.display = addDiv;
+        attributeEditing.style.display = attributesDiv;
+
+        document.getElementById("updateInstructionDiv").style.display = addDiv;
+    }
+
+        // Function to unselect features
+    function unselectFeature() {
+        if (highlight) {
+            highlight.remove();
+        }
+    }
+}
 
 
 
@@ -923,8 +1154,16 @@ require([
     // FeatureForm Widget
     //----------------------------------
     function setFeatureForm(app, layer) {
- 
-        app.featureform = new FeatureForm({
+
+            var id = null;
+            for (var i = 0; i < app.layers.length; i++) {
+                if (app.layers[i] === layer) {
+                    app.layers[i].featureform = null;
+                    id = i;
+                }
+            }
+
+        app.layers[id].featureform = new FeatureForm({
             container: "formDiv",
             layer: layer,
             fieldConfig: [
@@ -966,214 +1205,34 @@ require([
                       name: "titre_aff",
                       label: "Titre Affaire"
                   }
-                ]
-        });
-
-
-        // Listen to the feature form's submit event.
-        // Update feature attributes shown in the form.
-        app.featureform.on("submit", function () {
-            if (editFeature) {
-                // Grab updated attributes from the form.
-                const updated = app.featureform.getValues();
-
-                // Loop through updated attributes and assign
-                // the updated values to feature attributes.
-                Object.keys(updated).forEach(function (name) {
-                    editFeature.attributes[name] = updated[name];
-                });
-
-                // Setup the applyEdits parameter with updates.
-                const edits = {
-                    updateFeatures: [editFeature]
-                };
-                applyEditsToIncidents(edits);
-            }
-        });
-
-        // Check if the user clicked on the existing feature
-        selectExistingFeature();
-
-
-        // update point edits to map
-        function applyEditsToIncidents(params) {
-             //unselectFeature();
-            layer.applyEdits(params).then(function (editsResult) {
-                // Get the objectId of the newly added feature.
-                // Call selectFeature function to highlight the new feature.
-                if (editsResult.addFeatureResults.length > 0 || editsResult.updateFeatureResults.length > 0) {
-                    unselectFeature();
-                    let objectId;
-                    if (editsResult.addFeatureResults.length > 0) {
-                        objectId = editsResult.addFeatureResults[0].objectId;
-                    }
-                    else {
-                        app.featureform.feature = null;
-                        objectId = editsResult.updateFeatureResults[0].objectId;
-                    }
-                    selectFeature(objectId);
-                    if (addFeatureDiv.style.display === "block") {
-                        toggleEditingDivs("none", "block");
-                    }
-                }
-                    // show off if user deleted a feature
-                else if (editsResult.deleteFeatureResults.length > 0) {
-                    toggleEditingDivs("block", "none");
-                }
-            })
-            .catch(function (error) {
-                console.log("===============================================");
-                console.error("[ applyEdits ] FAILURE: ", error.code, error.name,
-                  error.message);
-                console.log("error = ", error);
-            });
-
-        }
-        // Check if a user clicked on an incident feature.
-        function selectExistingFeature() {
-            app.mapView.on("click", function (event) {
-                // clear previous feature selection
-                unselectFeature();
-                             
-                app.mapView.hitTest(event).then(function (response) {
-                    // If a user clicks on an incident feature, select the feature.
-                   
-                    if (response.results.length === 0) {
-                        toggleEditingDivs("block", "none");
-                    }
-                    else if (response.results[0].graphic && response.results[0].graphic.layer.id == "localisation") {
-
-                        if (addFeatureDiv.style.display === "block") {
-                            toggleEditingDivs("none", "block");
-                        }
-                        selectFeature(response.results[0].graphic.attributes[layer.objectIdField]);
-                       
-                    }
-                });
-                
-            });
-        }
-        // Highlights the clicked feature and display
-        // the feature form with the incident's attributes.
-        function selectFeature(objectId) {
-
-            // query feature from the server
-            layer.queryFeatures({
-                objectIds: [objectId],
-                outFields: ["*"],
-                returnGeometry: true
-            }).then(function (results) {
-                
-                if (results.features.length > 0) {
-                    editFeature = results.features[0];
-
-                    // display the attributes of selected feature in the form
-                    app.featureform.feature = editFeature;
-                    // highlight the feature on the view
-                    app.mapView.whenLayerView(editFeature.layer).then(function (layerView) {
-                        
-                        highlight = layerView.highlight(editFeature);
-                        //zoomto point selected
-                        app.mapView.goTo(editFeature.geometry);
-                    });
-                }
-            });
-        }
-        // input boxes for the attribute editing
-        const addFeatureDiv = document.getElementById("addFeatureDiv");
-        const attributeEditing = document.getElementById("featureUpdateDiv");
-
-        // Controls visibility of addFeature or attributeEditing divs
-        function toggleEditingDivs(addDiv, attributesDiv) {
-            addFeatureDiv.style.display = addDiv;
-            attributeEditing.style.display = attributesDiv;
-
-            document.getElementById("updateInstructionDiv").style.display = addDiv;
-        }
-        // Remove the feature highlight and remove attributes
-        // from the feature form.
-        function unselectFeature() {
-            if (highlight) {
-                highlight.remove();
-            }
-        }
-        // Update attributes of the selected feature.
-        $("#btnUpdate").click(function () {
-            // Fires feature form's submit event.
-            app.featureform.submit();
-        });
-        // Delete the selected feature. ApplyEdits is called
-        // with the selected feature to be deleted.
-        $("#btnDelete").click(function () {
-            // setup the applyEdits parameter with deletes.
-            const edits = {
-                deleteFeatures: [editFeature]
-            };
-
-            applyEditsToIncidents(edits);
-        });
-
-        $("#btnAddBD").click(function () {
-            // add point to database
-            app.featureform.submit();
-            
-            var objForm = app.featureform.getValues();
-            var latForm = app.featureform.feature.geometry.latitude;
-            var longForm = app.featureform.feature.geometry.longitude;
-            
-            //fields
-            var keys = Object.keys(objForm);
-            var fields = "";
-            for (var i = 1; i < keys.length; i++) {
-                fields=fields+keys[i]+",";
-            }
-            fields = fields+"lat,long";
-
-            //values
-            var valObj = Object.values(objForm);
-            var values = "";
-            for (var i = 1; i < valObj.length; i++) {
-                if (i !== 2) {
-                    values = values + "'" + valObj[i] + "'" + ",";
-                } else {
-                    values = values + "to_timestamp(" + valObj[i] / 1000 + ")" + ",";
-                }
-            }
-            values = values +latForm + ", " + longForm;
-
-            var resultData = $.ajax({
-                url: '/pool',
-                data: 'fields=' + fields + '&values=' + values,
-                success: function (result) {
-                    alert(result)
-                },
-                error: function (xhr) {
-                    alert(xhr.statusText)
-                }
-
-            });
-
-        });
+            ]
+        });  
     }
+
+
 
 
     //----------------------------------
     // Print Map Widget
     //----------------------------------
 
-    $("#printButton").click(function () {
+    $("#printButton").on('click', function () {
 
-        var dataUrl1 = null;
-        var dataUrl2 = null;
-        var dataUrl3 = null;
+        //screenShot();
+        
+        var carteJpg = new Object();
+        carteJpg.map1 = new Object();
+        carteJpg.map2 = new Object();
+        carteJpg.map3 = new Object();
 
-        app.mapView.when(function () {
+        //Arcgis ScreenShot
+        app1.mapView.when(function () {
             var options = {
                 format: 'jpg',
                 quality: 100
             };
-            app.mapView.takeScreenshot(options).then(function (screenshot) {
-                dataUrl1 = screenshot.dataUrl;
+            app1.mapView.takeScreenshot(options).then(function (screenshot) {
+                carteJpg.map1.dataImage = screenshot.dataUrl;
             });
         });
 
@@ -1183,7 +1242,7 @@ require([
                 quality: 100
             };
             app2.mapView.takeScreenshot(options).then(function (screenshot) {
-                dataUrl2 = screenshot.dataUrl;
+                carteJpg.map2.dataImage = screenshot.dataUrl;
             });
         });
 
@@ -1193,28 +1252,215 @@ require([
                 quality: 100
             };
             app3.mapView.takeScreenshot(options).then(function (screenshot) {
-                dataUrl3 = screenshot.dataUrl;
+                carteJpg.map3.dataImage = screenshot.dataUrl;
             });
         });
 
-        var doc = new jsPDF({
-            orientation: 'p',
-            unit: 'mm',
-            format: 'a4'
-        })
-        doc.addImage(dataUrl1, 'JPEG', 15, 20, 180, 120);
-        doc.addImage(dataUrl2, 'JPEG', 15, 160, 180, 120);
-        doc.addImage(dataUrl3, 'JPEG', 15, 220, 60, 60);
-        doc.save('carteLoc.pdf')
+        //mapviews elements
+        var mapViews = document.getElementsByClassName("esri-view");
+
+        //Border elements
+
+
+
+        //ScaleBar elements
+        var scaleBars = document.getElementsByClassName("esri-scale-bar");
+
+        html2canvas(scaleBars[0], { backgroundColor: null }).then(function (canvas) {
+            carteJpg.map1.dataScalBar = canvas.toDataURL("image/png");
+
+        });
+
+        html2canvas(scaleBars[1], { backgroundColor: null }).then(function (canvas) {
+            carteJpg.map2.dataScalBar = canvas.toDataURL("image/png");
+        });
+
+        html2canvas(scaleBars[2], { backgroundColor: null }).then(function (canvas) {
+            carteJpg.map3.dataScalBar = canvas.toDataURL("image/png");
+
+            exportToJpeg();
+        });       
+
+
+        //Export to jpeg
+        function exportToJpeg() {
+
+            //mapviews elements
+            var mapViews = document.getElementsByClassName("esri-view");
+            var mapContainer = document.getElementById("map-container");
+
+            //get dimensions from html elements
+            
+            var dx = mapContainer.getBoundingClientRect().x + 1;
+            var dy = mapContainer.getBoundingClientRect().y + 1;
+
+
+            //dimensions
+            carteJpg.map1.width = mapViews[0].getBoundingClientRect().width;
+            carteJpg.map1.height = mapViews[0].getBoundingClientRect().height;
+            carteJpg.map2.width = mapViews[1].getBoundingClientRect().width;
+            carteJpg.map2.height = mapViews[1].getBoundingClientRect().height;
+            carteJpg.map3.width = mapViews[2].getBoundingClientRect().width;
+            carteJpg.map3.height = mapViews[2].getBoundingClientRect().height;
+
+            //maps positions
+            carteJpg.map1.x = mapViews[0].getBoundingClientRect().x - dx;
+            carteJpg.map1.y = mapViews[0].getBoundingClientRect().y - dy;
+            carteJpg.map2.x = mapViews[1].getBoundingClientRect().x - dx;
+            carteJpg.map2.y = mapViews[1].getBoundingClientRect().y - dy;
+            carteJpg.map3.x = mapViews[2].getBoundingClientRect().x - dx;
+            carteJpg.map3.y = mapViews[2].getBoundingClientRect().y - dy;
+
+            //scalebar positions
+            carteJpg.map1.sx = scaleBars[0].getBoundingClientRect().x - dx;
+            carteJpg.map1.sy = scaleBars[0].getBoundingClientRect().y - dy + 15;
+            carteJpg.map2.sx = scaleBars[1].getBoundingClientRect().x - dx;
+            carteJpg.map2.sy = scaleBars[1].getBoundingClientRect().y - dy + 15;
+            carteJpg.map3.sx = scaleBars[2].getBoundingClientRect().x - dx;
+            carteJpg.map3.sy = scaleBars[2].getBoundingClientRect().y - dy + 15;
+
+            carteJpg.width = 682;
+            carteJpg.height = 954;
+
+            var canvas = document.getElementById('canvas');
+
+            border1(carteJpg);
+            border2(carteJpg);
+            border3(carteJpg);
+
+            if ($('#numViews').val()==3) {
+            mergeImages([
+                { src: carteJpg.border1, x: carteJpg.map1.x, y: carteJpg.map1.y },
+                { src: carteJpg.map1.dataImage, x: carteJpg.map1.x + 1, y: carteJpg.map1.y + 1},
+                { src: carteJpg.map1.dataScalBar, x: carteJpg.map1.sx, y: carteJpg.map1.sy },
+                { src: carteJpg.border2, x: carteJpg.map2.x, y: carteJpg.map2.y},
+                { src: carteJpg.map2.dataImage, x: carteJpg.map2.x+ 1, y: carteJpg.map2.y+1 },
+                { src: carteJpg.map2.dataScalBar, x: carteJpg.map2.sx, y: carteJpg.map2.sy },
+                { src: carteJpg.border3, x: carteJpg.map3.x, y: carteJpg.map3.y },
+                { src: carteJpg.map3.dataImage, x: carteJpg.map3.x+1, y: carteJpg.map3.y +1},
+                { src: carteJpg.map3.dataScalBar, x: carteJpg.map3.sx, y: carteJpg.map3.sy }
+            ], {
+                width: carteJpg.width,
+                height: carteJpg.height
+            })
+            .then(function (b64) {
+                //download image
+                let a = document.createElement("a");
+                a.href = b64;
+                a.download = "carte.jpg";
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+
+            });
+            } else if ($('#numViews').val() == 2) {
+                mergeImages([
+                { src: carteJpg.border2, x: carteJpg.map2.x, y: carteJpg.map2.y },
+                { src: carteJpg.map2.dataImage, x: carteJpg.map2.x+1, y: carteJpg.map2.y +1},
+                { src: carteJpg.map2.dataScalBar, x: carteJpg.map2.sx, y: carteJpg.map2.sy },
+                { src: carteJpg.border3, x: carteJpg.map3.x, y: carteJpg.map3.y},
+                { src: carteJpg.map3.dataImage, x: carteJpg.map3.x+1, y: carteJpg.map3.y +1},
+                { src: carteJpg.map3.dataScalBar, x: carteJpg.map3.sx, y: carteJpg.map3.sy }
+                            ], {
+                                width: carteJpg.width,
+                                height: carteJpg.height
+                            })
+            .then(function (b64) {
+                //download image
+                let a = document.createElement("a");
+                a.href = b64;
+                a.download = "carte.jpg";
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+
+            });
+        } else if ($('#numViews').val() == 1) {
+            mergeImages([
+            { src: carteJpg.border3, x: carteJpg.map3.x, y: carteJpg.map3.y},
+            { src: carteJpg.map3.dataImage, x: carteJpg.map3.x+1, y: carteJpg.map3.y +1},
+            { src: carteJpg.map3.dataScalBar, x: carteJpg.map3.sx, y: carteJpg.map3.sy }
+            ], {
+                width: carteJpg.width,
+                height: carteJpg.height
+            })
+        .then(function (b64) {
+            //download image
+            let a = document.createElement("a");
+            a.href = b64;
+            a.download = "carte.jpg";
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+
+        });
+        }
+        }
+
+
+        function border1(carteJpg) {
+
+            var ctx = document.getElementById('canvas').getContext('2d');
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            ctx.lineWidth = 2;
+
+            ctx.beginPath();
+            ctx.moveTo(1, 1);
+            ctx.lineTo(carteJpg.map1.width + 1, 1);
+            ctx.lineTo(carteJpg.map1.width + 1, carteJpg.map1.height + 1);
+            ctx.lineTo(1, carteJpg.map1.height + 1);
+            ctx.lineTo(1, 1);
+            ctx.stroke();
+
+            carteJpg.border1 = canvas.toDataURL();
+
+        }
+
+        function border2(carteJpg) {
+
+            var ctx = document.getElementById('canvas').getContext('2d');
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            ctx.lineWidth = 2;
+
+            ctx.beginPath();
+            ctx.moveTo(1, 1);
+            ctx.lineTo(carteJpg.map2.width + 1, 1);
+            ctx.lineTo(carteJpg.map2.width + 1, carteJpg.map2.height + 1);
+            ctx.lineTo(1, carteJpg.map2.height + 1);
+            ctx.lineTo(1, 1);
+            ctx.stroke();
+
+            carteJpg.border2 = canvas.toDataURL();
+
+        }
+
+
+        function border3(carteJpg) {
+
+            var canvas = document.getElementById('canvas');
+            var ctx = document.getElementById('canvas').getContext('2d');
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            ctx.lineWidth = 2;
+
+            ctx.beginPath();
+            ctx.moveTo(1, 1);
+            ctx.lineTo(carteJpg.map3.width + 1, 1);
+            ctx.lineTo(carteJpg.map3.width + 1, carteJpg.map3.height + 1);
+            ctx.lineTo(1, carteJpg.map3.height + 1);
+            ctx.lineTo(1, 1);
+            ctx.stroke();
+
+            carteJpg.border3 = canvas.toDataURL();
+
+        }
     });
 
-    function changeLayers() {
-        // Listen for any layer being added or removed in the Map
-        app3.webmap.allLayers.on("change", function (event) {
-            console.log("Layer added: ", event.added);
-            console.log("Layer removed: ", event.removed);
-            console.log("Layer moved: ", event.moved);
-        });
-    }
 
 });
+

@@ -31,8 +31,8 @@ app.get('/pool', function (req, res) {
             console.log("not able to get connection " + err);
             res.status(400).send(err);
         }
-        var fields = req.param('fields');
-        var values = req.param('values');
+        var fields = req.query['fields'];
+        var values = req.query['values'];
 
         var query = "INSERT INTO etudes_sites_geoter_monde ( " + fields + " ) VALUES (" + values + "); update etudes_sites_geoter_monde set geom=st_SetSrid(st_MakePoint(long, lat), 4326);"
         client.query(query, function (err, result) {

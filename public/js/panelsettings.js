@@ -96,9 +96,9 @@ function(Zoom, Home, Locate, Compass, BasemapToggle, NavToggle, Search, Legend, 
           panelPosition: "calcite-panels-right", 
           zoomPosition: "calcite-zoom-top-left", 
           navFixedPosition: "navbar-fixed-top",
-          viewPadding: { top: 50 , bottom: 0 },
+          viewPadding: { top: 0 , bottom: 0 },
           viewPaddingNavHidden: { top: 0 , bottom: 0 }, 
-          uiPadding: { top: 15, bottom: 30 },
+          uiPadding: { top: 15, bottom: 5, right: 5 },
           layoutName: ""
       },
       TOPSPACE: {
@@ -109,7 +109,7 @@ function(Zoom, Home, Locate, Compass, BasemapToggle, NavToggle, Search, Legend, 
           navFixedPosition: "navbar-fixed-top",
           viewPadding: { top: 65, bottom: 0 }, 
           viewPaddingNavHidden: { top: 0 , bottom: 0 }, 
-          uiPadding: { top: 15, bottom: 30 },
+          uiPadding: { top: 15, bottom: 5, right: 5 },
           layoutName: ""
       }, 
       TOPSPACEALL: {
@@ -120,7 +120,7 @@ function(Zoom, Home, Locate, Compass, BasemapToggle, NavToggle, Search, Legend, 
           navFixedPosition: "navbar-fixed-top",
           viewPadding: { top: 65, bottom: 0 }, 
           viewPaddingNavHidden: { top: 0 , bottom: 0 }, 
-          uiPadding: { top: 15, bottom: 30 },
+          uiPadding: { top: 15, bottom: 5, right: 5 },
           layoutName: ""
       }, 
       TOPFIXED: {
@@ -131,7 +131,7 @@ function(Zoom, Home, Locate, Compass, BasemapToggle, NavToggle, Search, Legend, 
           navFixedPosition: "navbar-fixed-top",
           viewPadding: { top: 0, bottom: 0 }, 
           viewPaddingNavHidden: { top: 0 , bottom: 0 },
-          uiPadding: { top: 15, bottom: 30 },
+          uiPadding: { top: 15, bottom: 5, right: 5 },
           layoutName: ""
       },
       BOTTOM: {
@@ -142,7 +142,7 @@ function(Zoom, Home, Locate, Compass, BasemapToggle, NavToggle, Search, Legend, 
           navFixedPosition: "navbar-fixed-bottom",
           viewPadding: { top: 0, bottom: 50  },
           viewPaddingNavHidden: { top: 0 , bottom: 0 },
-          uiPadding: { top: 30, bottom: 15 },
+          uiPadding: { top: 30, bottom: 15, right: 5 },
           layoutName: ""
       },
       BOTTOMSPACE: {
@@ -153,7 +153,7 @@ function(Zoom, Home, Locate, Compass, BasemapToggle, NavToggle, Search, Legend, 
           navFixedPosition: "navbar-fixed-bottom",
           viewPadding: { top: 0, bottom: 65 },
           viewPaddingNavHidden: { top: 0 , bottom: 0 }, 
-          uiPadding: { top: 30, bottom: 15 },
+          uiPadding: { top: 30, bottom: 15, right: 5 },
           layoutName: ""
       }, 
       BOTTOMSPACEALL: {
@@ -164,7 +164,7 @@ function(Zoom, Home, Locate, Compass, BasemapToggle, NavToggle, Search, Legend, 
           navFixedPosition: "navbar-fixed-bottom",
           viewPadding: { top: 0, bottom: 65 },
           viewPaddingNavHidden: { top: 0 , bottom: 0 }, 
-          uiPadding: { top: 30, bottom: 15 },
+          uiPadding: { top: 30, bottom: 15, right: 5 },
           layoutName: ""
       }, 
       BOTTOMFIXED: {
@@ -175,7 +175,7 @@ function(Zoom, Home, Locate, Compass, BasemapToggle, NavToggle, Search, Legend, 
           navFixedPosition: "navbar-fixed-bottom",
           viewPadding: { top: 0, bottom: 0 }, 
           viewPaddingNavHidden: { top: 0 , bottom: 0 },
-          uiPadding: { top: 30, bottom: 15 },
+          uiPadding: { top: 30, bottom: 15, right: 5 },
           layoutName: ""
       },
       // Custom layouts...
@@ -187,7 +187,7 @@ function(Zoom, Home, Locate, Compass, BasemapToggle, NavToggle, Search, Legend, 
           navFixedPosition: "navbar-fixed-top",
           viewPadding: { top: 40, bottom: 0 }, 
           viewPaddingSmallScreen: { top: 40, bottom: 0 }, 
-          uiPadding: { top: 15, left: 15, right: 15, bottom: 30 },
+          uiPadding: { top: 15, left: 15, right: 5, bottom: 30 },
           layoutName: "calcite-layout-small-title"
       },
       BOTTOMSMALL: {
@@ -198,7 +198,7 @@ function(Zoom, Home, Locate, Compass, BasemapToggle, NavToggle, Search, Legend, 
           navFixedPosition: "navbar-fixed-bottom",
           viewPadding: { top: 0, bottom: 40 }, 
           viewPaddingSmallScreen: { top: 0, bottom: 40 }, 
-          uiPadding: { top: 30, left: 15, right: 15, bottom: 15 },
+          uiPadding: { top: 30, left: 15, right: 5, bottom: 15 },
           layoutName: "calcite-layout-small-title"
       },
       TOPLARGE: {
@@ -209,7 +209,7 @@ function(Zoom, Home, Locate, Compass, BasemapToggle, NavToggle, Search, Legend, 
           navFixedPosition: "navbar-fixed-top",
           viewPadding: { top: 60, bottom: 0 }, 
           viewPaddingSmallScreen: { top: 60, bottom: 0 }, 
-          uiPadding: { top: 15, left: 15, right: 15, bottom: 30 },
+          uiPadding: { top: 15, left: 15, right: 5, bottom: 30 },
           layoutName: "calcite-layout-large-title"
       },
       BOTTOMLARGE: {
@@ -220,7 +220,7 @@ function(Zoom, Home, Locate, Compass, BasemapToggle, NavToggle, Search, Legend, 
           navFixedPosition: "navbar-fixed-bottom",
           viewPadding: { top: 0, bottom: 60 },
           viewPaddingSmallScreen: { top: 0, bottom: 60 }, 
-          uiPadding: { top: 30, left: 15, right: 15, bottom: 15 },
+          uiPadding: { top: 30, left: 15, right: 5, bottom: 15 },
           layoutName: "calcite-layout-large-title"
       },
       TOPINLINELEFT: {
@@ -320,315 +320,132 @@ function(Zoom, Home, Locate, Compass, BasemapToggle, NavToggle, Search, Legend, 
             }
         });
 
-      //--------------------------------------------------------------------
-      // Tab - Title
-      //--------------------------------------------------------------------
-
-      query("#titleButton").on("click", function() {
-        query(".calcite-title-main")[0].innerHTML = query("#settingsTitleInput")[0].value;
-        query(".calcite-title-sub")[0].innerHTML = query("#settingsSubTitleInput")[0].value;;
-      });
 
       //--------------------------------------------------------------------
       // Tab - Map
       //--------------------------------------------------------------------
 
-      // Map
-      query("#settings2dView").on("click", function(e) {
-        domClass.toggle(query("#mapNav")[0], "hidden");
-      });
+      // Set Map Views
+        $('#numViews').on('change', function () {
 
-      query("#settings3dView").on("click", function(e) {
-        domClass.toggle(query("#sceneNav")[0], "hidden");
-      });
+            if ($(this).val() == '3') {
 
-      query("#settingsAddWebmap").on("click", function() {
-        _this.addWebmap();
-      });
+                $("#map1").removeClass("hidden");
+                $("#map2").removeClass("hidden");
 
-      query("#settingsClearWebmap").on("click", function() {
-        _this.clearWebmap();
-      });
+                enableSettings($('#sortView1'));
+                enableSettings($('#sortView2'));
+                enableSettings($('#sortView3'));
 
-      //--------------------------------------------------------------------
-      // Tab - Theme
-      //--------------------------------------------------------------------
+                $("#map1").attr('data-x', 0);
+                $("#map1").attr('data-y', 0);
 
-      //----------------------------------
-      // Color
-      //----------------------------------
+                $("#map2").attr('data-x', 0);
+                $("#map2").attr('data-y', 0);
 
-      query("#settingsColor").on("change", function(e) {
-        var style = e.target.value;
-        // Update UI
-        query("#colorThemeCollapse").removeClass("in");
-        query("#colorCalciteCollapse").removeClass("in");
-        query("#colorPickerCollapse").removeClass("in");
-        switch (style) {
-          // Show Calcite themes
-          case "theme":
-            query("#colorThemeCollapse").collapse("show");
-            break;
-          // Show calcite colors
-          case "calcite":
-            query("#colorCalciteCollapse").collapse("show");
-            break;
-          // Show custom colors
-          case "custom":
-            query("#colorPickerCollapse").collapse("show");
-        }
-      });
+                $("#map3").attr('data-x', 0);
+                $("#map3").attr('data-y', 0);
 
-      //----------------------------------
-      // Calcite Themes
-      //----------------------------------
+                $("#map1").css({ height: 416, width: 680, left: 0, top: 0 , transform: 'translate(0px, 0px)'});
+                $("#map2").css({ height: 416, width: 680, left: 0, top: 435, transform: 'translate(0px, 0px)' });
+                $("#map3").css({ height: 302, width: 302, left: 0, top: 650, transform: 'translate(0px, 0px)' });
 
-      query("#settingsThemeColor").on("change", function(e) {
-        // Get styles 
-        var theme = e.target.value,
-          textStyle = "";
-          bgStyle = "";
-          bgRgbaColor = "";
-          applyToAll = true;
 
-        // Select light theme
-        switch (theme) {
-          case "light":
-            textStyle = CALCITE_THEME_STYLES.TEXT_DARK;
-            bgStyle = CALCITE_THEME_STYLES.BG_LIGHT;
-            bgRgbaColor = CALCITE_THEME_STYLES.RGBA_DEFAULT; 
-            break;
-          // Select dark theme
-          case "dark":
-            textStyle = CALCITE_THEME_STYLES.TEXT_LIGHT;
-            bgStyle = CALCITE_THEME_STYLES.BG_DARK;
-            bgRgbaColor = CALCITE_THEME_STYLES.RGBA_DEFAULT;
-            break;
-        }
+            } else if ($(this).val() == '2') {
 
-        // Update UI 
-        query("#settingsCalciteColorAll")[0].checked = true;
-        query("#settingsPickerColorAll")[0].checked = true;
-        query("#settingsTextColor")[0].value = textStyle;
+                $("#map1").addClass("hidden");
+                $("#map2").removeClass("hidden");
 
-        // Set styles
-        _this.setStyles(bgStyle, textStyle, bgRgbaColor, applyToAll);
-        _this.applyStyles();
+                enableSettings($('#sortView1'));
+                disableSettings($('#sortView3'));
+                enableSettings($('#sortView2'));
+
+                $("#map2").attr('data-x', 0);
+                $("#map2").attr('data-y', 0);
+
+                $("#map3").attr('data-x', 0);
+                $("#map3").attr('data-y', 0);
+
+                $("#map2").css({ height: 467, width: 680, left: 0, top: 0, transform: 'translate(0px, 0px)' });
+                $("#map3").css({ height: 467, width: 680, left: 0, top: 485, transform: 'translate(0px, 0px)' });
+            } else if ($(this).val() == '1') {
+
+                $("#map1").addClass("hidden");
+                $("#map2").addClass("hidden");
+                disableSettings($('#sortView1'));
+                disableSettings($('#sortView2'));
+                disableSettings($('#sortView3'));
+
+                $("#map3").attr('data-x', 0);
+                $("#map3").attr('data-y', 0);
+
+                $("#map3").css({ height: 952, width: 680, left: 0, top: 0, transform: 'translate(0px, 0px)' });
+            }
+          
       });
 
 
-      //----------------------------------
-      // Calcite Colors
-      //----------------------------------
 
-      query("#settingsCalciteColor").on("change", function(e) {
-        // Get styles 
-        var bgColorStyle = e.target.value,
-          textStyle = e.target.options[e.target.selectedIndex].dataset.textcolor;
-          bgStyle = CALCITE_THEME_STYLES.BG_CUSTOM;
-          bgRgbaColor = _this._getRgbaColorFromStyle(bgColorStyle); // Convert to RGB
-          applyToAll = query("#settingsCalciteColorAll")[0].checked;
+      function disableSettings(xv) {
 
-         // Update UI
-        query("#settingsTextColor")[0].value = textStyle;
+              xv.prop('disabled', 'disabled');
 
-        // Set styles
-        _this.setStyles(bgStyle, textStyle, bgRgbaColor, applyToAll);
-        _this.applyStyles();
+      }
+
+      function enableSettings(xv) {
+
+          xv.prop('disabled', false);
+
+      }
+
+        // Set Map Positions Main View
+      $('#sortView1').on('change', function () {
+          if ($(this).val() == "1" && $('#numViews').val() == '3') {
+              $("#map3").css({ top: "0px" });
+          } else if ($(this).val() == "2" && $('#numViews').val() == '3') {
+              $("#map3").css({ top: "435px" });
+          } else if ($(this).val() == "3" && $('#numViews').val() == '3') {
+              $("#map3").css({ top: "650px" });
+          } else if ($(this).val() == "1" && $('#numViews').val() == '2') {
+              $("#map3").css({ top: "0px" });
+          } else if ($(this).val() == "2" && $('#numViews').val() == '2') {
+              $("#map3").css({ top: "485px" });
+          } else if ($(this).val() == "3" && $('#numViews').val() == '2') {
+              $("#map3").css({ top: "485px" });
+          } 
+          
       });
 
-      //----------------------------------
-      // Color Picker
-      //----------------------------------
-
-      query("#colorPickerDiv").on("color-change", function(e) {
-        e.color = e.color || _this.app.colorPickerWidget.color;
-        if (!e.color) {
-          return;
-        }
-        // Get styles  
-        var bgStyle = CALCITE_THEME_STYLES.BG_CUSTOM,
-          bgRbgaColor = "rgba(" + e.color.r + "," + e.color.g + "," + e.color.b + "," + e.color.a + ")",
-          textStyle = null,
-          applyToAll = query("#settingsCalciteColorAll")[0].checked;
-        
-        // Get the best complimentary text color
-        var hsl = _this._rgb2hsl(e.color.r, e.color.g, e.color.b);
-        if (hsl.l < 0.55) {
-          textStyle = CALCITE_THEME_STYLES.TEXT_LIGHT;
-        } else {
-          textStyle = CALCITE_THEME_STYLES.TEXT_DARK;
-        }
-
-        // Update UI
-        query("#settingsTextColor")[0].value = textStyle;
-
-        // Set styles
-        _this.setStyles(bgStyle, textStyle, bgRbgaColor, applyToAll);
-        _this.applyStyles();
-      });
-
-      //----------------------------------
-      // Apply to all checkboxes
-      //----------------------------------
-
-      query("#settingsCalciteColorAll").on("click", function(e) {
-        // Sync UI
-        query("#settingsPickerColorAll")[0].checked = e.target.checked;
-        // Set styles
-        on.emit(query("#settingsCalciteColor")[0], "change", { bubbles: true, cancelable: true });
-      });
-
-      query("#settingsPickerColorAll").on("click", function(e) {
-        // Sync UI
-        query("#settingsCalciteColorAll")[0].checked = e.target.checked;
-        // Set styles
-        on.emit(query("#colorPickerDiv")[0], "color-change", { bubbles: true, cancelable: true });
-      });
-
-      //----------------------------------
-      // Text Color
-      //----------------------------------
-
-      query("#settingsTextColor").on("change", function(e) {
-        // Get styles  
-        var textStyle = e.target.value,
-          applyToAll = query("#settingsCalciteColorAll")[0].checked;
-
-        // Set styles
-        _this.setStyles(null, textStyle, null, applyToAll);
-        _this.applyStyles();
-      });
-
-      //----------------------------------
-      // Widgets Color
-      //----------------------------------
-
-      query("#settingsWidgets").on("change", function(e) {    
-        var theme = e.target.value;
-        query(CALCITE_THEME_SELECTORS.MAP).removeClass("calcite-widgets-dark calcite-widgets-light").addClass(theme);
-      });
-
-      //--------------------------------------------------------------------
-      // Tab - Layout
-      //--------------------------------------------------------------------
-
-      query("#settingsLayout").on("change", function(e) {
-        var theme = e.target.value;
-        // Add classes
-        switch (theme) {
-          // Default APP_LAYOUTS
-          case "layout-top": // default
-            _this.setLayout(_this.APP_LAYOUTS.TOP);
-            break;
-          case "layout-top-space":
-            _this.setLayout(_this.APP_LAYOUTS.TOPSPACE);
-            break;
-          case "layout-top-space-all":
-            _this.setLayout(_this.APP_LAYOUTS.TOPSPACEALL);
-            break;
-          case "layout-top-fixed":
-            _this.setLayout(_this.APP_LAYOUTS.TOPFIXED);
-            break;
-          case "layout-bottom":
-            _this.setLayout(_this.APP_LAYOUTS.BOTTOM);
-            break;
-          case "layout-bottom-space":
-            _this.setLayout(_this.APP_LAYOUTS.BOTTOMSPACE);
-            break;
-          case "layout-bottom-space-all":
-            _this.setLayout(_this.APP_LAYOUTS.BOTTOMSPACEALL);
-            break;
-          case "layout-bottom-fixed":
-            _this.setLayout(_this.APP_LAYOUTS.BOTTOMFIXED);
-            break;
-          // Custom APP_LAYOUTS
-          case "calcite-layout-small-title-top":
-            _this.setLayout(_this.APP_LAYOUTS.TOPSMALL);
-            break;
-          case "calcite-layout-small-title-bottom":
-            _this.setLayout(_this.APP_LAYOUTS.BOTTOMSMALL);
-            break;
-          case "calcite-layout-large-title-top":
-            _this.setLayout(_this.APP_LAYOUTS.TOPLARGE);
-            break;
-          case "calcite-layout-large-title-bottom":
-            _this.setLayout(_this.APP_LAYOUTS.BOTTOMLARGE);
-            break;
-          case "calcite-layout-inline-left":
-            _this.setLayout(_this.APP_LAYOUTS.TOPINLINELEFT);
-            break;
-          case "calcite-layout-inline-right":
-            _this.setLayout(_this.APP_LAYOUTS.TOPINLINERIGHT);
-            break;
-          default:
-            _this.setLayout(_this.APP_LAYOUTS.TOP);
-            break;
-        }
-      });
-
-      // Map widgets add/remove
-      query("#settingsMapWidget").on("change", function(e) {
-        on.emit(query("#settingsPositionMapWidget")[0], "change",  {
-          bubbles: true,
-          cancelable: true
-        });
-      });
-
-      // Scene widgets add/remove
-      query("#settingsSceneWidget").on("change", function(e) {
-        on.emit(query("#settingsPositionSceneWidget")[0], "change",  {
-          bubbles: true,
-          cancelable: true
-        });
-      });
-
-      // Map widgets position
-      query("#settingsPositionMapWidget").on("change", function(e) {
-        var name = query("#settingsMapWidget")[0].value,
-          position = e.target.value;
-        _this.setWidgetPosition(_this.app.mapView, name, position);
-      });
-
-      // Scene widgets position
-      query("#settingsPositionSceneWidget").on("change", function(e) {
-        var name = query("#settingsSceneWidget")[0].value,
-          position = e.target.value;
-       // _this.setWidgetPosition(_this.app.sceneView, name, position);
-      });
-
-      query("#settingsPopup").on("change", function(e){
-        var popupOptions = {
-          position: e.target.value
-        }
-        _this.setPopupDock(_this.app.mapView, popupOptions);
-        //_this.setPopupDock(_this.app.sceneView, popupOptions);
-      });
-
-      query("#settingsPanel").on("change", function(e) {
-        var panels = query(CALCITE_THEME_SELECTORS.PANELS)[0],
-          panelStyle = e.target.value;
-        domClass.remove(panels, "calcite-panels-left calcite-panels-right");
-        domClass.add(panels, panelStyle);
-      });
-
-      query("#settingsMenu").on("change", function(e) {
-        var menu = query(CALCITE_THEME_SELECTORS.DROPDOWN_MENU)[0],
-          menuStyle = e.target.value;
-        domClass.remove(menu, "calcite-menu-drawer");
-        domClass.add(menu, menuStyle);
-      });
-
-      query("#settingsPadding").on("keydown", function(evt) {
-        if (evt.keyCode === keys.ENTER) {
-          var str = this.value;
-          var padding = eval("("+str+")");
-          if (padding) {
-            _this.app.mapView.padding = padding;
-            //_this.app.sceneView.padding = padding;
+        // Set Map Positions View 2
+      $('#sortView2').on('change', function () {
+          if ($(this).val() == "1" && $('#numViews').val() == '3') {
+              $("#map2").css({ top: "0px" });
+          } else if ($(this).val() == "2" && $('#numViews').val() == '3') {
+              $("#map2").css({ top: "435px" });
+          } else if ($(this).val() == "3" && $('#numViews').val() == '3') {
+              $("#map2").css({ top: "537px" });
+          } else if ($(this).val() == "1" && $('#numViews').val() == '2') {
+              $("#map2").css({ top: "0px" });
+          } else if ($(this).val() == "2" && $('#numViews').val() == '2') {
+              $("#map2").css({ top: "485px" });
+          } else if ($(this).val() == "3" && $('#numViews').val() == '2') {
+              $("#map2").css({ top: "485px" });
           }
-        }
       });
+
+        // Set Map Positions View 3
+      $('#sortView3').on('change', function () {
+          if ($(this).val() == "1" && $('#numViews').val() == '3') {
+              $("#map1").css({ top: "0px" });
+          } else if ($(this).val() == "2" && $('#numViews').val() == '3') {
+              $("#map1").css({ top: "435px" });
+          } else if ($(this).val() == "3" && $('#numViews').val() == '3') {
+              $("#map1").css({ top: "537px" });
+          } 
+      });
+
+
+
     },
 
     //--------------------------------------------------------------------------
@@ -853,7 +670,7 @@ function(Zoom, Home, Locate, Compass, BasemapToggle, NavToggle, Search, Legend, 
       } else {
         _this.setPadding(layout.viewPadding, layout.uiPadding);  
       }
-      _this.setPaddingUI(layout.viewPadding); //update UI
+     // _this.setPaddingUI(layout.viewPadding); //update UI
       if (layout.zoomPosition === "calcite-zoom-top-right") {
         _this.setWidgetPosition(_this.app.mapView, "zoom", "top-right");
         //_this.setWidgetPosition(_this.app.sceneView, "zoom", "top-right");
@@ -891,10 +708,10 @@ function(Zoom, Home, Locate, Compass, BasemapToggle, NavToggle, Search, Legend, 
       //_this.app.sceneView.ui.padding = uiPadding;
     },
 
-    setPaddingUI: function(viewPadding) {
+   /* setPaddingUI: function(viewPadding) {
       query("#settingsPadding")[0].value = JSON.stringify(viewPadding);
-    },
-
+    },*/
+    
     setWidgetPosition: function(view, name, position, index, id) {
       var component,
         exists = view.ui.find(name);
@@ -1013,4 +830,6 @@ function(Zoom, Home, Locate, Compass, BasemapToggle, NavToggle, Search, Legend, 
   });
 
   return PanelSettings;
+
+ 
 });
