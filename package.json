@@ -1,6 +1,12 @@
 {
   "name": "localisation",
-  "version": "0.3.1",
+  "version": "0.4.0",
+  "scripts": {
+    "build": "grunt build",
+    "clean": "grunt clean",
+    "styles": "grunt styles --force"
+  },
+  "license": "Apache-2.0",
   "dependencies": {
     "arcgis-js-api": "~4.10.0",
     "csvtojson": "^2.0.8",
@@ -15,6 +21,9 @@
   },
   "author": "Fabian Molina <fabianm536@gmail.com>",
   "description": "carte de localisation",
+  "repository": {
+    "url": "https://github.com/fabianm536/carte-localisation-app.git"
+  },
   "devDependencies": {
     "calcite-web": "github:Esri/calcite-web#v1.2.5"
   }
