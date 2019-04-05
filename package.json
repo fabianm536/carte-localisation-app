@@ -25,6 +25,15 @@
     "url": "https://github.com/fabianm536/carte-localisation-app.git"
   },
   "devDependencies": {
-    "calcite-web": "github:Esri/calcite-web#v1.2.5"
+    "grunt": "^1.0.0",
+    "grunt-contrib-clean": "^1.0.0",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-dojo": "^1.1.1",
+    "grunt-sass": "^2.0.0",
+    "gulp": "^3.9.1",
+    "gulp-clean": "^0.3.1",
+    "gulp-rename": "^1.2.2",
+    "node-sass": "~4.7.2",
+    "uglify-js": "^2.7.5"
   }
 }
