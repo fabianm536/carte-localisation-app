@@ -190,18 +190,6 @@ var profile = {
               mid.indexOf("/docs/") > -1;
         }
       }
-    },
-    {
-      name: "bootstrap",
-      location: DIR + "/bootstrap"
-    },
-    {
-      name: "calcite-maps",
-      location: "./../calcite-maps"
-    },
-    {
-      name: "calcite-settings",
-      location: "./../src/app"
     }
   ],
 
@@ -600,18 +588,6 @@ var profile = {
         name: "moment",
         location: "../moment",
         main: "moment"
-      },
-      {
-        name: "bootstrap",
-        location: "../bootstrap"
-      },
-      {
-        name: "calcite-maps",
-        location: "../calcite-maps"
-      },
-      {
-        name: "calcite-settings",
-        location: "../calcite-settings"
       }
     ],
     map: {

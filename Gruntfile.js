@@ -41,7 +41,8 @@ module.exports = function (grunt) {
         dojo: 'dojoconfig.js',
         load: 'build',
         cwd: './',
-        basePath: './src'
+        basePath: './src',
+        ignoreErrors: true 
       }
     },
 
