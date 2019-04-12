@@ -68,7 +68,6 @@ require([
         basemapSelected: "streets",
         basemapSelectedAlt: "streets",
         webmap: null,
-        webmapId: "3615ad3ea7a04278ad1b4ac3eef50f8f",
         padding: {
             top: 50,
             right: 0,
@@ -85,8 +84,6 @@ require([
             }
         },
         popupOptions: {
-            autoPanEnabled: true,
-            messageEnabled: false,
             spinnerEnabled: false,
             dockEnabled: true,
             dockOptions: {
@@ -118,7 +115,6 @@ require([
         basemapSelected: "gray",
         basemapSelectedAlt: "gray",
         webmap: null,
-        webmapId: "3615ad3ea7a04278ad1b4ac3eef50f8f",
         padding: {
             top: 50,
             right: 0,
@@ -135,8 +131,6 @@ require([
             }
         },
         popupOptions: {
-            autoPanEnabled: true,
-            messageEnabled: false,
             spinnerEnabled: false,
             dockEnabled: true,
             dockOptions: {
@@ -169,7 +163,6 @@ require([
         basemapSelected: "gray",
         basemapSelectedAlt: "gray",
         webmap: null,
-        webmapId: "3615ad3ea7a04278ad1b4ac3eef50f8f",
         padding: {
             top: 50,
             right: 0,
@@ -186,8 +179,6 @@ require([
             }
         },
         popupOptions: {
-            autoPanEnabled: true,
-            messageEnabled: false,
             spinnerEnabled: false,
             dockEnabled: true,
             dockOptions: {
@@ -242,10 +233,7 @@ require([
     function initializeMapViews(app) {
         // Webmap
         app.webmap = new Map({
-            basemap: 'streets',
-            portalItem: {
-                id: app.webmapId
-            }
+            basemap: 'streets'
         });
         // 2D - MapView
         app.mapView = new MapView({
@@ -255,8 +243,7 @@ require([
             center: app.lonlat,
             padding: app.padding,
             ui: app.uiPadding,
-            popup: new Popup(app.popupOptions),
-            visible: true
+            popup: new Popup(app.popupOptions)
         });
 
 
@@ -285,10 +272,7 @@ require([
     function initializeMapViews2(app) {
         // Webmap
         app.webmap = new Map({
-            basemap: 'national-geographic',
-            portalItem: {
-                id: app.webmapId
-            }
+            basemap: 'national-geographic'
         });
         // 2D - MapView
         app.mapView = new MapView({
@@ -298,8 +282,7 @@ require([
             center: app.lonlat,
             padding: app.padding,
             ui: app.uiPadding,
-            popup: new Popup(app.popupOptions),
-            visible: true
+            popup: new Popup(app.popupOptions)
         });
 
 
@@ -328,10 +311,7 @@ require([
     function initializeMapViews3(app) {
         // Webmap
         app.webmap = new Map({
-            basemap: 'satellite',
-            portalItem: {
-                id: app.webmapId
-            }
+            basemap: 'satellite'
         });
         // 2D - MapView
         app.mapView = new MapView({
@@ -341,8 +321,7 @@ require([
             center: app.lonlat,
             padding: app.padding,
             ui: app.uiPadding,
-            popup: new Popup(app.popupOptions),
-            visible: true
+            popup: new Popup(app.popupOptions)
         });
 
 
@@ -502,7 +481,6 @@ require([
                 viewModel: {
                     view: app.activeView,
                     popupEnabled: showPopup,
-                    highlightEnabled: false,
                     maxSuggestions: 20
                 },
             }, parentId);
@@ -520,25 +498,16 @@ require([
 
     function setColorPicker(app) {
         app.colorPickerWidget = new ColorPicker({
-            required: false,
-            showRecentColors: false,
-            showTransparencySlider: false
         }, "colorPickerDiv");
     }
 
     function setColorPicker2(app) {
         app.colorPickerWidget = new ColorPicker({
-            required: false,
-            showRecentColors: false,
-            showTransparencySlider: false
         }, "colorPickerDiv2");
     }
 
     function setColorPicker3(app) {
         app.colorPickerWidget = new ColorPicker({
-            required: false,
-            showRecentColors: false,
-            showTransparencySlider: false
         }, "colorPickerDiv3");
     }
 

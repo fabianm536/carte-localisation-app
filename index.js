@@ -1,3 +1,4 @@
+var http = require('http');
 var express = require('express');
 var multer = require('multer');
 var path = require('path');
@@ -5,6 +6,8 @@ var pg = require("pg");
 var app = express();
 var fs = require('fs');
 const csv = require('csvtojson');
+
+const port = process.env.PORT; //This is for get port from IIS
 
 
 //static folder. All sub folders work with
@@ -85,8 +88,6 @@ app.post('/api/file', function (req, res) {
 //////////////////////////
 //////server config///////
 //////////////////////////
-
-
 
 app.listen(4000, function () {
     console.log('Server is running.. on Port 4000');
