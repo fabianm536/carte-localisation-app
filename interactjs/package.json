@@ -1,0 +1,89 @@
+{
+  "_args": [
+    [
+      "interactjs@1.4.0-rc.5",
+      "C:\\Users\\f.molina\\Documents\\carte-localisation-app"
+    ]
+  ],
+  "_dev": {
+    "entries": "./index.ts",
+    "standalone": "interact",
+    "destDir": "./dist",
+    "name": "interact"
+  },
+  "_from": "interactjs@1.4.0-rc.5",
+  "_id": "interactjs@1.4.0-rc.5",
+  "_inBundle": false,
+  "_integrity": "sha512-n7ExK4liisR8uZdjxIyHS/cJkZZmbeqakCZyOlwpvN13xVc4hjwbIDTS/gYSHRRcTkKWen4/1TSqy/dOw9l8XA==",
+  "_location": "/interactjs",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "interactjs@1.4.0-rc.5",
+    "name": "interactjs",
+    "escapedName": "interactjs",
+    "rawSpec": "1.4.0-rc.5",
+    "saveSpec": null,
+    "fetchSpec": "1.4.0-rc.5"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/interactjs/-/interactjs-1.4.0-rc.5.tgz",
+  "_spec": "1.4.0-rc.5",
+  "_where": "C:\\Users\\f.molina\\Documents\\carte-localisation-app",
+  "authors": [
+    {
+      "name": "Taye Adeyemi",
+      "email": "dev@taye.me",
+      "url": "http://taye.me"
+    }
+  ],
+  "bugs": {
+    "url": "https://github.com/taye/interact.js/issues"
+  },
+  "dependencies": {
+    "@interactjs/types": "1.4.0-rc.5"
+  },
+  "description": "Drag and drop, resizing and multi-touch gestures with inertia and snapping for modern browsers (and also IE9+)",
+  "devDependencies": {
+    "@interactjs/_dev": "1.4.0-rc.5",
+    "@interactjs/interact": "1.4.0-rc.5",
+    "@interactjs/modifiers": "1.4.0-rc.5",
+    "@interactjs/utils": "1.4.0-rc.5"
+  },
+  "homepage": "http://interactjs.io",
+  "jsdelivr": "dist/interact.min.js",
+  "jspm": {
+    "main": "index"
+  },
+  "keywords": [
+    "interact.js",
+    "draggable",
+    "droppable",
+    "drag",
+    "drop",
+    "drag and drop",
+    "resize",
+    "touch",
+    "multi-touch",
+    "gesture",
+    "snap",
+    "inertia",
+    "grid",
+    "autoscroll",
+    "SVG"
+  ],
+  "license": "MIT",
+  "main": "dist/interact.js",
+  "name": "interactjs",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/taye/interact.js.git"
+  },
+  "scripts": {
+    "build": "@build --docs"
+  },
+  "version": "1.4.0-rc.5"
+}

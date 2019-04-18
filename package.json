@@ -1,20 +1,10 @@
 {
   "name": "localisation",
-  "version": "0.4.0",
-  "scripts": {
-    "build": "grunt build",
-    "clean": "grunt clean",
-    "styles": "grunt styles --force"
-  },
+  "version": "0.5.0",
   "license": "Apache-2.0",
   "dependencies": {
-    "arcgis-js-api": "~4.10.0",
     "csvtojson": "^2.0.8",
     "express": "^4.16.4",
-    "html2canvas": "^1.0.0-alpha.12",
-    "interactjs": "^1.4.0-rc.5",
-    "jquery": "^3.3.1",
-    "merge-images": "^1.1.0",
     "multer": "1.1.0",
     "path": "^0.12.7",
     "pg": "^6.4.2"
@@ -23,17 +13,5 @@
   "description": "carte de localisation",
   "repository": {
     "url": "https://github.com/fabianm536/carte-localisation-app.git"
-  },
-  "devDependencies": {
-    "grunt": "^1.0.0",
-    "grunt-contrib-clean": "^1.0.0",
-    "grunt-contrib-copy": "^1.0.0",
-    "grunt-dojo": "^1.1.1",
-    "grunt-sass": "^2.0.0",
-    "gulp": "^3.9.1",
-    "gulp-clean": "^0.3.1",
-    "gulp-rename": "^1.2.2",
-    "node-sass": "~4.7.2",
-    "uglify-js": "^2.7.5"
   }
 }
