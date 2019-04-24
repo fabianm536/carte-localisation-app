@@ -3,6 +3,9 @@ require([
   "dojo/has",
   "esri/config",
   "esri/Map",
+  "esri/Basemap",
+  "esri/layers/WMSLayer",
+  "esri/layers/WMTSLayer",
   "esri/layers/FeatureLayer",
   "esri/layers/TileLayer",
   "esri/geometry/Point",
@@ -37,7 +40,7 @@ require([
 
   // Dojo
   "dojo/domReady!"
-], function (has, esriConfig,Map, FeatureLayer,TileLayer, Point, SpatialReference, coordinateFormatter, MapView, Graphic, Search, ScaleBar, Popup, ColorPicker, 
+], function (has, esriConfig,Map, Basemap,WMSLayer, WMTSLayer,FeatureLayer,TileLayer, Point, SpatialReference, coordinateFormatter, MapView, Graphic, Search, ScaleBar, Popup, ColorPicker, 
         FeatureForm, watchUtils, query, domClass, dom, on, CalciteMapsSettings, CalciteMapsArcGISSupport, PanelSettings
         ) {
 
@@ -49,6 +52,250 @@ require([
             }
         };
     }
+
+
+    ///FUGRO BASEMAP
+    var etopo2_1 = new WMTSLayer({
+        url: "http://192.168.157.25:90/index.php/lizmap/service/",
+        serviceMode : 'KVP',
+        customParameters : {
+          repository: "fugrobasemap",
+          project: "fugrobasemap2"
+          },
+        activeLayer: {
+          id: 'etopo2_1'
+        }
+      });
+
+      var gtopo_1km_1 = new WMTSLayer({
+        url: "http://192.168.157.25:90/index.php/lizmap/service/",
+        serviceMode : 'KVP',
+        customParameters : {
+          repository: "fugrobasemap",
+          project: "fugrobasemap2"
+          },
+        activeLayer: {
+          id: 'gtopo_1km_1'
+        }
+      });
+
+      var gtopo_1km_2 = new WMTSLayer({
+        url: "http://192.168.157.25:90/index.php/lizmap/service/",
+        serviceMode : 'KVP',
+        customParameters : {
+          repository: "fugrobasemap",
+          project: "fugrobasemap2"
+          },
+        activeLayer: {
+          id: 'gtopo_1km_2'
+        }
+      });
+
+      
+      var VMAP0_CaspianSea = new WMTSLayer({
+        url: "http://192.168.157.25:90/index.php/lizmap/service/",
+        serviceMode : 'KVP',
+        customParameters : {
+          repository: "fugrobasemap",
+          project: "fugrobasemap2"
+          },
+        activeLayer: {
+          id: 'VMAP0_CaspianSea'
+        }
+      });
+
+      var NED_relief_bathy_1 = new WMTSLayer({
+        url: "http://192.168.157.25:90/index.php/lizmap/service/",
+        serviceMode : 'KVP',
+        customParameters : {
+          repository: "fugrobasemap",
+          project: "fugrobasemap2"
+          },
+        activeLayer: {
+          id: 'NED_relief_bathy_1'
+        }
+      });
+
+      
+      var etopo2_1 = new WMTSLayer({
+        url: "http://192.168.157.25:90/index.php/lizmap/service/",
+        serviceMode : 'KVP',
+        customParameters : {
+          repository: "fugrobasemap",
+          project: "fugrobasemap2"
+          },
+        activeLayer: {
+          id: 'etopo2_1'
+        }
+      });
+
+      var ESRI_boundaries_2 = new WMSLayer({
+        url: "http://192.168.157.25:90/index.php/lizmap/service/",
+        serviceMode : 'KVP',
+        customParameters : {
+          repository: "fugrobasemap",
+          project: "fugrobasemap2"
+          },
+        sublayers: [
+          {
+            name: "ESRI_boundaries_2"
+          }
+        ]
+      });
+
+      var ESRI_cities_3 = new WMSLayer({
+        url: "http://192.168.157.25:90/index.php/lizmap/service/",
+        serviceMode : 'KVP',
+        customParameters : {
+          repository: "fugrobasemap",
+          project: "fugrobasemap2"
+          },
+          sublayers: [
+          {
+            name: "ESRI_cities_3"
+          }
+        ]
+      });
+
+      var ESRI_cities_2 = new WMSLayer({
+        url: "http://192.168.157.25:90/index.php/lizmap/service/",
+        serviceMode : 'KVP',
+        customParameters : {
+          repository: "fugrobasemap",
+          project: "fugrobasemap2"
+          },
+          sublayers: [
+          {
+            name: "ESRI_cities_2"
+          }
+        ]
+      });
+
+     
+      var NED_pays = new WMSLayer({
+        url: "http://192.168.157.25:90/index.php/lizmap/service/",
+        serviceMode : 'KVP',
+        customParameters : {
+          repository: "fugrobasemap",
+          project: "fugrobasemap2"
+          },
+          sublayers: [
+          {
+            name: "NED_pays"
+          }
+        ]
+      });
+
+
+      var ESRI_capital_1 = new WMSLayer({
+        url: "http://192.168.157.25:90/index.php/lizmap/service/",
+        serviceMode : 'KVP',
+        customParameters : {
+          repository: "fugrobasemap",
+          project: "fugrobasemap2"
+          },
+          sublayers: [
+          {
+            name: "ESRI_capital_1"
+          }
+        ]
+      });
+
+      var Toponymes_monde = new WMSLayer({
+        url: "http://192.168.157.25:90/index.php/lizmap/service/",
+        serviceMode : 'KVP',
+        customParameters : {
+          repository: "fugrobasemap",
+          project: "fugrobasemap2"
+          },
+          sublayers: [
+          {
+            name: "Toponymes_monde"
+          }
+        ]
+      });
+
+      var ESRI_capital_3 = new WMSLayer({
+        url: "http://192.168.157.25:90/index.php/lizmap/service/",
+        serviceMode : 'KVP',
+        customParameters : {
+          repository: "fugrobasemap",
+          project: "fugrobasemap2"
+          },
+          sublayers: [
+          {
+            name: "ESRI_capital_3"
+          }
+        ]
+      });
+
+      var ESRI_boundaries = new WMSLayer({
+        url: "http://192.168.157.25:90/index.php/lizmap/service/",
+        serviceMode : 'KVP',
+        customParameters : {
+          repository: "fugrobasemap",
+          project: "fugrobasemap2"
+          },
+          sublayers: [
+          {
+            name: "ESRI_boundaries"
+          }
+        ]
+      });
+
+      var ESRI_capital_4 = new WMSLayer({
+        url: "http://192.168.157.25:90/index.php/lizmap/service/",
+        serviceMode : 'KVP',
+        customParameters : {
+          repository: "fugrobasemap",
+          project: "fugrobasemap2"
+          },
+          sublayers: [
+          {
+            name: "ESRI_capital_4"
+          }
+        ]
+      });
+
+      var ESRI_country_name = new WMSLayer({
+        url: "http://192.168.157.25:90/index.php/lizmap/service/",
+        serviceMode : 'KVP',
+        customParameters : {
+          repository: "fugrobasemap",
+          project: "fugrobasemap2"
+          },
+          sublayers: [
+          {
+            name: "ESRI_country_name"
+          }
+        ]
+      });
+
+      var ESRI_capital_2 = new WMSLayer({
+        url: "http://192.168.157.25:90/index.php/lizmap/service/",
+        serviceMode : 'KVP',
+        customParameters : {
+          repository: "fugrobasemap",
+          project: "fugrobasemap2"
+          },
+          sublayers: [
+          {
+            name: "ESRI_capital_2"
+          }
+        ]
+      });
+
+
+      var fugrobasemap = new Basemap({
+        baseLayers: [NED_relief_bathy_1,etopo2_1,gtopo_1km_2,gtopo_1km_1,VMAP0_CaspianSea,NED_pays,ESRI_country_name,
+        ESRI_boundaries_2,ESRI_boundaries,ESRI_cities_3,ESRI_cities_2,ESRI_capital_4,
+        ESRI_capital_3, ESRI_capital_2,ESRI_capital_1,Toponymes_monde],
+        title: "Fugro Basemap",
+        id: "fugrobasemap",
+        thumbnailUrl:
+          "img/fugrobasemap2.png"
+      });
+////end basemap
 
     var app1, app2, app3;
 
@@ -234,7 +481,7 @@ require([
         
         // Webmap
         app.webmap = new Map({
-            basemap: 'streets'
+            basemap: fugrobasemap
         });
         // 2D - MapView
         app.mapView = new MapView({

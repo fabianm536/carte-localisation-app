@@ -1,5 +1,6 @@
 var http = require('http');
 var express = require('express');
+const cors = require('cors');
 var multer = require('multer');
 var path = require('path');
 var pg = require("pg");
@@ -12,6 +13,30 @@ const port = process.env.PORT; //This is for get port from IIS
 
 //static folder. All sub folders work with
 app.use(express.static(__dirname + '/'));
+
+//CORS settings
+const allowedOrigins = [
+    'http://192.168.157.25',
+    'http://192.168.157.25:90',
+    'http://192.168.157.25:90/index.php/lizmap/service'
+  ];
+
+const corsOptions = {
+origin: (origin, callback) => {
+    if (allowedOrigins.includes(origin) || !origin) {
+    callback(null, true);
+    } else {
+    callback(new Error('Origin not allowed by CORS'));
+    }
+}
+}
+
+// Enable preflight requests for all routes
+app.options('*', cors(corsOptions));
+
+app.get('/', cors(corsOptions), (req, res, next) => {
+    res.json({ message: 'This route is CORS-enabled for an allowed origin.' });
+})
 
 
 //////////////////////////
@@ -90,5 +115,5 @@ app.post('/api/file', function (req, res) {
 //////////////////////////
 
 app.listen(4000, function () {
-    console.log('Server is running.. on Port 4000');
+    console.log('CORS-enabled web server is running.. on Port 4000');
 });
