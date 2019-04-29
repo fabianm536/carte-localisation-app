@@ -241,7 +241,7 @@ require([
         
         // Webmap
         app.webmap = new Map({
-            basemap: "gray"
+            basemap: "streets"
         });
         // 2D - MapView
         app.mapView = new MapView({
@@ -361,7 +361,7 @@ require([
     function initializeWidgets(app) {
 
         app.mapView.when(function () {
-            app.panelSettings.setWidgetPosition(app.mapView, "zoom", "none", 1);
+            app.panelSettings.setWidgetPosition(app.mapView, "zoom", "top-left", 1);
         });
 
         // Panel widgets
@@ -1219,6 +1219,12 @@ require([
         carteJpg.map2 = new Object();
         carteJpg.map3 = new Object();
 
+        var pixelRatio = 1;
+
+        //ScaleBar elements
+        var scaleBars = document.getElementsByClassName("esri-scale-bar");
+
+
         //Arcgis ScreenShot
         app1.mapView.when(function () {
             var options = {
@@ -1228,53 +1234,35 @@ require([
             app1.mapView.takeScreenshot(options).then(function (screenshot) {
                 carteJpg.map1.dataImage = screenshot.dataUrl;
             });
-        });
-
-        app2.mapView.when(function () {
-            var options = {
-                format: 'jpg',
-                quality: 100
-            };
-            app2.mapView.takeScreenshot(options).then(function (screenshot) {
-                carteJpg.map2.dataImage = screenshot.dataUrl;
+            app2.mapView.when(function () {
+                var options = {
+                    format: 'jpg',
+                    quality: 100
+                };
+                app2.mapView.takeScreenshot(options).then(function (screenshot) {
+                    carteJpg.map2.dataImage = screenshot.dataUrl;
+                });
+                app3.mapView.when(function () {
+                    var options = {
+                        format: 'jpg',
+                        quality: 100
+                    };
+                    app3.mapView.takeScreenshot(options).then(function (screenshot) {
+                        carteJpg.map3.dataImage = screenshot.dataUrl;
+                    });
+                    html2canvas(scaleBars[0], { backgroundColor: null }).then(function (canvas) {
+                        carteJpg.map1.dataScalBar = canvas.toDataURL("image/png");
+                        html2canvas(scaleBars[1], { backgroundColor: null }).then(function (canvas) {
+                            carteJpg.map2.dataScalBar = canvas.toDataURL("image/png");
+                            html2canvas(scaleBars[2], { backgroundColor: null }).then(function (canvas) {
+                                carteJpg.map3.dataScalBar = canvas.toDataURL("image/png");
+                                exportToJpeg();
+                            });   
+                        });
+                    });
+                });
             });
         });
-
-        app3.mapView.when(function () {
-            var options = {
-                format: 'jpg',
-                quality: 100
-            };
-            app3.mapView.takeScreenshot(options).then(function (screenshot) {
-                carteJpg.map3.dataImage = screenshot.dataUrl;
-            });
-        });
-
-        //mapviews elements
-        var mapViews = document.getElementsByClassName("esri-view");
-
-        //Border elements
-
-
-
-        //ScaleBar elements
-        var scaleBars = document.getElementsByClassName("esri-scale-bar");
-
-        html2canvas(scaleBars[0], { backgroundColor: null }).then(function (canvas) {
-            carteJpg.map1.dataScalBar = canvas.toDataURL("image/png");
-
-        });
-
-        html2canvas(scaleBars[1], { backgroundColor: null }).then(function (canvas) {
-            carteJpg.map2.dataScalBar = canvas.toDataURL("image/png");
-        });
-
-        html2canvas(scaleBars[2], { backgroundColor: null }).then(function (canvas) {
-            carteJpg.map3.dataScalBar = canvas.toDataURL("image/png");
-
-            exportToJpeg();
-        });       
-
 
         //Export to jpeg
         function exportToJpeg() {
@@ -1287,7 +1275,6 @@ require([
             
             var dx = mapContainer.getBoundingClientRect().x + 1;
             var dy = mapContainer.getBoundingClientRect().y + 1;
-
 
             //dimensions
             carteJpg.map1.width = mapViews[0].getBoundingClientRect().width;

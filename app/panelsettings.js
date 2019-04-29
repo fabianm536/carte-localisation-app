@@ -332,11 +332,17 @@ function(Zoom, Home, Locate, Compass, BasemapToggle, NavToggle, Search, Legend, 
 
                 $("#map1").removeClass("hidden");
                 $("#map2").removeClass("hidden");
+                $('#formlayout3').removeClass("hidden");
+                $('#formlayout2').addClass("hidden");
+                $('#layout2').val("1");
+                
 
-                enableSettings($('#sortView1'));
-                enableSettings($('#sortView2'));
-                enableSettings($('#sortView3'));
+                //z order
+                $("#map1").css( "z-index", "0" );
+                $("#map2").css( "z-index", "1" );
+                $("#map3").css( "z-index", "2" );
 
+                //xy position
                 $("#map1").attr('data-x', 0);
                 $("#map1").attr('data-y', 0);
 
@@ -348,33 +354,33 @@ function(Zoom, Home, Locate, Compass, BasemapToggle, NavToggle, Search, Legend, 
 
                 $("#map1").css({ height: 416, width: 680, left: 0, top: 0 , transform: 'translate(0px, 0px)'});
                 $("#map2").css({ height: 416, width: 680, left: 0, top: 435, transform: 'translate(0px, 0px)' });
-                $("#map3").css({ height: 302, width: 302, left: 0, top: 650, transform: 'translate(0px, 0px)' });
-
+                $("#map3").css({ height: 302, width: 302, left: 10, top: 650, transform: 'translate(0px, 0px)' });
 
             } else if ($(this).val() == '2') {
 
                 $("#map1").addClass("hidden");
                 $("#map2").removeClass("hidden");
+                $('#formlayout2').removeClass("hidden");
+                $('#formlayout3').addClass("hidden");
+                $('#layout3').val("1");
 
-                enableSettings($('#sortView1'));
-                disableSettings($('#sortView3'));
-                enableSettings($('#sortView2'));
-
+                //z order
+                $("#map2").css( "z-index", "1" );
+                $("#map3").css( "z-index", "2" );
+    
+                //xy position
                 $("#map2").attr('data-x', 0);
                 $("#map2").attr('data-y', 0);
-
                 $("#map3").attr('data-x', 0);
                 $("#map3").attr('data-y', 0);
-
                 $("#map2").css({ height: 467, width: 680, left: 0, top: 0, transform: 'translate(0px, 0px)' });
                 $("#map3").css({ height: 467, width: 680, left: 0, top: 485, transform: 'translate(0px, 0px)' });
             } else if ($(this).val() == '1') {
 
                 $("#map1").addClass("hidden");
                 $("#map2").addClass("hidden");
-                disableSettings($('#sortView1'));
-                disableSettings($('#sortView2'));
-                disableSettings($('#sortView3'));
+                $('#formlayout2').addClass("hidden");
+                $('#formlayout3').addClass("hidden");
 
                 $("#map3").attr('data-x', 0);
                 $("#map3").attr('data-y', 0);
@@ -385,62 +391,125 @@ function(Zoom, Home, Locate, Compass, BasemapToggle, NavToggle, Search, Legend, 
       });
 
 
+      // Set Map Positions View 3
+      $('#layout3').on('change', function () {
+        if ($(this).val() == "1") {
+            //z order
+            $("#map1").css( "z-index", "0" );
+            $("#map2").css( "z-index", "1" );
+            $("#map3").css( "z-index", "2" );
 
-      function disableSettings(xv) {
+            //xy position
+            $("#map1").attr('data-x', 0);
+            $("#map1").attr('data-y', 0);
+            $("#map2").attr('data-x', 0);
+            $("#map2").attr('data-y', 0);
+            $("#map3").attr('data-x', 0);
+            $("#map3").attr('data-y', 0);
+            $("#map1").css({ height: 416, width: 680, left: 0, top: 0 , transform: 'translate(0px, 0px)'});
+            $("#map2").css({ height: 416, width: 680, left: 0, top: 435, transform: 'translate(0px, 0px)' });
+            $("#map3").css({ height: 302, width: 302, left: 10, top: 650, transform: 'translate(0px, 0px)' });
 
-              xv.prop('disabled', 'disabled');
+        } else if ($(this).val() == "2" ) {
+            //z order
+            $("#map1").css( "z-index", "2" );
+            $("#map2").css( "z-index", "1" );
+            $("#map3").css( "z-index", "0" );
 
-      }
+            //xy position
+            $("#map1").attr('data-x', 0);
+            $("#map1").attr('data-y', 0);
+            $("#map2").attr('data-x', 0);
+            $("#map2").attr('data-y', 0);
+            $("#map3").attr('data-x', 0);
+            $("#map3").attr('data-y', 0);
+            $("#map2").css({ height: 466, width: 680, left: 0, top: 0 , transform: 'translate(0px, 0px)'});
+            $("#map3").css({ height: 467, width: 680, left: 0, top: 485, transform: 'translate(0px, 0px)' });
+            $("#map1").css({ height: 233, width: 233, left: 447, top: 0, transform: 'translate(0px, 0px)' });
 
-      function enableSettings(xv) {
+        } else if ($(this).val() == "3" ) {
+          $("#map1").css( "z-index", "0" );
+          $("#map2").css( "z-index", "1" );
+          $("#map3").css( "z-index", "2" );
 
-          xv.prop('disabled', false);
+          //xy position
+          $("#map1").attr('data-x', 0);
+          $("#map1").attr('data-y', 0);
+          $("#map2").attr('data-x', 0);
+          $("#map2").attr('data-y', 0);
+          $("#map3").attr('data-x', 0);
+          $("#map3").attr('data-y', 0);
+          $("#map1").css({ height: 332, width: 332, left: 348, top: 620 , transform: 'translate(0px, 0px)'});
+          $("#map2").css({ height: 332, width: 332, left: 0, top: 620, transform: 'translate(0px, 0px)' });
+          $("#map3").css({ height: 606, width: 680, left: 0, top: 0, transform: 'translate(0px, 0px)' });
+        } else if ($(this).val() == "4" ) {
+          $("#map1").css( "z-index", "0" );
+          $("#map2").css( "z-index", "1" );
+          $("#map3").css( "z-index", "2" );
 
-      }
+          //xy position
+          $("#map1").attr('data-x', 0);
+          $("#map1").attr('data-y', 0);
+          $("#map2").attr('data-x', 0);
+          $("#map2").attr('data-y', 0);
+          $("#map3").attr('data-x', 0);
+          $("#map3").attr('data-y', 0);
+          $("#map1").css({ height: 332, width: 332, left: 348, top: 0 , transform: 'translate(0px, 0px)'});
+          $("#map2").css({ height: 332, width: 332, left: 0, top: 0, transform: 'translate(0px, 0px)' });
+          $("#map3").css({ height: 606, width: 680, left: 0, top: 347, transform: 'translate(0px, 0px)' });
+        } 
+    });
 
-        // Set Map Positions Main View
-      $('#sortView1').on('change', function () {
-          if ($(this).val() == "1" && $('#numViews').val() == '3') {
-              $("#map3").css({ top: "0px" });
-          } else if ($(this).val() == "2" && $('#numViews').val() == '3') {
-              $("#map3").css({ top: "435px" });
-          } else if ($(this).val() == "3" && $('#numViews').val() == '3') {
-              $("#map3").css({ top: "650px" });
-          } else if ($(this).val() == "1" && $('#numViews').val() == '2') {
-              $("#map3").css({ top: "0px" });
-          } else if ($(this).val() == "2" && $('#numViews').val() == '2') {
-              $("#map3").css({ top: "485px" });
-          } else if ($(this).val() == "3" && $('#numViews').val() == '2') {
-              $("#map3").css({ top: "485px" });
-          } 
-          
-      });
-
-        // Set Map Positions View 2
-      $('#sortView2').on('change', function () {
-          if ($(this).val() == "1" && $('#numViews').val() == '3') {
-              $("#map2").css({ top: "0px" });
-          } else if ($(this).val() == "2" && $('#numViews').val() == '3') {
-              $("#map2").css({ top: "435px" });
-          } else if ($(this).val() == "3" && $('#numViews').val() == '3') {
-              $("#map2").css({ top: "537px" });
-          } else if ($(this).val() == "1" && $('#numViews').val() == '2') {
-              $("#map2").css({ top: "0px" });
-          } else if ($(this).val() == "2" && $('#numViews').val() == '2') {
-              $("#map2").css({ top: "485px" });
-          } else if ($(this).val() == "3" && $('#numViews').val() == '2') {
-              $("#map2").css({ top: "485px" });
-          }
-      });
-
-        // Set Map Positions View 3
-      $('#sortView3').on('change', function () {
-          if ($(this).val() == "1" && $('#numViews').val() == '3') {
-              $("#map1").css({ top: "0px" });
-          } else if ($(this).val() == "2" && $('#numViews').val() == '3') {
-              $("#map1").css({ top: "435px" });
-          } else if ($(this).val() == "3" && $('#numViews').val() == '3') {
-              $("#map1").css({ top: "537px" });
+         // Set Map Positions View 2
+         $('#layout2').on('change', function () {
+          if ($(this).val() == "1") {
+              //z order
+              $("#map2").css( "z-index", "1" );
+              $("#map3").css( "z-index", "2" );
+  
+              //xy position
+              $("#map2").attr('data-x', 0);
+              $("#map2").attr('data-y', 0);
+              $("#map3").attr('data-x', 0);
+              $("#map3").attr('data-y', 0);
+              $("#map2").css({ height: 467, width: 680, left: 0, top: 0, transform: 'translate(0px, 0px)' });
+              $("#map3").css({ height: 467, width: 680, left: 0, top: 485, transform: 'translate(0px, 0px)' });
+  
+          } else if ($(this).val() == "2" ) {
+              //z order
+              $("#map2").css( "z-index", "1" );
+              $("#map3").css( "z-index", "0" );
+  
+              //xy position
+              $("#map2").attr('data-x', 0);
+              $("#map2").attr('data-y', 0);
+              $("#map3").attr('data-x', 0);
+              $("#map3").attr('data-y', 0);
+              $("#map3").css({ height: 467, width: 680, left: 0, top: 0, transform: 'translate(0px, 0px)' });
+              $("#map2").css({ height: 467, width: 680, left: 0, top: 485, transform: 'translate(0px, 0px)' });
+  
+          } else if ($(this).val() == "3" ) {
+            $("#map2").css( "z-index", "1" );
+            $("#map3").css( "z-index", "2" );
+  
+            //xy position
+            $("#map2").attr('data-x', 0);
+            $("#map2").attr('data-y', 0);
+            $("#map3").attr('data-x', 0);
+            $("#map3").attr('data-y', 0);
+            $("#map3").css({ height: 332, width: 332, left: 0, top: 0, transform: 'translate(0px, 0px)' });
+            $("#map2").css({ height: 952, width: 680, left: 0, top: 0, transform: 'translate(0px, 0px)' });
+          } else if ($(this).val() == "4" ) {
+            $("#map2").css( "z-index", "2" );
+            $("#map3").css( "z-index", "1" );
+  
+            //xy position
+            $("#map2").attr('data-x', 0);
+            $("#map2").attr('data-y', 0);
+            $("#map3").attr('data-x', 0);
+            $("#map3").attr('data-y', 0);
+            $("#map2").css({ height: 332, width: 332, left: 0, top: 0, transform: 'translate(0px, 0px)' });
+            $("#map3").css({ height: 952, width: 680, left: 0, top: 0, transform: 'translate(0px, 0px)' });
           } 
       });
 

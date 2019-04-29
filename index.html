@@ -16,6 +16,9 @@
   <!-- Calcite Maps -->
   <link rel="stylesheet" href="calcite-maps/dist/css/calcite-maps-arcgis-4.x.min-v0.10.css">
   
+  <!-- Bootstrap-select -->
+  <link rel="stylesheet" href="calcite-maps/dist/css/bootstrap-select.css">
+  
   <!-- ArcGIS JS 4.x -->
   <link rel="stylesheet" href="arcgis/4.10/esri/css/main.css">
 
@@ -122,7 +125,7 @@
       #map3 {
           position: absolute;
           top: 650px;
-          left: 0px;
+          left: 10px;
           height: 302px;
           width: 302px;
           border: 1px solid black;
@@ -130,6 +133,7 @@
       .hidden {
           display: none;
       }
+
 
   </style>
 
@@ -249,7 +253,7 @@
                         <li role="presentation" class="active"><a href="#map" aria-controls="map" role="tab" data-toggle="tab">Map</a></li>
                         <li role="presentation"><a href="#xy" aria-controls="xy" role="tab" data-toggle="tab">XY</a></li>
                         <li role="presentation"><a href="#file" aria-controls="file" role="tab" data-toggle="tab">File</a></li>
-                        <li role="presentation"><a href="#sync" aria-controls="sync" role="tab" data-toggle="tab">Sync</a></li>
+                        
                     </ul>
 
                     <div class="tab-content">
@@ -388,20 +392,7 @@
                             </div>
                         </div>
 
-                        <!-- Tab - Sync -->
 
-                        <div role="tabpanel" class="tab-pane" id="sync">
-                            <div class="calcite-form-title">Maps Sync</div>
-
-                            <div class="form-horizontal calcite-form-padding">
-
-                                <div class="form-group">
-                                    <div class="col-xs-9 col-xs-offset-3">
-                                        <button id="syncButton" type="button" class="btn btn-primary btn-block">Sync maps</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
 
                     </div><!-- /.tab-content -->
                     <div id="editArea" class="editArea-container">
@@ -588,6 +579,7 @@
                     <div class="panel-body">
                         <ul class="nav nav-tabs" role="tablist">
                             <li role="presentation" class="active"><a href="#views" aria-controls="title" role="tab" data-toggle="tab">Views</a></li>
+                            <li role="presentation"><a href="#sync" aria-controls="sync" role="tab" data-toggle="tab">Sync</a></li>
                         </ul>
 
                         <div class="tab-content">
@@ -603,7 +595,7 @@
                                     <div class="col-xs-9">
                                         <div class="col-xs-6">
                                             <select class="form-control" name="numViews" id="numViews">
-                                                <option value="3">3</option>.
+                                                <option value="3">3</option>
                                                 <option value="2">2</option>
                                                 <option value="1">1</option>
                                             </select>
@@ -611,53 +603,53 @@
                                     </div>
                                     </div>
 
-                                
-                                <div class="calcite-form-title">2. Set the maps position</div>
 
-                                <div class="form-group">
-                                    <label for="settingsView" class="col-xs-3 control-label">MainView</label>
-                                    <div class="col-xs-9">
-                                        <div class="col-xs-6">
-                                            <select class="form-control" name="sortView1" id="sortView1">
-                                                <option value="3">Bottom</option>
-                                                <option value="1">Top</option>
-                                                <option value="2">Middle</option>
-                                                
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
+                                <div class="calcite-form-title">2. Set the layout</div>
 
-                                <div class="form-group">
-                                    <label for="settingsView" class="col-xs-3 control-label">View 2</label>
+                                <div class="form-group" id="formlayout3">
+                                    <label for="settingsView" class="col-xs-3 control-label">Layout</label>
 
                                     <div class="col-xs-9">
                                         <div class="col-xs-6">
-                                            <select class="form-control" name="sortView2" id="sortView2">
-                                                <option value="2">Middle</option>
-                                                <option value="1">Top</option>                                                
-                                                <option value="3">Bottom</option>
+                                            <select class="form-control" name="layout3" id="layout3">
+                                                <option value="1">View 1</option>
+                                                <option value="2">View 2</option>
+                                                <option value="3">View 3</option>
+                                                <option value="4">View 4</option>
                                             </select>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="settingsView" class="col-xs-3 control-label">View 3</label>
+                                    </div>
+                                    
+                                <div class="form-group hidden" id="formlayout2" >
+                                    <label for="settingsView" class="col-xs-3 control-label">Layout</label>
 
                                     <div class="col-xs-9">
                                         <div class="col-xs-6">
-                                            <select class="form-control" name="sortView3" id="sortView3">
-                                                <option value="1">Top</option>
-                                                <option value="2">Middle</option>
-                                                <option value="3">Bottom</option>
+                                            <select class="form-control" name="layout2" id="layout2">
+                                                <option value="1">View 1</option>
+                                                <option value="2">View 2</option>
+                                                <option value="3">View 3</option>
+                                                <option value="4">View 4</option>
                                             </select>
                                         </div>
                                     </div>
-                                </div>
-
-                                
+                                    </div>                               
                             </div>
+                        <!-- Tab - Sync -->
 
+                        <div role="tabpanel" class="tab-pane" id="sync">
+                            <div class="calcite-form-title">Maps Sync</div>
+
+                            <div class="form-horizontal calcite-form-padding">
+
+                                <div class="form-group">
+                                    <div class="col-xs-9 col-xs-offset-3">
+                                        <button id="syncButton" type="button" class="btn btn-primary btn-block">Sync maps</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                            
                             </div>
                         </div><!-- /.tab-content -->
