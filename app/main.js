@@ -1310,17 +1310,25 @@ require([
             border3(carteJpg);
 
             if ($('#numViews').val()==3) {
-            mergeImages([
-                { src: carteJpg.border1, x: carteJpg.map1.x, y: carteJpg.map1.y },
+
+                var imgMap1 = [{ src: carteJpg.border1, x: carteJpg.map1.x, y: carteJpg.map1.y },
                 { src: carteJpg.map1.dataImage, x: carteJpg.map1.x + 1, y: carteJpg.map1.y + 1},
-                { src: carteJpg.map1.dataScalBar, x: carteJpg.map1.sx, y: carteJpg.map1.sy },
-                { src: carteJpg.border2, x: carteJpg.map2.x, y: carteJpg.map2.y},
-                { src: carteJpg.map2.dataImage, x: carteJpg.map2.x+ 1, y: carteJpg.map2.y+1 },
-                { src: carteJpg.map2.dataScalBar, x: carteJpg.map2.sx, y: carteJpg.map2.sy },
-                { src: carteJpg.border3, x: carteJpg.map3.x, y: carteJpg.map3.y },
-                { src: carteJpg.map3.dataImage, x: carteJpg.map3.x+1, y: carteJpg.map3.y +1},
-                { src: carteJpg.map3.dataScalBar, x: carteJpg.map3.sx, y: carteJpg.map3.sy }
-            ], {
+                { src: carteJpg.map1.dataScalBar, x: carteJpg.map1.sx, y: carteJpg.map1.sy }];
+                var imgMap2 = [{ src: carteJpg.border2, x: carteJpg.map2.x, y: carteJpg.map2.y},
+                    { src: carteJpg.map2.dataImage, x: carteJpg.map2.x+ 1, y: carteJpg.map2.y+1 },
+                    { src: carteJpg.map2.dataScalBar, x: carteJpg.map2.sx, y: carteJpg.map2.sy }]
+                var imgMap3 = [{ src: carteJpg.border3, x: carteJpg.map3.x, y: carteJpg.map3.y },
+                    { src: carteJpg.map3.dataImage, x: carteJpg.map3.x+1, y: carteJpg.map3.y +1},
+                    { src: carteJpg.map3.dataScalBar, x: carteJpg.map3.sx, y: carteJpg.map3.sy }]
+
+                if($('#map3').css("z-index")>$('#map2').css("z-index")&&$('#map2').css("z-index")>$('#map1').css("z-index")){
+                    var imgMapConcat=imgMap1.concat(imgMap2,imgMap3);
+                }else if ($('#map1').css("z-index")>$('#map2').css("z-index")&&$('#map2').css("z-index")>$('#map3').css("z-index")){
+                    var imgMapConcat=imgMap3.concat(imgMap2,imgMap1);
+                }
+                
+               // console.log($('#map1').css("z-index"),$('#map2').css("z-index"),$('#map3').css("z-index"));
+            mergeImages(imgMapConcat, {
                 width: carteJpg.width,
                 height: carteJpg.height
             })
@@ -1335,14 +1343,19 @@ require([
 
             });
             } else if ($('#numViews').val() == 2) {
-                mergeImages([
-                { src: carteJpg.border2, x: carteJpg.map2.x, y: carteJpg.map2.y },
-                { src: carteJpg.map2.dataImage, x: carteJpg.map2.x+1, y: carteJpg.map2.y +1},
-                { src: carteJpg.map2.dataScalBar, x: carteJpg.map2.sx, y: carteJpg.map2.sy },
-                { src: carteJpg.border3, x: carteJpg.map3.x, y: carteJpg.map3.y},
-                { src: carteJpg.map3.dataImage, x: carteJpg.map3.x+1, y: carteJpg.map3.y +1},
-                { src: carteJpg.map3.dataScalBar, x: carteJpg.map3.sx, y: carteJpg.map3.sy }
-                            ], {
+                var imgMap2 = [{ src: carteJpg.border2, x: carteJpg.map2.x, y: carteJpg.map2.y},
+                    { src: carteJpg.map2.dataImage, x: carteJpg.map2.x+ 1, y: carteJpg.map2.y+1 },
+                    { src: carteJpg.map2.dataScalBar, x: carteJpg.map2.sx, y: carteJpg.map2.sy }]
+                var imgMap3 = [{ src: carteJpg.border3, x: carteJpg.map3.x, y: carteJpg.map3.y },
+                    { src: carteJpg.map3.dataImage, x: carteJpg.map3.x+1, y: carteJpg.map3.y +1},
+                    { src: carteJpg.map3.dataScalBar, x: carteJpg.map3.sx, y: carteJpg.map3.sy }]
+
+                if($('#map3').css("z-index")>$('#map2').css("z-index")){
+                    var imgMapConcat=imgMap2.concat(imgMap3);
+                }else if ($('#map2').css("z-index")>$('#map3').css("z-index")){
+                    var imgMapConcat=imgMap3.concat(imgMap2);
+                }
+                mergeImages(imgMapConcat, {
                                 width: carteJpg.width,
                                 height: carteJpg.height
                             })
