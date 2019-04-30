@@ -365,7 +365,7 @@ require([
         });
 
         // Panel widgets
-        app.panelSettings.setWidgetPosition(app.mapView, "layerlist", "top-left", 0, "layerlistDiv");
+       // app.panelSettings.setWidgetPosition(app.mapView, "layerlist", "top-left", 0, "layerlistDiv");
 
     }
     //----------------------------------

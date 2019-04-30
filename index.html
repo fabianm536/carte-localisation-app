@@ -162,7 +162,7 @@
             <li><a role="menuitem" tabindex="0" data-target="#panelBasemaps1" aria-haspopup="true"><span class="glyphicon glyphicon-th-large"></span> Basemaps 1</a></li>
             <li><a role="menuitem" tabindex="0" data-target="#panelBasemaps2" aria-haspopup="true"><span class="glyphicon glyphicon-th-large"></span> Basemaps 2</a></li>
             <li><a role="menuitem" tabindex="0" data-target="#panelBasemaps3" aria-haspopup="true"><span class="glyphicon glyphicon-th-large"></span> Basemaps 3</a></li>
-            <li><a role="menuitem" tabindex="0" data-target="#panelLayerlist" aria-haspopup="true"><span class="glyphicon glyphicon-list-alt"></span> LayerList</a></li>
+            <li><a role="menuitem" tabindex="0" data-target="#panelAttributes" aria-haspopup="true"><span class="glyphicon glyphicon-list-alt"></span> Attributes</a></li>
             <li><a role="menuitem" tabindex="0" data-target="#panelPrint" aria-haspopup="true"><span class="glyphicon glyphicon-print"></span> Print</a></li>
             <li><a role="menuitem" tabindex="0" data-target="#panelSettings" aria-haspopup="true"><span class="glyphicon glyphicon-cog"></span> Settings</a></li>
             <li><a role="menuitem" tabindex="0" id="calciteToggleNavbar" aria-haspopup="true"><span class="glyphicon glyphicon-fullscreen"></span> Full Map</a></li>
@@ -395,30 +395,7 @@
 
 
                     </div><!-- /.tab-content -->
-                    <div id="editArea" class="editArea-container">
-                        <div id="addFeatureDiv" style="display:block;">
-                            <h3 class="list-heading">Report Project</h3>
-                        </div>
-                        <div id="featureUpdateDiv" style="display:none; margin-top: 1em;">
-                            <h3 class="list-heading">Enter the project information</h3>
-                            <div id="attributeArea">
-                                <div id="formDiv"></div>
-                                <input type="button" class="btn btn-primary btn-block" value="Update project info" id="btnUpdate" style="color: #fff;">
 
-                            </div>
-                            <br />
-                            <div id="deleteArea">
-                                <input type="button" class="btn btn-primary btn-block" value="Delete project" id="btnDelete" style="color: #fff;">
-                            </div>
-                            <br />
-                            <div id="addBDArea">
-                                <input type="button" class="btn btn-primary btn-block" value="Add project to Data Base" id="btnAddBD" style="color: #fff; background-color: #008000; border-color: #286328; ">
-                            </div>
-                        </div>
-                        <div id="updateInstructionDiv" style="text-align:center; display:block">
-                            <p id="selectHeader">Select an project to edit or delete.</p>
-                        </div>
-                    </div>
                 </div><!-- /.panel-body -->
             </div><!-- /.panel-collapse -->
         </div><!-- /.panel -->
@@ -510,18 +487,42 @@
         </div>
 
 
-        <!-- Panel - LayerList -->
+        <!-- Panel - Attributes -->
 
-        <div id="panelLayerlist" class="panel collapse">
-            <div id="headingLayerlist" class="panel-heading" role="tab">
+        <div id="panelAttributes" class="panel collapse">
+            <div id="headingAttributes" class="panel-heading" role="tab">
                 <div class="panel-title">
-                    <a class="panel-toggle collapsed" role="button" data-toggle="collapse" href="#collapseLayerlist" aria-expanded="false" aria-controls="collapseLayerlist"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span><span class="panel-label">Layerlist</span></a>
-                    <a class="panel-close" role="button" data-toggle="collapse" tabindex="0" href="#panelLayerlist"><span class="esri-icon esri-icon-close" aria-hidden="true"></span></a>
+                    <a class="panel-toggle collapsed" role="button" data-toggle="collapse" href="#collapseAttributes" aria-expanded="false" aria-controls="collapseAttributes"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span><span class="panel-label">Attributes</span></a>
+                    <a class="panel-close" role="button" data-toggle="collapse" tabindex="0" href="#panelAttributes"><span class="esri-icon esri-icon-close" aria-hidden="true"></span></a>
                 </div>
             </div>
-            <div id="collapseLayerlist" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingLayerlist">
+            <div id="collapseAttributes" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingAttributes">
                 <div class="panel-body body-light">
-                    <div id="layerlistDiv"></div>
+                    <div id="attributesDiv"></div>
+                    <div id="editArea" class="editArea-container">
+                        <div id="addFeatureDiv" style="display:block;">
+                            <h3 class="list-heading">Report Project</h3>
+                        </div>
+                        <div id="featureUpdateDiv" style="display:none; margin-top: 1em;">
+                            <h3 class="list-heading">Enter the project information</h3>
+                            <div id="attributeArea">
+                                <div id="formDiv"></div>
+                                <input type="button" class="btn btn-primary btn-block" value="Update project info" id="btnUpdate" style="color: #fff;">
+
+                            </div>
+                            <br />
+                            <div id="deleteArea">
+                                <input type="button" class="btn btn-primary btn-block" value="Delete project" id="btnDelete" style="color: #fff;">
+                            </div>
+                            <br />
+                            <div id="addBDArea">
+                                <input type="button" class="btn btn-primary btn-block" value="Add project to Data Base" id="btnAddBD" style="color: #fff; background-color: #008000; border-color: #286328; ">
+                            </div>
+                        </div>
+                        <div id="updateInstructionDiv" style="text-align:center; display:block">
+                            <p id="selectHeader">Select an project to edit or delete.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
