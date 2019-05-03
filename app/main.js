@@ -644,17 +644,27 @@ require([
    
     $('#syncButton').off("click").on("click", function () {
 
-        var layers = app3.webmap.layers.items;
-
         app1.webmap.removeAll();
         app2.webmap.removeAll();
+        var layers = app3.webmap.layers.items;
+
+    if (app3.layers[0].featureform.feature == null){
+
+        app3.layers.forEach(function (lyr) {
+            addPoint(app2, lyr.source.items[0].geometry.x, lyr.source.items[0].geometry.y, lyr.source.items[0].geometry.spatialReference, lyr.source.items[0].attributes.toponyme);
+            addPoint(app1, lyr.source.items[0].geometry.x, lyr.source.items[0].geometry.y, lyr.source.items[0].geometry.spatialReference, lyr.source.items[0].attributes.toponyme);
+
+        });
+
+    }else {
+        
 
         layers.forEach(function (lyr) {
             addPoint(app2, lyr.featureform.feature.geometry.x, lyr.featureform.feature.geometry.y, lyr.featureform.feature.geometry.spatialReference, lyr.featureform.feature.attributes.toponyme);
             addPoint(app1, lyr.featureform.feature.geometry.x, lyr.featureform.feature.geometry.y, lyr.featureform.feature.geometry.spatialReference, lyr.featureform.feature.attributes.toponyme);
 
         });
-
+    }
     });
 
 
@@ -664,21 +674,10 @@ require([
 
     // Listen for when a result is selected
     app3.searchWidgetSettings.on("select-result", function (event) {
-
         //off - on prevent event duplicated
         $('#addPointButton').off("click").on("click", function () {
-
-            if (event.result.key !== null) {
-
                 addPoint(app3, event.result.feature.geometry.x, event.result.feature.geometry.y, event.result.feature.geometry.spatialReference);
-
-            } else {
-                console.error("event.mapPoint is not defined");
-            }
-
         });
-
-
     });
 
     // With the lat long data click event and create feature
