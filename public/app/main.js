@@ -755,6 +755,40 @@ require([
         return false;
     });
 
+    // With the shape file data click event and create features
+
+    $("#shapefileform").submit(function (event) {
+
+        $("#statushp").empty().text("File is uploading...");
+        event.preventDefault();
+        var sr = JSON.parse('{ "wkid": ' + $('#epsg4').val() + '}');
+
+        $(this).ajaxSubmit({
+
+            error: function (xhr) {
+                status('Error: ' + xhr.status);
+            },
+
+            success: function (response) {
+
+                $("#statusshp").empty().text("File uploaded");
+                var shp = "shp//"+response;
+
+                shapefile.open(shp,null)
+                .then(source => source.read()
+                  .then(function log(result) {
+                    if (result.done) return;
+                    var x = result.value.geometry.coordinates[0];
+                    var y = result.value.geometry.coordinates[1];
+                    addPoint(app3, x, y, sr);
+                    return source.read().then(log);
+                  }))
+                .catch(error => console.error(error.stack));
+            }
+        });
+        return false;
+    });
+
 
     //----------------------------------
     // add Point 
@@ -891,6 +925,11 @@ require([
         });
         
     }
+
+    //----------------------------------
+    // add shp from file 
+    //----------------------------------
+
 
     //----------------------------------
     // set Feature form by selected point 
@@ -1162,41 +1201,52 @@ require([
             fieldConfig: [
                   {
                       name: "toponyme",
-                      label: "Toponyme"
+                      label: "Toponyme",
+					  maxLength: 20
                   },
                   {
                       name: "client",
-                      label: "Client"
+                      label: "Client",
+					  maxLength: 20
                   }, {
                       name: "date",
                       label: "Date"
                   }, {
                       name: "rapport",
-                      label: "Rapport"
+                      label: "Rapport",
+					  maxLength: 20
                   }, {
                       name: "titre",
-                      label: "Titre"
+                      label: "Titre",
+					  maxLength: 20
                   }, {
                       name: "n_affaire",
-                      label: "Nombre Affaire"
+                      label: "Nombre Affaire",
+					  maxLength: 5
                   }, {
                       name: "theme",
-                      label: "Theme"
+                      label: "Theme",
+					  maxLength: 20
                   }, {
                       name: "prestation",
-                      label: "Prestation"
+                      label: "Prestation",
+					  maxLength: 20
                   }, {
                       name: "type_clien",
-                      label: "Type Client"
+                      label: "Type Client",
+					  maxLength: 20
                   }, {
                       name: "filiere",
-                      label: "Filiere"
+                      label: "Filiere",
+					  maxLength: 20
                   }, {
                       name: "id_aff",
-                      label: "Id Affaire"
+                      label: "Id Affaire",
+					  maxLength: 20
                   }, {
                       name: "titre_aff",
-                      label: "Titre Affaire"
+                      label: "Titre Affaire",
+					  maxLength: 20
                   }
             ]
         });  
@@ -1400,7 +1450,7 @@ require([
             ctx.lineWidth = 2;
 
             ctx.beginPath();
-            ctx.moveTo(1, 1);
+            ctx.moveTo(0, 0);
             ctx.lineTo(carteJpg.map1.width + 1, 1);
             ctx.lineTo(carteJpg.map1.width + 1, carteJpg.map1.height + 1);
             ctx.lineTo(1, carteJpg.map1.height + 1);
@@ -1420,7 +1470,7 @@ require([
             ctx.lineWidth = 2;
 
             ctx.beginPath();
-            ctx.moveTo(1, 1);
+            ctx.moveTo(0, 0);
             ctx.lineTo(carteJpg.map2.width + 1, 1);
             ctx.lineTo(carteJpg.map2.width + 1, carteJpg.map2.height + 1);
             ctx.lineTo(1, carteJpg.map2.height + 1);
@@ -1442,7 +1492,7 @@ require([
             ctx.lineWidth = 2;
 
             ctx.beginPath();
-            ctx.moveTo(1, 1);
+            ctx.moveTo(0, 0);
             ctx.lineTo(carteJpg.map3.width + 1, 1);
             ctx.lineTo(carteJpg.map3.width + 1, carteJpg.map3.height + 1);
             ctx.lineTo(1, carteJpg.map3.height + 1);

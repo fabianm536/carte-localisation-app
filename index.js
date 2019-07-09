@@ -7,12 +7,13 @@ var pg = require("pg");
 var app = express();
 var fs = require('fs');
 const csv = require('csvtojson');
+var shapefile = require("shapefile");
 
 const port = process.env.PORT; //This is for get port from IIS
 
 
 //static folder. All sub folders work with
-app.use(express.static(__dirname + '/'));
+app.use(express.static(__dirname + '/public/'));
 
 //CORS settings
 const allowedOrigins = [
@@ -51,6 +52,18 @@ var config = {
     idleTimeoutMillis: 30000, // how long a client is allowed to remain idle before being closed
 };
 
+/*
+var config = {
+	host: '192.168.157.17',
+    user: 'postgres',
+    database: 'geodocweb',
+    password: 'geoter*2013',
+    port: 5432,
+    max: 10, // max number of connection can be open to database
+    idleTimeoutMillis: 30000, // how long a client is allowed to remain idle before being closed
+};
+*/ 
+
 var pool = new pg.Pool(config);
 
 app.get('/pool', function (req, res) {
@@ -81,7 +94,7 @@ app.get('/pool', function (req, res) {
 
 var storage = multer.diskStorage({
     destination: function (req, file, callback) {
-        callback(null, './uploads');
+        callback(null, './public/shp');
     },
     filename: function (req, file, callback) {
         callback(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
@@ -96,7 +109,6 @@ app.post('/api/file', function (req, res) {
             return res.end("Error uploading file.");
         }
         
-        
         const csvFilePath = req.file.destination + '/' + req.file.filename;
 
         csv({
@@ -108,6 +120,32 @@ app.post('/api/file', function (req, res) {
             
         });
     });
+});
+
+////import shapefile
+app.post('/api/shapefile', function (req, res) {
+    
+    upload(req, res, function (err) {
+        if (err) {
+            return res.end("Error uploading file.");
+        }
+        const shpPath = req.file.filename;
+        return res.end(shpPath);
+        /*
+        const shpPath = req.file.destination + '/' + req.file.filename;
+
+        shapefile.open(shpPath)
+        .then(source => source.read()
+        .then(function log(result){
+            if (result.done) return;
+            console.log(result.value);
+            return source.read().then(log);
+        }
+        ))
+        .catch(error => console.error(error.stack));
+        */
+        
+    })
 });
 
 //////////////////////////

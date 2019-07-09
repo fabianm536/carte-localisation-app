@@ -1,0 +1,291 @@
+
+{
+  "header": {
+    "event": "Allocation failed - JavaScript heap out of memory",
+    "trigger": "FatalError",
+    "filename": "report.20190709.133734.4388.0.001.json",
+    "dumpEventTime": "2019-07-09T13:37:34Z",
+    "processId": 4388,
+    "commandLine": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "index"
+    ],
+    "nodejsVersion": "v11.13.0",
+    "wordSize": 64,
+    "arch": "x64",
+    "platform": "win32",
+    "componentVersions": {
+      "node": "11.13.0",
+      "v8": "7.0.276.38-node.18",
+      "uv": "1.27.0",
+      "zlib": "1.2.11",
+      "brotli": "1.0.7",
+      "ares": "1.15.0",
+      "modules": "67",
+      "nghttp2": "1.34.0",
+      "napi": "4",
+      "llhttp": "1.1.1",
+      "http_parser": "2.8.0",
+      "openssl": "1.1.1b",
+      "cldr": "34.0",
+      "icu": "63.1",
+      "tz": "2018e",
+      "unicode": "11.0"
+    },
+    "release": {
+      "name": "node",
+      "headersUrl": "https://nodejs.org/download/release/v11.13.0/node-v11.13.0-headers.tar.gz",
+      "sourceUrl": "https://nodejs.org/download/release/v11.13.0/node-v11.13.0.tar.gz",
+      "libUrl": "https://nodejs.org/download/release/v11.13.0/win-x64/node.lib"
+    },
+    "osName": "Windows_NT",
+    "osRelease": "10.0.17134",
+    "osVersion": "Windows 10 Pro",
+    "osMachine": "x86_64",
+    "host": "FR-STGEOID74"
+  },
+  "javascriptStack": {
+    "message": "No stack.",
+    "stack": [
+      "Unavailable."
+    ]
+  },
+  "nativeStack": [
+    {
+      "pc": "0x00007ff7ad5ccffe",
+      "symbol": "SSL_SESSION_get0_peer+15662"
+    },
+    {
+      "pc": "0x00007ff7ad5cbea9",
+      "symbol": "SSL_SESSION_get0_peer+11225"
+    },
+    {
+      "pc": "0x00007ff7ad5cb733",
+      "symbol": "SSL_SESSION_get0_peer+9315"
+    },
+    {
+      "pc": "0x00007ff7ad6b9292",
+      "symbol": "uv_loop_fork+88258"
+    },
+    {
+      "pc": "0x00007ff7adadfd8e",
+      "symbol": "v8::internal::FatalProcessOutOfMemory+798"
+    },
+    {
+      "pc": "0x00007ff7adadfcc7",
+      "symbol": "v8::internal::FatalProcessOutOfMemory+599"
+    },
+    {
+      "pc": "0x00007ff7adb937a4",
+      "symbol": "v8::internal::Heap::RootIsImmortalImmovable+14068"
+    },
+    {
+      "pc": "0x00007ff7adb9183b",
+      "symbol": "v8::internal::Heap::RootIsImmortalImmovable+6027"
+    },
+    {
+      "pc": "0x00007ff7adcc94ad",
+      "symbol": "v8::internal::Factory::AllocateRawArray+61"
+    },
+    {
+      "pc": "0x00007ff7adcc9e42",
+      "symbol": "v8::internal::Factory::NewFixedArrayWithFiller+66"
+    },
+    {
+      "pc": "0x00007ff7add0c6ea",
+      "symbol": "v8::internal::wasm::AsmType::Void+69050"
+    },
+    {
+      "pc": "0x00007ff7adcf9036",
+      "symbol": "v8::internal::BigIntLiteral+127046"
+    },
+    {
+      "pc": "0x00007ff7add8c5d0",
+      "symbol": "v8::internal::StoreBuffer::StoreBufferOverflow+64256"
+    },
+    {
+      "pc": "0x000000a85f4d0481",
+      "symbol": ""
+    }
+  ],
+  "javascriptHeap": {
+    "totalMemory": 618151936,
+    "totalCommittedMemory": 618151936,
+    "usedMemory": 612603384,
+    "availableMemory": 911318224,
+    "memoryLimit": 1526909922,
+    "heapSpaces": {
+      "read_only_space": {
+        "memorySize": 524288,
+        "committedMemory": 524288,
+        "capacity": 515584,
+        "used": 33520,
+        "available": 482064
+      },
+      "new_space": {
+        "memorySize": 1048576,
+        "committedMemory": 1048576,
+        "capacity": 1031168,
+        "used": 0,
+        "available": 1031168
+      },
+      "old_space": {
+        "memorySize": 11210752,
+        "committedMemory": 11210752,
+        "capacity": 10743328,
+        "used": 9504352,
+        "available": 1238976
+      },
+      "code_space": {
+        "memorySize": 1048576,
+        "committedMemory": 1048576,
+        "capacity": 699264,
+        "used": 699264,
+        "available": 0
+      },
+      "map_space": {
+        "memorySize": 1060864,
+        "committedMemory": 1060864,
+        "capacity": 443200,
+        "used": 443200,
+        "available": 0
+      },
+      "large_object_space": {
+        "memorySize": 603258880,
+        "committedMemory": 603258880,
+        "capacity": 1510489064,
+        "used": 601923048,
+        "available": 908566016
+      },
+      "new_large_object_space": {
+        "memorySize": 0,
+        "committedMemory": 0,
+        "capacity": 0,
+        "used": 0,
+        "available": 0
+      }
+    }
+  },
+  "resourceUsage": {
+    "userCpuSeconds": 13.39,
+    "kernelCpuSeconds": 2.218,
+    "cpuConsumptionPercent": 33.9304,
+    "maxRss": 1303965696,
+    "pageFaults": {
+      "IORequired": 471825,
+      "IONotRequired": 0
+    },
+    "fsActivity": {
+      "reads": 425,
+      "writes": 7
+    }
+  },
+  "libuv": [
+  ],
+  "environmentVariables": {
+    "=::": "::\\",
+    "ADSK_CLM_WPAD_PROXY_CHECK": "FALSE",
+    "AGSDESKTOPJAVA": "C:\\Program Files (x86)\\ArcGIS\\Desktop10.5\\",
+    "ALLUSERSPROFILE": "C:\\ProgramData",
+    "APPDATA": "C:\\Users\\f.molina\\AppData\\Roaming",
+    "ChocolateyInstall": "C:\\ProgramData\\chocolatey",
+    "ChocolateyLastPathUpdate": "131988603123705599",
+    "CommonProgramFiles": "C:\\Program Files\\Common Files",
+    "CommonProgramFiles(x86)": "C:\\Program Files (x86)\\Common Files",
+    "CommonProgramW6432": "C:\\Program Files\\Common Files",
+    "COMPUTERNAME": "FR-STGEOID74",
+    "ComSpec": "C:\\WINDOWS\\system32\\cmd.exe",
+    "DriverData": "C:\\Windows\\System32\\Drivers\\DriverData",
+    "FPS_BROWSER_APP_PROFILE_STRING": "Internet Explorer",
+    "FPS_BROWSER_USER_PROFILE_STRING": "Default",
+    "FP_NO_HOST_CHECK": "NO",
+    "FUGRO": "C:\\Program Files (x86)\\FLI-MAP",
+    "GDAL_DATA": "C:\\Program Files\\PostgreSQL\\11\\gdal-data",
+    "HOMEDRIVE": "C:",
+    "HOMEPATH": "\\Users\\f.molina",
+    "LOCALAPPDATA": "C:\\Users\\f.molina\\AppData\\Local",
+    "LOGONSERVER": "\\\\NLDATADC01",
+    "MOZ_PLUGIN_PATH": "C:\\Program Files (x86)\\Nuance\\Power PDF  30\\Bin",
+    "NUMBER_OF_PROCESSORS": "4",
+    "NVM_HOME": "C:\\Users\\f.molina\\AppData\\Roaming\\nvm",
+    "NVM_SYMLINK": "C:\\Program Files\\nodejs",
+    "OneDrive": "C:\\Users\\f.molina\\OneDrive - Fugro",
+    "OneDriveCommercial": "C:\\Users\\f.molina\\OneDrive - Fugro",
+    "OS": "Windows_NT",
+    "Path": "C:\\Python27\\;C:\\Python27\\Scripts;C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\javapath;C:\\ProgramData\\Oracle\\Java\\javapath;C:\\Program Files (x86)\\FLI-MAP\\Shared\\Programs;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\Program Files (x86)\\Common Files\\Acronis\\SnapAPI\\;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;c:\\Dwimperl\\perl\\bin;c:\\Dwimperl\\perl\\site\\bin;c:\\Dwimperl\\c\\bin;C:\\Program Files\\Microsoft SQL Server\\110\\Tools\\Binn\\;C:\\FPC\\2.6.4\\bin\\i386-Win32;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Program Files\\Git\\cmd;C:\\Python27\\ArcGIS10.5;C:\\Python27\\ArcGIS10.5\\Scripts;C:\\Program Files (x86)\\Yarn\\bin\\;C:\\ProgramData\\chocolatey\\bin;C:\\Users\\f.molina\\AppData\\Roaming\\nvm;C:\\Program Files\\nodejs;C:\\Users\\f.molina\\AppData\\Local\\Microsoft\\WindowsApps;C:\\Users\\f.molina\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\f.molina\\AppData\\Local\\Yarn\\bin;C:\\Users\\f.molina\\AppData\\Roaming\\npm;C:\\Users\\f.molina\\AppData\\Roaming\\nvm;C:\\Program Files\\nodejs",
+    "PATHEXT": ".COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC;.CPL",
+    "POSTGIS_ENABLE_OUTDB_RASTERS": "1",
+    "POSTGIS_GDAL_ENABLED_DRIVERS": "GTiff PNG JPEG GIF XYZ DTED USGSDEM AAIGrid",
+    "PROCESSOR_ARCHITECTURE": "AMD64",
+    "PROCESSOR_IDENTIFIER": "Intel64 Family 6 Model 15 Stepping 6, GenuineIntel",
+    "PROCESSOR_LEVEL": "6",
+    "PROCESSOR_REVISION": "0f06",
+    "ProgramData": "C:\\ProgramData",
+    "ProgramFiles": "C:\\Program Files",
+    "ProgramFiles(x86)": "C:\\Program Files (x86)",
+    "ProgramW6432": "C:\\Program Files",
+    "PSModulePath": "C:\\Users\\f.molina\\Documents\\WindowsPowerShell\\Modules;C:\\Program Files\\WindowsPowerShell\\Modules;C:\\WINDOWS\\system32\\WindowsPowerShell\\v1.0\\Modules\\",
+    "PUBLIC": "C:\\Users\\Public",
+    "SESSIONNAME": "Console",
+    "SystemDrive": "C:",
+    "SystemRoot": "C:\\WINDOWS",
+    "TEMP": "C:\\Users\\F9735~1.MOL\\AppData\\Local\\Temp",
+    "TMP": "C:\\Users\\F9735~1.MOL\\AppData\\Local\\Temp",
+    "UATDATA": "C:\\WINDOWS\\CCM\\UATData\\D9F8C395-CAB8-491d-B8AC-179A1FE1BE77",
+    "USERDNSDOMAIN": "AD.FUGRO.COM",
+    "USERDOMAIN": "fugro-global",
+    "USERDOMAIN_ROAMINGPROFILE": "fugro-global",
+    "USERNAME": "f.molina",
+    "USERPROFILE": "C:\\Users\\f.molina",
+    "VS110COMNTOOLS": "C:\\Program Files (x86)\\Microsoft Visual Studio 11.0\\Common7\\Tools\\",
+    "VS120COMNTOOLS": "C:\\Program Files (x86)\\Microsoft Visual Studio 12.0\\Common7\\Tools\\",
+    "windir": "C:\\WINDOWS",
+    "windows_tracing_flags": "3",
+    "windows_tracing_logfile": "C:\\BVTBin\\Tests\\installpackage\\csilogfile.log"
+  },
+  "sharedObjects": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "C:\\WINDOWS\\SYSTEM32\\ntdll.dll",
+    "C:\\WINDOWS\\System32\\KERNEL32.DLL",
+    "C:\\WINDOWS\\System32\\KERNELBASE.dll",
+    "C:\\WINDOWS\\System32\\PSAPI.DLL",
+    "C:\\WINDOWS\\System32\\WS2_32.dll",
+    "C:\\WINDOWS\\System32\\RPCRT4.dll",
+    "C:\\WINDOWS\\System32\\ADVAPI32.dll",
+    "C:\\WINDOWS\\System32\\msvcrt.dll",
+    "C:\\WINDOWS\\System32\\sechost.dll",
+    "C:\\WINDOWS\\System32\\USER32.dll",
+    "C:\\WINDOWS\\System32\\win32u.dll",
+    "C:\\WINDOWS\\System32\\GDI32.dll",
+    "C:\\WINDOWS\\System32\\gdi32full.dll",
+    "C:\\WINDOWS\\System32\\msvcp_win.dll",
+    "C:\\WINDOWS\\System32\\ucrtbase.dll",
+    "C:\\WINDOWS\\System32\\CRYPT32.dll",
+    "C:\\WINDOWS\\System32\\MSASN1.dll",
+    "C:\\WINDOWS\\SYSTEM32\\dbghelp.dll",
+    "C:\\WINDOWS\\SYSTEM32\\IPHLPAPI.DLL",
+    "C:\\WINDOWS\\SYSTEM32\\USERENV.dll",
+    "C:\\WINDOWS\\System32\\profapi.dll",
+    "C:\\WINDOWS\\SYSTEM32\\WINMM.dll",
+    "C:\\WINDOWS\\SYSTEM32\\WINMMBASE.dll",
+    "C:\\WINDOWS\\SYSTEM32\\bcrypt.dll",
+    "C:\\WINDOWS\\System32\\cfgmgr32.dll",
+    "C:\\WINDOWS\\System32\\IMM32.DLL",
+    "C:\\WINDOWS\\System32\\umppc9302.dll",
+    "C:\\WINDOWS\\System32\\powrprof.dll",
+    "C:\\WINDOWS\\system32\\uxtheme.dll",
+    "C:\\WINDOWS\\System32\\combase.dll",
+    "C:\\WINDOWS\\System32\\bcryptPrimitives.dll",
+    "C:\\WINDOWS\\system32\\mswsock.dll",
+    "C:\\WINDOWS\\System32\\kernel.appcore.dll",
+    "C:\\WINDOWS\\SYSTEM32\\CRYPTBASE.DLL",
+    "C:\\WINDOWS\\System32\\NSI.dll",
+    "C:\\WINDOWS\\SYSTEM32\\dhcpcsvc6.DLL",
+    "C:\\WINDOWS\\SYSTEM32\\dhcpcsvc.DLL",
+    "C:\\WINDOWS\\system32\\napinsp.dll",
+    "C:\\WINDOWS\\system32\\pnrpnsp.dll",
+    "C:\\WINDOWS\\system32\\NLAapi.dll",
+    "C:\\WINDOWS\\SYSTEM32\\DNSAPI.dll",
+    "C:\\WINDOWS\\System32\\winrnr.dll"
+  ]
+}

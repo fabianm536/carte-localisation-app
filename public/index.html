@@ -32,6 +32,9 @@
   <!-- interactjs -->
   <script src="interactjs/dist/interact.js"></script>
 
+  <!-- shapefile -->
+  <script src="https://unpkg.com/shapefile@0.6"></script>
+
   <style>
     html, body {
       margin: 0;
@@ -165,7 +168,7 @@
             <li><a role="menuitem" tabindex="0" data-target="#panelAttributes" aria-haspopup="true"><span class="glyphicon glyphicon-list-alt"></span> Attributes</a></li>
             <li><a role="menuitem" tabindex="0" data-target="#panelPrint" aria-haspopup="true"><span class="glyphicon glyphicon-print"></span> Print</a></li>
             <li><a role="menuitem" tabindex="0" data-target="#panelSettings" aria-haspopup="true"><span class="glyphicon glyphicon-cog"></span> Settings</a></li>
-            <li><a role="menuitem" tabindex="0" id="calciteToggleNavbar" aria-haspopup="true"><span class="glyphicon glyphicon-fullscreen"></span> Full Map</a></li>
+            <li><a role="menuitem" tabindex="0" target="_blank" href="https://fugro.sharepoint.com/sites/WebMapping-CarteLoc/Carte%20de%20localisation/Manuel%20d%27utilisation%20Carte%20de%20localisation.aspx?web=1" aria-haspopup="true"><span class="glyphicon glyphicon-book"></span> Help</a></li>
         </ul>
     </div>
     <!-- Title -->
@@ -252,8 +255,9 @@
                     <ul class="nav nav-tabs" role="tablist">
                         <li role="presentation" class="active"><a href="#map" aria-controls="map" role="tab" data-toggle="tab">Map</a></li>
                         <li role="presentation"><a href="#xy" aria-controls="xy" role="tab" data-toggle="tab">XY</a></li>
-                        <li role="presentation"><a href="#file" aria-controls="file" role="tab" data-toggle="tab">File</a></li>
-                        
+                        <li role="presentation"><a href="#file" aria-controls="file" role="tab" data-toggle="tab">CSV File</a></li>
+                        <li role="presentation"><a href="#shapefile" aria-controls="shapefile" role="tab" data-toggle="tab">Shapefile</a></li>
+                        <li role="presentation"><a href="#database" aria-controls="dataabse" role="tab" data-toggle="tab">DB</a></li>
                     </ul>
 
                     <div class="tab-content">
@@ -367,7 +371,7 @@
                                     <div class="form-group">
                                         <label for="long" class="col-xs-3 control-label">File</label>
                                         <div class="col-xs-9" style="margin-top: 5px;">
-                                            <input type="file" name="userFile" id="userFile" class="custom-file-input" required>
+                                            <input type="file" accept=".csv" name="userFile" id="userFile" class="custom-file-input" required>
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -392,7 +396,75 @@
                             </div>
                         </div>
 
+                        <!-- Tab - shapefile -->
 
+                        <div role="tabpanel" class="tab-pane" id="shapefile">
+                                <div class="calcite-form-title">Set the location</div>
+                            <div class="form-horizontal calcite-form-padding">
+
+                                <form id="shapefileform" method="post" enctype="multipart/form-data" action="/api/shapefile">
+                                    <div class="form-group">
+                                        <label for="long" class="col-xs-3 control-label">File</label>
+                                        <div class="col-xs-9" style="margin-top: 5px;">
+                                            <input type="file" accept=".shp" name="userFile" id="usershapeFile" class="custom-file-input" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="epsg3" class="col-xs-3 control-label"><a target="_blank" href="http://www.spatialreference.org/ref/epsg/">EPSG</a></label>
+                                        <div class="col-xs-9">
+                                            <input list="refsystem-datalist3" id="epsg4" value="4326" class="form-control" required>
+                                            <datalist id="refsystem-datalist3">
+                                                <option value="4326">WGS84(4326)</option>
+                                                <option value="102100">WebMercator(102100)</option>
+                                            </datalist>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-xs-9 col-xs-offset-3">
+                                            <button type="submit" value="Upload file" name="submit" class="btn btn-primary btn-block">Add points shapefile to map</button>
+                                        </div>
+                                    </div>
+                                </form>
+                                <span id="statusshp"></span>
+
+
+                            </div>
+                        </div>
+
+                        <!-- Tab - base de données -->
+
+                        <div role="tabpanel" class="tab-pane" id="database">
+                                <div class="calcite-form-title">Set the location</div>
+                            <div class="form-horizontal calcite-form-padding">
+
+                                <form id="database" method="post" enctype="multipart/form-data" action="/api/shapefile">
+                                    <div class="form-group">
+                                        <label for="long" class="col-xs-3 control-label">File</label>
+                                        <div class="col-xs-9" style="margin-top: 5px;">
+                                            <input type="file" accept=".shp" name="userFile" id="usershapeFile" class="custom-file-input" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="epsg3" class="col-xs-3 control-label"><a target="_blank" href="http://www.spatialreference.org/ref/epsg/">EPSG</a></label>
+                                        <div class="col-xs-9">
+                                            <input list="refsystem-datalist3" id="epsg4" value="4326" class="form-control" required>
+                                            <datalist id="refsystem-datalist3">
+                                                <option value="4326">WGS84(4326)</option>
+                                                <option value="102100">WebMercator(102100)</option>
+                                            </datalist>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-xs-9 col-xs-offset-3">
+                                            <button type="submit" value="Upload file" name="submit" class="btn btn-primary btn-block">Add points shapefile to map</button>
+                                        </div>
+                                    </div>
+                                </form>
+                                <span id="statusshp"></span>
+
+
+                            </div>
+                        </div>
 
                     </div><!-- /.tab-content -->
 
