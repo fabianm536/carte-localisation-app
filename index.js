@@ -7,7 +7,6 @@ var pg = require("pg");
 var app = express();
 var fs = require('fs');
 const csv = require('csvtojson');
-var shapefile = require("shapefile");
 
 const port = process.env.PORT; //This is for get port from IIS
 
@@ -44,6 +43,7 @@ app.get('/', cors(corsOptions), (req, res, next) => {
 /////postgres config//////
 //////////////////////////
 var config = {
+	host: 'localhost',
     user: 'postgres',
     database: 'gtrtest',
     password: 'postgres',
@@ -75,7 +75,7 @@ app.get('/pool', function (req, res) {
         var fields = req.query['fields'];
         var values = req.query['values'];
 
-        var query = "INSERT INTO etudes_sites_geoter_monde ( " + fields + " ) VALUES (" + values + "); update etudes_sites_geoter_monde set geom=st_SetSrid(st_MakePoint(long, lat), 4326);"
+        var query = "INSERT INTO etudes_sites_geoter_monde_2019 ( " + fields + " ) VALUES (" + values + "); update etudes_sites_geoter_monde_2019 set geom=st_SetSrid(st_MakePoint(long, lat), 4326);"
         client.query(query, function (err, result) {
             //call `done()` to release the client back to the pool
             done();
@@ -153,19 +153,7 @@ app.post('/api/shapefile', function (req, res) {
         }
         const shpPath = req.file.filename;
         return res.end(shpPath);
-        /*
-        const shpPath = req.file.destination + '/' + req.file.filename;
 
-        shapefile.open(shpPath)
-        .then(source => source.read()
-        .then(function log(result){
-            if (result.done) return;
-            console.log(result.value);
-            return source.read().then(log);
-        }
-        ))
-        .catch(error => console.error(error.stack));
-        */
         
     })
 });

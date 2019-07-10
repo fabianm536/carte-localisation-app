@@ -838,14 +838,12 @@ require([
             url: '/database',
             data: 'extent=' +  whereExtent + '&limit=' + limitval,
             success: function (result) {
-                console.log(result);
 
                 for(var i =0 ; i<result.length; i++){
                     
                         var x = result[i].long;
                         var y = result[i].lat;
                         addPoint(app3, x, y, sr, "",function(){});
-                    
                 }
             },
             error: function (xhr) {
@@ -1292,11 +1290,8 @@ require([
                   }, {
                       name: "n_affaire",
                       label: "Nombre Affaire",
-<<<<<<< Updated upstream:public/app/main.js
-					  maxLength: 5
-=======
                       maxLength: 5
->>>>>>> Stashed changes:app/main.js
+
                   }, {
                       name: "theme",
                       label: "Theme",
