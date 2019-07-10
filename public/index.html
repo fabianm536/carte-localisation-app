@@ -442,6 +442,7 @@
 
                             </div>
                         </div>
+<<<<<<< Updated upstream:public/index.html
 
                         <!-- Tab - base de données -->
 
@@ -454,6 +455,35 @@
                                     <div class="form-group">
                                         <div class="col-xs-9 col-xs-offset-3">
                                             <button type="submit" value="Get points" name="submit" class="btn btn-primary btn-block">Add points Database to map</button>
+=======
+
+                        <!-- Tab - base de données -->
+
+                        <div role="tabpanel" class="tab-pane" id="database">
+                                <div class="calcite-form-title">Set the location</div>
+                            <div class="form-horizontal calcite-form-padding">
+
+                                <form id="database" method="post" enctype="multipart/form-data" action="/api/shapefile">
+                                    <div class="form-group">
+                                        <label for="long" class="col-xs-3 control-label">File</label>
+                                        <div class="col-xs-9" style="margin-top: 5px;">
+                                            <input type="file" accept=".shp" name="userFile" id="usershapeFile" class="custom-file-input" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="epsg3" class="col-xs-3 control-label"><a target="_blank" href="http://www.spatialreference.org/ref/epsg/">EPSG</a></label>
+                                        <div class="col-xs-9">
+                                            <input list="refsystem-datalist3" id="epsg4" value="4326" class="form-control" required>
+                                            <datalist id="refsystem-datalist3">
+                                                <option value="4326">WGS84(4326)</option>
+                                                <option value="102100">WebMercator(102100)</option>
+                                            </datalist>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-xs-9 col-xs-offset-3">
+                                            <button type="submit" value="Upload file" name="submit" class="btn btn-primary btn-block">Add points shapefile to map</button>
+>>>>>>> Stashed changes:public/index.html
                                         </div>
                                     </div>
                                 </form>

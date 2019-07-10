@@ -1292,7 +1292,11 @@ require([
                   }, {
                       name: "n_affaire",
                       label: "Nombre Affaire",
+<<<<<<< Updated upstream:public/app/main.js
 					  maxLength: 5
+=======
+                      maxLength: 5
+>>>>>>> Stashed changes:app/main.js
                   }, {
                       name: "theme",
                       label: "Theme",
