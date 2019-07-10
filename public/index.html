@@ -311,6 +311,12 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
+                                                <label for="lat" class="col-xs-3 control-label">Point Name</label>
+                                                <div class="col-xs-9">
+                                                    <input type="text" class="form-control" id="name" maxlength="20">
+                                                </div>
+                                            </div>
+                                        <div class="form-group">
                                             <label for="lat" class="col-xs-3 control-label">Latitude</label>
                                             <div class="col-xs-9">
                                                 <input type="text" class="form-control" id="lat" placeholder="DD: 55.94420083 DMS: 55 56 39.123N" required>
@@ -342,6 +348,12 @@
                                                 </datalist>
                                             </div>
                                         </div>
+                                        <div class="form-group">
+                                                <label for="lat" class="col-xs-3 control-label">Point Name</label>
+                                                <div class="col-xs-9">
+                                                    <input type="text" class="form-control" id="xyname" maxlength="20">
+                                                </div>
+                                            </div>
                                         <div class="form-group">
                                             <label for="coordx" class="col-xs-3 control-label">Coord. X</label>
                                             <div class="col-xs-9">
@@ -437,26 +449,11 @@
                                 <div class="calcite-form-title">Set the location</div>
                             <div class="form-horizontal calcite-form-padding">
 
-                                <form id="database" method="post" enctype="multipart/form-data" action="/api/shapefile">
-                                    <div class="form-group">
-                                        <label for="long" class="col-xs-3 control-label">File</label>
-                                        <div class="col-xs-9" style="margin-top: 5px;">
-                                            <input type="file" accept=".shp" name="userFile" id="usershapeFile" class="custom-file-input" required>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="epsg3" class="col-xs-3 control-label"><a target="_blank" href="http://www.spatialreference.org/ref/epsg/">EPSG</a></label>
-                                        <div class="col-xs-9">
-                                            <input list="refsystem-datalist3" id="epsg4" value="4326" class="form-control" required>
-                                            <datalist id="refsystem-datalist3">
-                                                <option value="4326">WGS84(4326)</option>
-                                                <option value="102100">WebMercator(102100)</option>
-                                            </datalist>
-                                        </div>
-                                    </div>
+                                <form id="databaseform" method="post" enctype="multipart/form-data" action="/api/shapefile">
+                                    
                                     <div class="form-group">
                                         <div class="col-xs-9 col-xs-offset-3">
-                                            <button type="submit" value="Upload file" name="submit" class="btn btn-primary btn-block">Add points shapefile to map</button>
+                                            <button type="submit" value="Get points" name="submit" class="btn btn-primary btn-block">Add points Database to map</button>
                                         </div>
                                     </div>
                                 </form>

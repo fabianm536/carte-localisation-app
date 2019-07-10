@@ -88,6 +88,28 @@ app.get('/pool', function (req, res) {
     });
 });
 
+//get database points
+app.get('/database', function (req, res) {
+    pool.connect(function (err, client, done) {
+        if (err) {
+            console.log("not able to get connection " + err);
+            res.status(400).send(err);
+        }
+        var extent = req.query['extent'];
+        var limitval = req.query['limit'];
+        var query = "SELECT toponyme, lat, long FROM public.etudes_sites_geoter_monde where" + extent + " limit "+ limitval
+        client.query(query, function (err, result) {
+            //call `done()` to release the client back to the pool
+            done();
+            if (err) {
+                console.log(err);
+                res.status(400).send(err);
+            }
+            res.status(200).send(result.rows);
+        });
+    });
+});
+
 //////////////////////////
 ///////file upload////////
 //////////////////////////

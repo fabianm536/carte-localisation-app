@@ -651,8 +651,8 @@ require([
     if (app3.layers[0].featureform.feature == null){
 
         app3.layers.forEach(function (lyr) {
-            addPoint(app2, lyr.source.items[0].geometry.x, lyr.source.items[0].geometry.y, lyr.source.items[0].geometry.spatialReference, lyr.source.items[0].attributes.toponyme);
-            addPoint(app1, lyr.source.items[0].geometry.x, lyr.source.items[0].geometry.y, lyr.source.items[0].geometry.spatialReference, lyr.source.items[0].attributes.toponyme);
+            addPoint(app2, lyr.source.items[0].geometry.x, lyr.source.items[0].geometry.y, lyr.source.items[0].geometry.spatialReference, lyr.source.items[0].attributes.toponyme,function(){});
+            addPoint(app1, lyr.source.items[0].geometry.x, lyr.source.items[0].geometry.y, lyr.source.items[0].geometry.spatialReference, lyr.source.items[0].attributes.toponyme,function(){});
 
         });
 
@@ -660,8 +660,8 @@ require([
         
 
         layers.forEach(function (lyr) {
-            addPoint(app2, lyr.featureform.feature.geometry.x, lyr.featureform.feature.geometry.y, lyr.featureform.feature.geometry.spatialReference, lyr.featureform.feature.attributes.toponyme);
-            addPoint(app1, lyr.featureform.feature.geometry.x, lyr.featureform.feature.geometry.y, lyr.featureform.feature.geometry.spatialReference, lyr.featureform.feature.attributes.toponyme);
+            addPoint(app2, lyr.featureform.feature.geometry.x, lyr.featureform.feature.geometry.y, lyr.featureform.feature.geometry.spatialReference, lyr.featureform.feature.attributes.toponyme,function(){});
+            addPoint(app1, lyr.featureform.feature.geometry.x, lyr.featureform.feature.geometry.y, lyr.featureform.feature.geometry.spatialReference, lyr.featureform.feature.attributes.toponyme,function(){});
 
         });
     }
@@ -676,8 +676,14 @@ require([
     app3.searchWidgetSettings.on("select-result", function (event) {
         //off - on prevent event duplicated
         $('#addPointButton').off("click").on("click", function () {
-                addPoint(app3, event.result.feature.geometry.x, event.result.feature.geometry.y, event.result.feature.geometry.spatialReference);
-        });
+            if (event.result !== null){
+                document.getElementById("addPointButton").disabled = true;
+                addPoint(app3, event.result.feature.geometry.x, event.result.feature.geometry.y, event.result.feature.geometry.spatialReference,event.result.name,function () {
+                    document.getElementById("addPointButton").disabled = false;
+                    event.result = null; 
+                }) 
+            }
+            })
     });
 
     // With the lat long data click event and create feature
@@ -686,14 +692,17 @@ require([
         event.preventDefault();
         var latlon = $('#lat').val() + " " + $('#long').val();
         var sr = new SpatialReference($('#epsg').val());
+        var name = $('#name').val();
 
         coordinateFormatter.load().then(function () {
             var point = coordinateFormatter.fromLatitudeLongitude(latlon, sr);
 
             if (point !== null) {
-
-                addPoint(app3, point.x, point.y, point.spatialReference);
-            }
+                document.getElementById("geoButton").disabled = true;
+                addPoint(app3, point.x, point.y, point.spatialReference,name,function () {
+                    document.getElementById("geoButton").disabled = false;
+                });
+                }
 
         });
     });
@@ -706,11 +715,22 @@ require([
         var x = $('#coordx').val();
         var y = $('#coordy').val();
         var sr = new SpatialReference($('#epsg2').val());
+        var name = $('#xyname').val();
 
-        addPoint(app3, x, y, sr);
+        addPoint(app3, x, y, sr, name, function(){});
 
     });
 
+
+  /*  //set options select
+    function(){
+        console.log("fileform");
+                $("#fieldname").append($('<option>', {
+                    value: 1,
+                    text: 'My option'
+                }));
+    }*/
+    
 
     // With the CSV file data click event and create features
 
@@ -733,6 +753,7 @@ require([
                 var res = JSON.parse(response);
                 var x = null;
                 var y = null;
+                var name = "";
                 for (r in res) {
                     if (res[r].hasOwnProperty('x')) { x = res[r].x }
                     else if (res[r].hasOwnProperty('longitude')) { x = res[r].longitude }
@@ -748,7 +769,11 @@ require([
                     else if (res[r].hasOwnProperty('Y')) { y = res[r].Y }
                     else { alert("No field y, Y, latitude, Latitude or lat found"); }
 
-                    addPoint(app3, x, y, sr);
+                    if (res[r].hasOwnProperty("name")) { name = res[r].name }
+                    else if (res[r].hasOwnProperty('Name')) { name = res[r].Name }
+                    else { name = " " }
+
+                    addPoint(app3, x, y, sr, name, function(){});
                 }
             }
         });
@@ -780,7 +805,7 @@ require([
                     if (result.done) return;
                     var x = result.value.geometry.coordinates[0];
                     var y = result.value.geometry.coordinates[1];
-                    addPoint(app3, x, y, sr);
+                    addPoint(app3, x, y, sr, "",function(){});
                     return source.read().then(log);
                   }))
                 .catch(error => console.error(error.stack));
@@ -789,11 +814,53 @@ require([
         return false;
     });
 
+    // With the database click event and create features
+
+    $("#databaseform").submit(function (event) {
+
+        $("#statusdb").empty().text("File is uploading...");
+        event.preventDefault();
+        var sr = JSON.parse('{ "wkid": ' + '4326' + '}');
+
+        var extent = app3.mapView.extent;
+        var latcenter = extent.center.latitude;
+        var longcenter = extent.center.longitude;
+        var latmin = latcenter - (extent.height/2)*(360/40030139.78);//meters to degres
+        var latmax = latcenter + (extent.height/2)*(360/40030139.78);
+        var longmin = longcenter - (extent.width/2)*(360/40030139.78);
+        var longmax = longcenter + (extent.width/2)*(360/40030139.78);
+
+        var whereExtent = "(lat > "+latmin+" and lat < "+latmax+") and (long > "+longmin+" and long < "+longmax+")";
+
+        var limitval = 50;
+
+        $.ajax({
+            url: '/database',
+            data: 'extent=' +  whereExtent + '&limit=' + limitval,
+            success: function (result) {
+                console.log(result);
+
+                for(var i =0 ; i<result.length; i++){
+                    
+                        var x = result[i].long;
+                        var y = result[i].lat;
+                        addPoint(app3, x, y, sr, "",function(){});
+                    
+                }
+            },
+            error: function (xhr) {
+                alert(xhr.statusText)
+            }
+
+        });
+        return false;
+    });
+
 
     //----------------------------------
     // add Point 
     //----------------------------------
-    function addPoint(app, x, y, sr, toponyme) {
+    function addPoint(app, x, y, sr, toponyme, callback) {
 
         var pointGeom = new Point({
             x: x,
@@ -923,6 +990,9 @@ require([
         layer.when(function () {
             app.mapView.goTo(layer.fullExtent);
         });
+
+        callback();
+        
         
     }
 
