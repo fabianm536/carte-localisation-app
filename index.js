@@ -97,7 +97,7 @@ app.get('/database', function (req, res) {
         }
         var extent = req.query['extent'];
         var limitval = req.query['limit'];
-        var query = "SELECT toponyme, lat, long FROM public.etudes_sites_geoter_monde where" + extent + " limit "+ limitval
+        var query = "SELECT * FROM public.etudes_sites_geoter_monde where" + extent + " limit "+ limitval
         client.query(query, function (err, result) {
             //call `done()` to release the client back to the pool
             done();

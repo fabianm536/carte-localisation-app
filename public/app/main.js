@@ -651,8 +651,8 @@ require([
     if (app3.layers[0].featureform.feature == null){
 
         app3.layers.forEach(function (lyr) {
-            addPoint(app2, lyr.source.items[0].geometry.x, lyr.source.items[0].geometry.y, lyr.source.items[0].geometry.spatialReference, lyr.source.items[0].attributes.toponyme,function(){});
-            addPoint(app1, lyr.source.items[0].geometry.x, lyr.source.items[0].geometry.y, lyr.source.items[0].geometry.spatialReference, lyr.source.items[0].attributes.toponyme,function(){});
+            addPoint(app2, lyr.source.items[0].geometry.x, lyr.source.items[0].geometry.y, lyr.source.items[0].geometry.spatialReference, {toponyme : lyr.source.items[0].attributes.toponyme},function(){});
+            addPoint(app1, lyr.source.items[0].geometry.x, lyr.source.items[0].geometry.y, lyr.source.items[0].geometry.spatialReference, {toponyme : lyr.source.items[0].attributes.toponyme},function(){});
 
         });
 
@@ -660,8 +660,8 @@ require([
         
 
         layers.forEach(function (lyr) {
-            addPoint(app2, lyr.featureform.feature.geometry.x, lyr.featureform.feature.geometry.y, lyr.featureform.feature.geometry.spatialReference, lyr.featureform.feature.attributes.toponyme,function(){});
-            addPoint(app1, lyr.featureform.feature.geometry.x, lyr.featureform.feature.geometry.y, lyr.featureform.feature.geometry.spatialReference, lyr.featureform.feature.attributes.toponyme,function(){});
+            addPoint(app2, lyr.featureform.feature.geometry.x, lyr.featureform.feature.geometry.y, lyr.featureform.feature.geometry.spatialReference, {toponyme : lyr.featureform.feature.attributes.toponyme},function(){});
+            addPoint(app1, lyr.featureform.feature.geometry.x, lyr.featureform.feature.geometry.y, lyr.featureform.feature.geometry.spatialReference, {toponyme : lyr.featureform.feature.attributes.toponyme},function(){});
 
         });
     }
@@ -678,7 +678,7 @@ require([
         $('#addPointButton').off("click").on("click", function () {
             if (event.result !== null){
                 document.getElementById("addPointButton").disabled = true;
-                addPoint(app3, event.result.feature.geometry.x, event.result.feature.geometry.y, event.result.feature.geometry.spatialReference,event.result.name,function () {
+                addPoint(app3, event.result.feature.geometry.x, event.result.feature.geometry.y, event.result.feature.geometry.spatialReference,{toponyme : event.result.name},function () {
                     document.getElementById("addPointButton").disabled = false;
                     event.result = null; 
                 }) 
@@ -699,7 +699,7 @@ require([
 
             if (point !== null) {
                 document.getElementById("geoButton").disabled = true;
-                addPoint(app3, point.x, point.y, point.spatialReference,name,function () {
+                addPoint(app3, point.x, point.y, point.spatialReference,{toponyme : name},function () {
                     document.getElementById("geoButton").disabled = false;
                 });
                 }
@@ -769,11 +769,7 @@ require([
                     else if (res[r].hasOwnProperty('Y')) { y = res[r].Y }
                     else { alert("No field y, Y, latitude, Latitude or lat found"); }
 
-                    if (res[r].hasOwnProperty("name")) { name = res[r].name }
-                    else if (res[r].hasOwnProperty('Name')) { name = res[r].Name }
-                    else { name = " " }
-
-                    addPoint(app3, x, y, sr, name, function(){});
+                    addPoint(app3, x, y, sr, res[r], function(){});
                 }
             }
         });
@@ -805,7 +801,7 @@ require([
                     if (result.done) return;
                     var x = result.value.geometry.coordinates[0];
                     var y = result.value.geometry.coordinates[1];
-                    addPoint(app3, x, y, sr, "",function(){});
+                    addPoint(app3, x, y, sr, result,function(){});
                     return source.read().then(log);
                   }))
                 .catch(error => console.error(error.stack));
@@ -838,12 +834,13 @@ require([
             url: '/database',
             data: 'extent=' +  whereExtent + '&limit=' + limitval,
             success: function (result) {
+console.log(result);
+
                 for(var i =0 ; i<result.length; i++){
                     
                         var x = result[i].long;
                         var y = result[i].lat;
-                        var name = result[i].toponyme;
-                        addPoint(app3, x, y, sr, name,function(){});
+                        addPoint(app3, x, y, sr, result[i] ,function(){});
                 }
             },
             error: function (xhr) {
@@ -858,7 +855,7 @@ require([
     //----------------------------------
     // add Point 
     //----------------------------------
-    function addPoint(app, x, y, sr, toponyme, callback) {
+    function addPoint(app, x, y, sr, attrs, callback) {
 
         var pointGeom = new Point({
             x: x,
@@ -869,15 +866,13 @@ require([
         var id = Date.now().toString();
         var oid = parseInt(id.substr(id.length - 5));
 
+        attrs.ObjectID= oid;
+        attrs.date= Date.now();
+
         var features = [
      {
          geometry: pointGeom,
-         attributes: {
-             ObjectID: oid,
-             toponyme: toponyme,
-             date: Date.now(),
-             client: "UAL1"
-         }
+         attributes: attrs
      }
         ];
 
@@ -891,6 +886,11 @@ require([
                 name: "toponyme",
                 alias: "toponyme",
                 type: "string"
+            },
+            {
+                name: "annee",
+                alias: "annee",
+                type: "double"
             }, {
                 name: "date",
                 alias: "date",
@@ -1268,6 +1268,11 @@ require([
                       label: "Toponyme",
 					  maxLength: 20
                   },
+                  {
+                    name: "annee",
+                    label: "Année",
+                    maxLength: 5
+                },
                   {
                       name: "client",
                       label: "Client",
