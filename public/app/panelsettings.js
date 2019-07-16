@@ -330,6 +330,9 @@ function(Zoom, Home, Locate, Compass, BasemapToggle, NavToggle, Search, Legend, 
 
             if ($(this).val() == '3') {
 
+                document.getElementById("menu").children[1].style.display = "block";
+                document.getElementById("menu").children[2].style.display = "block";
+
                 $("#map1").removeClass("hidden");
                 $("#map2").removeClass("hidden");
                 $('#formlayout3').removeClass("hidden");
@@ -358,6 +361,9 @@ function(Zoom, Home, Locate, Compass, BasemapToggle, NavToggle, Search, Legend, 
 
             } else if ($(this).val() == '2') {
 
+                document.getElementById("menu").children[1].style.display = "none";
+                document.getElementById("menu").children[2].style.display = "block";
+
                 $("#map1").addClass("hidden");
                 $("#map2").removeClass("hidden");
                 $('#formlayout2').removeClass("hidden");
@@ -376,6 +382,9 @@ function(Zoom, Home, Locate, Compass, BasemapToggle, NavToggle, Search, Legend, 
                 $("#map2").css({ height: 467, width: 680, left: 0, top: 0, transform: 'translate(0px, 0px)' });
                 $("#map3").css({ height: 467, width: 680, left: 0, top: 485, transform: 'translate(0px, 0px)' });
             } else if ($(this).val() == '1') {
+
+              document.getElementById("menu").children[1].style.display = "none";
+              document.getElementById("menu").children[2].style.display = "none";
 
                 $("#map1").addClass("hidden");
                 $("#map2").addClass("hidden");

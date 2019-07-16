@@ -834,7 +834,6 @@ require([
             url: '/database',
             data: 'extent=' +  whereExtent + '&limit=' + limitval,
             success: function (result) {
-console.log(result);
 
                 for(var i =0 ; i<result.length; i++){
                     
@@ -1015,7 +1014,6 @@ console.log(result);
             unselectFeature(function(){
                 toggleEditingDivs("block", "none");
 
-                console.log(document.getElementsByClassName("esri-feature-form esri-widget"));
                 var forms = document.getElementsByClassName("esri-feature-form esri-widget");
                 if(forms.length>0){
                     for(var i = 0; i < forms.length; i++) {
@@ -1038,7 +1036,6 @@ console.log(result);
                     selectFeature(response.results[0].graphic.attributes[layer.objectIdField], id.id)
 
                     //manage form view
-                    console.log(id.id);
                     var formid = "formDiv" + id.id;
                     document.getElementById(formid).style.display = "block";
                     

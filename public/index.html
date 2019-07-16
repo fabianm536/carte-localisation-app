@@ -91,6 +91,10 @@
     background-color: #9a9696;
 }
 
+.disabled {
+    pointer-events:none; 
+    opacity:0.6;         
+}
       /* Maps */
 
       #map-container {
@@ -138,6 +142,7 @@
       }
 
 
+
   </style>
 
 </head>
@@ -159,15 +164,15 @@
                 <span></span>
             </div>
         </a>
-        <ul class="dropdown-menu">
+        <ul id="menu" class="dropdown-menu" >
 
             <li><a role="menuitem" tabindex="0" data-target="#panelPoint" aria-haspopup="true"><span class="glyphicon glyphicon-map-marker"></span> Add Point</a></li>
-            <li><a role="menuitem" tabindex="0" data-target="#panelBasemaps1" aria-haspopup="true"><span class="glyphicon glyphicon-th-large"></span> Basemaps 1</a></li>
-            <li><a role="menuitem" tabindex="0" data-target="#panelBasemaps2" aria-haspopup="true"><span class="glyphicon glyphicon-th-large"></span> Basemaps 2</a></li>
-            <li><a role="menuitem" tabindex="0" data-target="#panelBasemaps3" aria-haspopup="true"><span class="glyphicon glyphicon-th-large"></span> Basemaps 3</a></li>
+            <li><a role="menuitem" tabindex="0" data-target="#panelBasemaps1" aria-haspopup="true"><span class="glyphicon glyphicon-th-large"></span> Basemaps map 1</a></li>
+            <li><a role="menuitem" tabindex="0" data-target="#panelBasemaps2" aria-haspopup="true"><span class="glyphicon glyphicon-th-large"></span> Basemaps map 2</a></li>
+            <li><a role="menuitem" tabindex="0" data-target="#panelBasemaps3" aria-haspopup="true"><span class="glyphicon glyphicon-th-large"></span> Basemaps map 3</a></li>
             <li><a role="menuitem" tabindex="0" data-target="#panelAttributes" aria-haspopup="true"><span class="glyphicon glyphicon-list-alt"></span> Attributes</a></li>
             <li><a role="menuitem" tabindex="0" data-target="#panelPrint" aria-haspopup="true"><span class="glyphicon glyphicon-print"></span> Print</a></li>
-            <li><a role="menuitem" tabindex="0" data-target="#panelSettings" aria-haspopup="true"><span class="glyphicon glyphicon-cog"></span> Settings</a></li>
+            <li><a role="menuitem" tabindex="0" data-target="#panelSettings" aria-haspopup="true"><span class="glyphicon glyphicon-cog"></span> Layout Settings</a></li>
             <li><a role="menuitem" tabindex="0" target="_blank" href="https://fugro.sharepoint.com/sites/WebMapping-CarteLoc/Carte%20de%20localisation/Manuel%20d%27utilisation%20Carte%20de%20localisation.aspx?web=1" aria-haspopup="true"><span class="glyphicon glyphicon-book"></span> Help</a></li>
         </ul>
     </div>
